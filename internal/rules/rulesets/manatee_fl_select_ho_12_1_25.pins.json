@@ -1,0 +1,43 @@
+{
+  "rule_set": "manatee_fl_select_ho_12_1_25",
+  "version": "1",
+  "id_prefix": "HO",
+  "sheet": "Policy Data",
+  "schema_renames": {
+    "core_all": "lall_jall_sall_call",
+    "lob_property_personal": "property_jall_personal_call",
+    "jur_us_property_personal": "property_us_personal_call"
+  },
+  "pins": {
+    "1":  { "target": { "variant": "policy.property.us-fl.personal.safepoint", "field": "policy_number" },
+            "note": "Business key of every row (D5)." },
+    "3":  { "target": { "variant": "location_address.property.us.personal", "field": "county" },
+            "transform": { "case": "upper" } },
+    "5":  { "target": { "variant": "loss_ratio_analysis", "field": "territory" },
+            "attention": "Name match only: loss_ratio_analysis is a portfolio reporting table, not a rating territory (D4, S5)." },
+    "6":  { "target": { "variant": "policy.property.us-fl.personal.safepoint", "field": "effective_date" } },
+    "10": { "target": { "variant": "dwelling.property.us.personal", "field": "year_built" } },
+    "11": { "target": { "variant": "dwelling.property.us.personal", "field": "construction" } },
+    "12": { "target": { "variant": "dwelling_asset.property.personal", "field": "protection_class" } },
+    "13": { "target": { "variant": "dwelling.property.us.personal", "field": "number_of_stories" } },
+    "14": { "target": { "variant": "dwelling.property.us.personal", "field": "number_of_units" },
+            "transform": { "map": { "1 to 4": "4", "5+": "5" } },
+            "note": "Band to integer (D1)." },
+    "16": { "target": { "variant": "dwelling.property.us.personal", "field": "burglar_alarm" } },
+    "19": { "target": { "variant": "dwelling.property.us.personal", "field": "building_code_effectiveness_grading" } },
+    "22": { "target": { "variant": "dwelling.property.us.personal", "field": "roof_deck_attachment" } },
+    "23": { "target": { "variant": "wind_mitigation_verification.property.us-fl.personal.safepoint", "field": "roof_shape" },
+            "transform": { "map": { "Gable": "gable", "Hip Roof": "hip", "Hip": "hip", "Flat": "flat" } },
+            "attention": "Writing Roof Shape also creates a location, a dwelling asset and a wind mitigation verification with placeholder inspection fields (D4, S7)." },
+    "25": { "target": { "variant": "dwelling.property.us.personal", "field": "secondary_water_resistance" },
+            "transform": { "map": { "SWR": "true", "No SWR": "false" } } },
+    "26": { "target": { "variant": "dwelling.property.us.personal", "field": "opening_protection" } },
+    "27": { "target": { "variant": "dwelling.property.us.personal", "field": "wind_speed_design" } },
+    "28": { "target": { "variant": "dwelling.property.us.personal", "field": "wind_speed_location" } },
+    "45": { "target": { "variant": "section_icoverages.property.us.personal", "field": "equipment_breakdown" } },
+    "50": { "target": { "variant": "line.property.us.personal", "field": "consent_to_rate" },
+            "transform": { "map": { "0": "false", "1": "true" } } },
+    "73": { "target": { "variant": "policy.property.us-fl.personal.safepoint", "field": "policy_number" },
+            "note": "Second Policy Number column. Used only when non-empty; a value different from column A is a blocking conflict." }
+  }
+}

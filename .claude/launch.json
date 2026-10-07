@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "migrator",
+      "runtimeExecutable": "./bin/migrator",
+      "runtimeArgs": ["serve", "-addr", "127.0.0.1:8080", "-env-file", ".env", "-ledger", "data/ledger.jsonl"],
+      "port": 8080
+    }
+  ]
+}

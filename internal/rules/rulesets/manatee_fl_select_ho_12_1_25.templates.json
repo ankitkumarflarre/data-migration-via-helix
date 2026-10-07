@@ -1,0 +1,80 @@
+{
+  "row_key_column": "A",
+  "row_date_column": "F",
+  "records": [
+    {
+      "variant": "organization", "scope": "job", "key": "party_reference",
+      "fields": {
+        "party_reference": { "generate": true, "attention": "Issuer identity is a generated placeholder (D6, S11)." },
+        "legal_name": { "generate": true, "attention": "Issuer legal name is a generated placeholder (D6, S11)." },
+        "record_status": { "const": "active" },
+        "registration_status": { "const": "active" }
+      }
+    },
+    {
+      "variant": "product", "scope": "job", "key": "product_code",
+      "fields": {
+        "product_code": { "generate": true, "attention": "Product code is a generated placeholder (D6, S11)." },
+        "product_name": { "generate": true, "attention": "Product name is a generated placeholder (D6, S11)." },
+        "product_category": { "generate": true },
+        "product_status": { "const": "active" },
+        "effective_date": { "min_col": "F" }
+      }
+    },
+    {
+      "variant": "party", "scope": "row", "key": "party_reference",
+      "fields": {
+        "party_reference": { "format": "PH-{PN}" },
+        "party_type": { "const": "person" },
+        "record_status": { "const": "active" }
+      }
+    },
+    {
+      "variant": "policy.property.us-fl.personal.safepoint", "scope": "row", "key": "policy_number", "anchor": true,
+      "fields": {
+        "policy_reference": { "format": "{PN}" },
+        "issue_date": { "col": "F", "attention": "Issue date is not in the sheet; the Effective Date is used (D6, S11)." },
+        "policyholder_reference": { "ref": "party" },
+        "product_reference": { "ref": "product" },
+        "issuing_party_reference": { "ref": "organization" },
+        "program_code": { "const": "safepoint" },
+        "personal_policy_form": { "col": "B", "map": { "HO3": "ho_3", "HO6": "ho_6" } },
+        "sinkhole_coverage_option": { "col": "AP", "map": { "Yes": "sinkhole_loss", "No": "catastrophic_ground_cover_collapse_only" } }
+      }
+    },
+    {
+      "variant": "location.property.us.personal", "scope": "row", "key": "location_identifier",
+      "fields": {
+        "location_identifier": { "format": "LOC-{PN}" },
+        "location_type": { "const": "primary_premises" },
+        "address_text": { "format": "{C}, FL", "attention": "Only the county is known; the address is \"<County>, FL\" (D6, S11)." },
+        "effective_date": { "col": "F" },
+        "party_reference": { "ref": "party" }
+      }
+    },
+    {
+      "variant": "dwelling_asset.property.personal", "scope": "row", "key": "dwelling_asset_reference",
+      "fields": {
+        "dwelling_asset_reference": { "format": "DA-{PN}" },
+        "dwelling_type": { "generate": true, "attention": "No list of dwelling types in the model; HO3 = owner-occupied home, HO6 = condo is noted for later (D7, S12)." },
+        "is_under_renovation": { "generate": true, "attention": "Renovation status is not in the sheet; generated as false (D6, S11)." },
+        "location_reference": { "ref": "location.property.us.personal" }
+      }
+    },
+    {
+      "variant": "wind_mitigation_verification.property.us-fl.personal.safepoint", "scope": "row", "key": "wind_mitigation_verification_reference",
+      "fields": {
+        "wind_mitigation_verification_reference": { "format": "WMV-{PN}" },
+        "dwelling_asset_reference": { "ref": "dwelling_asset.property.personal" },
+        "verification_status": { "const": "submitted" },
+        "inspection_date": { "col": "F", "attention": "Inspection date is not in the sheet; the Effective Date is used (D9, S13)." },
+        "oir_b1_1802_form_revision": { "generate": true, "attention": "OIR-B1-1802 form revision is a generated placeholder (D9, S13)." }
+      }
+    },
+    { "variant": "dwelling.property.us.personal", "scope": "row" },
+    { "variant": "section_icoverages.property.us.personal", "scope": "row" },
+    { "variant": "line.property.us.personal", "scope": "row" },
+    { "variant": "location_address.property.us.personal", "scope": "row" },
+    { "variant": "loss_ratio_analysis", "scope": "row" }
+  ]
+}

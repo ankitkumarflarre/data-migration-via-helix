@@ -1,0 +1,1043 @@
+{
+  "rule_set": "manatee_fl_select_ho_12_1_25",
+  "version": "1",
+  "source_report": {
+    "file": "Manatee FL Select HO Rater Effective 12.1.25 - Schema Validation Report.html",
+    "sha256": "4d0073091911dd72cc9d7fe8686d4b0c874e14a325d9a23af5694d4f0b00cbcd"
+  },
+  "sheet": "Policy Data",
+  "schema_renames": {
+    "core_all": "lall_jall_sall_call",
+    "jur_us_property_personal": "property_us_personal_call",
+    "lob_property_personal": "property_jall_personal_call"
+  },
+  "rules": [
+    {
+      "id": "HO-01",
+      "report_no": 1,
+      "excel_column": "A",
+      "header": "Policy Number",
+      "report_status": "Confirmed - Exact/Normalized",
+      "confidence": "High",
+      "target": {
+        "variant": "policy.property.us-fl.personal.safepoint",
+        "field": "policy_number"
+      },
+      "alternatives": [
+        {
+          "variant": "policy.motor.us.commercial",
+          "field": "policy_number"
+        },
+        {
+          "variant": "policy.motor.us.fleet",
+          "field": "policy_number"
+        },
+        {
+          "variant": "policy.motor.us.personal",
+          "field": "policy_number"
+        },
+        {
+          "variant": "policy.property.commercial",
+          "field": "policy_number"
+        },
+        {
+          "variant": "policy_lifecycle",
+          "field": "policy_number"
+        },
+        {
+          "variant": "raw_xml_document.property.us.personal",
+          "field": "policy_number"
+        }
+      ],
+      "report_locations": [
+        "_view.policy.policy_number [VIEW]",
+        "_view.policy_lifecycle.policy_number [VIEW]",
+        "_view.policy_motor_us_commercial.policy_number [VIEW]",
+        "_view.policy_motor_us_fleet.policy_number [VIEW]",
+        "_view.policy_motor_us_personal.policy_number [VIEW]",
+        "_view.policy_property_commercial.policy_number [VIEW]",
+        "_view.policy_property_us_fl_personal_safepoint.policy_number [VIEW]",
+        "_view.raw_xml_document.policy_number [VIEW]",
+        "_view.raw_xml_document_property_us_personal.policy_number [VIEW]",
+        "core_all.policy.policy_number [TABLE]",
+        "core_all.policy_lifecycle.policy_number [TABLE]",
+        "jur_us_property_personal.raw_xml_document.policy_number [TABLE]"
+      ],
+      "transform": {},
+      "note": "Business key of every row (D5)."
+    },
+    {
+      "id": "HO-03",
+      "report_no": 3,
+      "excel_column": "C",
+      "header": "County",
+      "report_status": "Confirmed - Exact/Normalized",
+      "confidence": "High",
+      "target": {
+        "variant": "location_address.property.us.personal",
+        "field": "county"
+      },
+      "alternatives": [
+        {
+          "variant": "account_location",
+          "field": "county"
+        },
+        {
+          "variant": "account_search_request",
+          "field": "county"
+        },
+        {
+          "variant": "contact_address_wrapper",
+          "field": "county"
+        },
+        {
+          "variant": "policy_address",
+          "field": "county"
+        },
+        {
+          "variant": "tax_location",
+          "field": "county"
+        }
+      ],
+      "report_locations": [
+        "_view.account_location.county [VIEW]",
+        "_view.account_search_request.county [VIEW]",
+        "_view.contact_address_wrapper.county [VIEW]",
+        "_view.location_address.county [VIEW]",
+        "_view.location_address_property_us_personal.county [VIEW]",
+        "_view.policy_address.county [VIEW]",
+        "_view.tax_location.county [VIEW]",
+        "core_all.account_location.county [TABLE]",
+        "core_all.account_search_request.county [TABLE]",
+        "core_all.contact_address_wrapper.county [TABLE]",
+        "core_all.policy_address.county [TABLE]",
+        "core_all.tax_location.county [TABLE]",
+        "jur_us_property_personal.location_address.county [TABLE]"
+      ],
+      "transform": {
+        "case": "upper"
+      }
+    },
+    {
+      "id": "HO-05",
+      "report_no": 5,
+      "excel_column": "E",
+      "header": "Territory",
+      "report_status": "Confirmed - Exact/Normalized",
+      "confidence": "High",
+      "target": {
+        "variant": "loss_ratio_analysis",
+        "field": "territory"
+      },
+      "alternatives": [],
+      "report_locations": [
+        "_view.loss_ratio_analysis.territory [VIEW]",
+        "core_all.loss_ratio_analysis.territory [TABLE]"
+      ],
+      "transform": {},
+      "attention": "Name match only: loss_ratio_analysis is a portfolio reporting table, not a rating territory (D4, S5)."
+    },
+    {
+      "id": "HO-06",
+      "report_no": 6,
+      "excel_column": "F",
+      "header": "Effective Date",
+      "report_status": "Confirmed - Exact/Normalized",
+      "confidence": "High",
+      "target": {
+        "variant": "policy.property.us-fl.personal.safepoint",
+        "field": "effective_date"
+      },
+      "alternatives": [
+        {
+          "variant": "address",
+          "field": "effective_date"
+        },
+        {
+          "variant": "adverse_development_cover",
+          "field": "effective_date"
+        },
+        {
+          "variant": "beneficial_ownership_record",
+          "field": "effective_date"
+        },
+        {
+          "variant": "benefit",
+          "field": "effective_date"
+        },
+        {
+          "variant": "binder",
+          "field": "effective_date"
+        },
+        {
+          "variant": "binding_authority",
+          "field": "effective_date"
+        },
+        {
+          "variant": "book_roll",
+          "field": "effective_date"
+        },
+        {
+          "variant": "broker_of_record_letter",
+          "field": "effective_date"
+        },
+        {
+          "variant": "certificate",
+          "field": "effective_date"
+        },
+        {
+          "variant": "cession",
+          "field": "effective_date"
+        },
+        {
+          "variant": "code_list",
+          "field": "effective_date"
+        },
+        {
+          "variant": "commission_agreement",
+          "field": "effective_date"
+        },
+        {
+          "variant": "commission_chargeback",
+          "field": "effective_date"
+        },
+        {
+          "variant": "communication_preference",
+          "field": "effective_date"
+        },
+        {
+          "variant": "contact_point",
+          "field": "effective_date"
+        },
+        {
+          "variant": "contract_wording",
+          "field": "effective_date"
+        },
+        {
+          "variant": "cost_catalog.motor",
+          "field": "effective_date"
+        },
+        {
+          "variant": "counterparty_security_approval",
+          "field": "effective_date"
+        },
+        {
+          "variant": "coverage.motor.us.commercial",
+          "field": "effective_date"
+        },
+        {
+          "variant": "coverage.motor.us.fleet",
+          "field": "effective_date"
+        },
+        {
+          "variant": "coverage.motor.us.personal",
+          "field": "effective_date"
+        },
+        {
+          "variant": "coverage.property.commercial",
+          "field": "effective_date"
+        },
+        {
+          "variant": "coverage.property.us.personal",
+          "field": "effective_date"
+        },
+        {
+          "variant": "domain_role_type",
+          "field": "effective_date"
+        },
+        {
+          "variant": "endorsement",
+          "field": "effective_date"
+        },
+        {
+          "variant": "facultative_certificate",
+          "field": "effective_date"
+        },
+        {
+          "variant": "fee_schedule",
+          "field": "effective_date"
+        },
+        {
+          "variant": "fronting_arrangement",
+          "field": "effective_date"
+        },
+        {
+          "variant": "geographic_zone",
+          "field": "effective_date"
+        },
+        {
+          "variant": "glossary_term",
+          "field": "effective_date"
+        },
+        {
+          "variant": "group_master_policy",
+          "field": "effective_date"
+        },
+        {
+          "variant": "grouping",
+          "field": "effective_date"
+        },
+        {
+          "variant": "iam_role",
+          "field": "effective_date"
+        },
+        {
+          "variant": "index",
+          "field": "effective_date"
+        },
+        {
+          "variant": "insured_object.flood.us.commercial.safepoint",
+          "field": "effective_date"
+        },
+        {
+          "variant": "insured_object.flood.us.personal.safepoint",
+          "field": "effective_date"
+        },
+        {
+          "variant": "insured_object.property.us.personal.safepoint",
+          "field": "effective_date"
+        },
+        {
+          "variant": "kpi",
+          "field": "effective_date"
+        },
+        {
+          "variant": "kpi_taxonomy",
+          "field": "effective_date"
+        },
+        {
+          "variant": "location.property.us.personal",
+          "field": "effective_date"
+        },
+        {
+          "variant": "loss_portfolio_transfer",
+          "field": "effective_date"
+        },
+        {
+          "variant": "member_resolution",
+          "field": "effective_date"
+        },
+        {
+          "variant": "membership",
+          "field": "effective_date"
+        },
+        {
+          "variant": "network",
+          "field": "effective_date"
+        },
+        {
+          "variant": "network_agreement",
+          "field": "effective_date"
+        },
+        {
+          "variant": "nomination",
+          "field": "effective_date"
+        },
+        {
+          "variant": "non_renewal",
+          "field": "effective_date"
+        },
+        {
+          "variant": "novation",
+          "field": "effective_date"
+        },
+        {
+          "variant": "parameter_set",
+          "field": "effective_date"
+        },
+        {
+          "variant": "party_life_event",
+          "field": "effective_date"
+        },
+        {
+          "variant": "peril",
+          "field": "effective_date"
+        },
+        {
+          "variant": "plan_design",
+          "field": "effective_date"
+        },
+        {
+          "variant": "policy.motor.us.commercial",
+          "field": "effective_date"
+        },
+        {
+          "variant": "policy.motor.us.fleet",
+          "field": "effective_date"
+        },
+        {
+          "variant": "policy.motor.us.personal",
+          "field": "effective_date"
+        },
+        {
+          "variant": "policy.property.commercial",
+          "field": "effective_date"
+        },
+        {
+          "variant": "policy_restructure",
+          "field": "effective_date"
+        },
+        {
+          "variant": "policy_schedule",
+          "field": "effective_date"
+        },
+        {
+          "variant": "portfolio_conversion",
+          "field": "effective_date"
+        },
+        {
+          "variant": "portfolio_transfer",
+          "field": "effective_date"
+        },
+        {
+          "variant": "prior_insurance.property.us.personal",
+          "field": "effective_date"
+        },
+        {
+          "variant": "producer_agreement",
+          "field": "effective_date"
+        },
+        {
+          "variant": "producer_appointment",
+          "field": "effective_date"
+        },
+        {
+          "variant": "product",
+          "field": "effective_date"
+        },
+        {
+          "variant": "product_version",
+          "field": "effective_date"
+        },
+        {
+          "variant": "rating_plan",
+          "field": "effective_date"
+        },
+        {
+          "variant": "regulatory_action",
+          "field": "effective_date"
+        },
+        {
+          "variant": "reinsurance_collateral",
+          "field": "effective_date"
+        },
+        {
+          "variant": "relationship",
+          "field": "effective_date"
+        },
+        {
+          "variant": "renewal_rights_transfer",
+          "field": "effective_date"
+        },
+        {
+          "variant": "requirement_checklist",
+          "field": "effective_date"
+        },
+        {
+          "variant": "rider",
+          "field": "effective_date"
+        },
+        {
+          "variant": "role_assignment",
+          "field": "effective_date"
+        },
+        {
+          "variant": "scheduled_item",
+          "field": "effective_date"
+        },
+        {
+          "variant": "servicing_transaction",
+          "field": "effective_date"
+        },
+        {
+          "variant": "treaty_participation",
+          "field": "effective_date"
+        },
+        {
+          "variant": "trigger",
+          "field": "effective_date"
+        },
+        {
+          "variant": "underwriting_guideline",
+          "field": "effective_date"
+        },
+        {
+          "variant": "user_role",
+          "field": "effective_date"
+        },
+        {
+          "variant": "workflow_definition",
+          "field": "effective_date"
+        },
+        {
+          "variant": "workflow_taxonomy",
+          "field": "effective_date"
+        }
+      ],
+      "report_locations": [
+        "_view.address.effective_date [VIEW]",
+        "_view.adverse_development_cover.effective_date [VIEW]",
+        "_view.beneficial_ownership_record.effective_date [VIEW]",
+        "_view.benefit.effective_date [VIEW]",
+        "_view.binder.effective_date [VIEW]",
+        "_view.binding_authority.effective_date [VIEW]",
+        "_view.book_roll.effective_date [VIEW]",
+        "_view.broker_of_record_letter.effective_date [VIEW]",
+        "_view.certificate.effective_date [VIEW]",
+        "_view.cession.effective_date [VIEW]",
+        "_view.code_list.effective_date [VIEW]",
+        "_view.commission_agreement.effective_date [VIEW]",
+        "_view.commission_chargeback.effective_date [VIEW]",
+        "_view.communication_preference.effective_date [VIEW]",
+        "_view.contact_point.effective_date [VIEW]",
+        "_view.contract_wording.effective_date [VIEW]",
+        "_view.cost_catalog.effective_date [VIEW]",
+        "_view.cost_catalog_motor.effective_date [VIEW]",
+        "_view.counterparty_security_approval.effective_date [VIEW]",
+        "_view.coverage.effective_date [VIEW]",
+        "_view.coverage_motor_us_commercial.effective_date [VIEW]",
+        "_view.coverage_motor_us_fleet.effective_date [VIEW]",
+        "_view.coverage_motor_us_personal.effective_date [VIEW]",
+        "_view.coverage_property_commercial.effective_date [VIEW]",
+        "_view.coverage_property_us_personal.effective_date [VIEW]",
+        "_view.domain_role_type.effective_date [VIEW]",
+        "_view.endorsement.effective_date [VIEW]",
+        "_view.facultative_certificate.effective_date [VIEW]",
+        "_view.fee_schedule.effective_date [VIEW]",
+        "_view.fronting_arrangement.effective_date [VIEW]",
+        "_view.geographic_zone.effective_date [VIEW]",
+        "_view.glossary_term.effective_date [VIEW]",
+        "_view.group_master_policy.effective_date [VIEW]",
+        "_view.grouping.effective_date [VIEW]",
+        "_view.iam_role.effective_date [VIEW]",
+        "_view.index.effective_date [VIEW]",
+        "_view.insured_object.effective_date [VIEW]",
+        "_view.insured_object_flood_us_commercial_safepoint.effective_date [VIEW]",
+        "_view.insured_object_flood_us_personal_safepoint.effective_date [VIEW]",
+        "_view.insured_object_property_us_personal_safepoint.effective_date [VIEW]",
+        "_view.kpi.effective_date [VIEW]",
+        "_view.kpi_taxonomy.effective_date [VIEW]",
+        "_view.location.effective_date [VIEW]",
+        "_view.location_property_us_personal.effective_date [VIEW]",
+        "_view.loss_portfolio_transfer.effective_date [VIEW]",
+        "_view.member_resolution.effective_date [VIEW]",
+        "_view.membership.effective_date [VIEW]",
+        "_view.network.effective_date [VIEW]",
+        "_view.network_agreement.effective_date [VIEW]",
+        "_view.nomination.effective_date [VIEW]",
+        "_view.non_renewal.effective_date [VIEW]",
+        "_view.novation.effective_date [VIEW]",
+        "_view.parameter_set.effective_date [VIEW]",
+        "_view.party_life_event.effective_date [VIEW]",
+        "_view.peril.effective_date [VIEW]",
+        "_view.plan_design.effective_date [VIEW]",
+        "_view.policy.effective_date [VIEW]",
+        "_view.policy_property_us_fl_personal_safepoint.effective_date [VIEW]",
+        "_view.policy_restructure.effective_date [VIEW]",
+        "_view.policy_schedule.effective_date [VIEW]",
+        "_view.portfolio_conversion.effective_date [VIEW]",
+        "_view.portfolio_transfer.effective_date [VIEW]",
+        "_view.prior_insurance.effective_date [VIEW]",
+        "_view.prior_insurance_property_us_personal.effective_date [VIEW]",
+        "_view.producer_agreement.effective_date [VIEW]",
+        "_view.producer_appointment.effective_date [VIEW]",
+        "_view.product.effective_date [VIEW]",
+        "_view.product_version.effective_date [VIEW]",
+        "_view.rating_plan.effective_date [VIEW]",
+        "_view.regulatory_action.effective_date [VIEW]",
+        "_view.reinsurance_collateral.effective_date [VIEW]",
+        "_view.relationship.effective_date [VIEW]",
+        "_view.renewal_rights_transfer.effective_date [VIEW]",
+        "_view.requirement_checklist.effective_date [VIEW]",
+        "_view.rider.effective_date [VIEW]",
+        "_view.role_assignment.effective_date [VIEW]",
+        "_view.scheduled_item.effective_date [VIEW]",
+        "_view.servicing_transaction.effective_date [VIEW]",
+        "_view.treaty_participation.effective_date [VIEW]",
+        "_view.trigger.effective_date [VIEW]",
+        "_view.underwriting_guideline.effective_date [VIEW]",
+        "_view.user_role.effective_date [VIEW]",
+        "_view.workflow_definition.effective_date [VIEW]",
+        "_view.workflow_taxonomy.effective_date [VIEW]",
+        "core_all.address.effective_date [TABLE]",
+        "core_all.adverse_development_cover.effective_date [TABLE]",
+        "core_all.beneficial_ownership_record.effective_date [TABLE]",
+        "core_all.benefit.effective_date [TABLE]",
+        "core_all.binder.effective_date [TABLE]",
+        "core_all.binding_authority.effective_date [TABLE]",
+        "core_all.book_roll.effective_date [TABLE]",
+        "core_all.broker_of_record_letter.effective_date [TABLE]",
+        "core_all.certificate.effective_date [TABLE]",
+        "core_all.cession.effective_date [TABLE]",
+        "core_all.code_list.effective_date [TABLE]",
+        "core_all.commission_agreement.effective_date [TABLE]",
+        "core_all.commission_chargeback.effective_date [TABLE]",
+        "core_all.communication_preference.effective_date [TABLE]",
+        "core_all.contact_point.effective_date [TABLE]",
+        "core_all.contract_wording.effective_date [TABLE]",
+        "core_all.counterparty_security_approval.effective_date [TABLE]",
+        "core_all.coverage.effective_date [TABLE]",
+        "core_all.domain_role_type.effective_date [TABLE]",
+        "core_all.endorsement.effective_date [TABLE]",
+        "core_all.facultative_certificate.effective_date [TABLE]",
+        "core_all.fee_schedule.effective_date [TABLE]",
+        "core_all.fronting_arrangement.effective_date [TABLE]",
+        "core_all.geographic_zone.effective_date [TABLE]",
+        "core_all.glossary_term.effective_date [TABLE]",
+        "core_all.group_master_policy.effective_date [TABLE]",
+        "core_all.grouping.effective_date [TABLE]",
+        "core_all.index.effective_date [TABLE]",
+        "core_all.insured_object.effective_date [TABLE]",
+        "core_all.location.effective_date [TABLE]",
+        "core_all.loss_portfolio_transfer.effective_date [TABLE]",
+        "core_all.member_resolution.effective_date [TABLE]",
+        "core_all.membership.effective_date [TABLE]",
+        "core_all.network.effective_date [TABLE]",
+        "core_all.network_agreement.effective_date [TABLE]",
+        "core_all.nomination.effective_date [TABLE]",
+        "core_all.non_renewal.effective_date [TABLE]",
+        "core_all.novation.effective_date [TABLE]",
+        "core_all.parameter_set.effective_date [TABLE]",
+        "core_all.party_life_event.effective_date [TABLE]",
+        "core_all.peril.effective_date [TABLE]",
+        "core_all.plan_design.effective_date [TABLE]",
+        "core_all.policy_restructure.effective_date [TABLE]",
+        "core_all.policy_schedule.effective_date [TABLE]",
+        "core_all.portfolio_conversion.effective_date [TABLE]",
+        "core_all.portfolio_transfer.effective_date [TABLE]",
+        "core_all.producer_agreement.effective_date [TABLE]",
+        "core_all.producer_appointment.effective_date [TABLE]",
+        "core_all.product.effective_date [TABLE]",
+        "core_all.product_version.effective_date [TABLE]",
+        "core_all.rating_plan.effective_date [TABLE]",
+        "core_all.regulatory_action.effective_date [TABLE]",
+        "core_all.reinsurance_collateral.effective_date [TABLE]",
+        "core_all.relationship.effective_date [TABLE]",
+        "core_all.renewal_rights_transfer.effective_date [TABLE]",
+        "core_all.requirement_checklist.effective_date [TABLE]",
+        "core_all.rider.effective_date [TABLE]",
+        "core_all.role_assignment.effective_date [TABLE]",
+        "core_all.scheduled_item.effective_date [TABLE]",
+        "core_all.servicing_transaction.effective_date [TABLE]",
+        "core_all.treaty_participation.effective_date [TABLE]",
+        "core_all.trigger.effective_date [TABLE]",
+        "core_all.underwriting_guideline.effective_date [TABLE]",
+        "jur_us_property_personal.policy.effective_date [TABLE]",
+        "jur_us_property_personal.prior_insurance.effective_date [TABLE]",
+        "lob_motor.cost_catalog.effective_date [TABLE]",
+        "mycel_iam.iam_role.effective_date [TABLE]",
+        "mycel_iam.user_role.effective_date [TABLE]",
+        "mycel_kpi.kpi.effective_date [TABLE]",
+        "mycel_kpi.kpi_taxonomy.effective_date [TABLE]",
+        "mycel_workflow.workflow_definition.effective_date [TABLE]",
+        "mycel_workflow.workflow_taxonomy.effective_date [TABLE]"
+      ],
+      "transform": {}
+    },
+    {
+      "id": "HO-10",
+      "report_no": 10,
+      "excel_column": "J",
+      "header": "Year Built",
+      "report_status": "Confirmed - Exact/Normalized",
+      "confidence": "High",
+      "target": {
+        "variant": "dwelling.property.us.personal",
+        "field": "year_built"
+      },
+      "alternatives": [
+        {
+          "variant": "dwelling_incident",
+          "field": "year_built"
+        }
+      ],
+      "report_locations": [
+        "_view.dwelling.year_built [VIEW]",
+        "_view.dwelling_incident.year_built [VIEW]",
+        "_view.dwelling_property_us_personal.year_built [VIEW]",
+        "core_all.dwelling_incident.year_built [TABLE]",
+        "jur_us_property_personal.dwelling.year_built [TABLE]"
+      ],
+      "transform": {}
+    },
+    {
+      "id": "HO-11",
+      "report_no": 11,
+      "excel_column": "K",
+      "header": "Construction",
+      "report_status": "Confirmed - Exact/Normalized",
+      "confidence": "High",
+      "target": {
+        "variant": "dwelling.property.us.personal",
+        "field": "construction"
+      },
+      "alternatives": [],
+      "report_locations": [
+        "_view.dwelling.construction [VIEW]",
+        "_view.dwelling_property_us_personal.construction [VIEW]",
+        "jur_us_property_personal.dwelling.construction [TABLE]"
+      ],
+      "transform": {}
+    },
+    {
+      "id": "HO-12",
+      "report_no": 12,
+      "excel_column": "L",
+      "header": "Protection Class",
+      "report_status": "Confirmed - Exact/Normalized",
+      "confidence": "High",
+      "target": {
+        "variant": "dwelling_asset.property.personal",
+        "field": "protection_class"
+      },
+      "alternatives": [],
+      "report_locations": [
+        "_view.dwelling_asset.protection_class [VIEW]",
+        "_view.dwelling_asset_property_personal.protection_class [VIEW]",
+        "lob_property_personal.dwelling_asset.protection_class [TABLE]"
+      ],
+      "transform": {}
+    },
+    {
+      "id": "HO-13",
+      "report_no": 13,
+      "excel_column": "M",
+      "header": "Number of Stories",
+      "report_status": "Confirmed - Exact/Normalized",
+      "confidence": "High",
+      "target": {
+        "variant": "dwelling.property.us.personal",
+        "field": "number_of_stories"
+      },
+      "alternatives": [
+        {
+          "variant": "geo_code_address_result.property.us.personal",
+          "field": "number_of_stories"
+        }
+      ],
+      "report_locations": [
+        "_view.dwelling.number_of_stories [VIEW]",
+        "_view.dwelling_property_us_personal.number_of_stories [VIEW]",
+        "_view.geo_code_address_result.number_of_stories [VIEW]",
+        "_view.geo_code_address_result_property_us_personal.number_of_stories [VIEW]",
+        "jur_us_property_personal.dwelling.number_of_stories [TABLE]",
+        "jur_us_property_personal.geo_code_address_result.number_of_stories [TABLE]"
+      ],
+      "transform": {}
+    },
+    {
+      "id": "HO-14",
+      "report_no": 14,
+      "excel_column": "N",
+      "header": "Number of Units",
+      "report_status": "Confirmed - Exact/Normalized",
+      "confidence": "High",
+      "target": {
+        "variant": "dwelling.property.us.personal",
+        "field": "number_of_units"
+      },
+      "alternatives": [
+        {
+          "variant": "dwelling_asset.property.personal",
+          "field": "number_of_units"
+        }
+      ],
+      "report_locations": [
+        "_view.dwelling.number_of_units [VIEW]",
+        "_view.dwelling_asset.number_of_units [VIEW]",
+        "_view.dwelling_asset_property_personal.number_of_units [VIEW]",
+        "_view.dwelling_property_us_personal.number_of_units [VIEW]",
+        "jur_us_property_personal.dwelling.number_of_units [TABLE]",
+        "lob_property_personal.dwelling_asset.number_of_units [TABLE]"
+      ],
+      "transform": {
+        "map": {
+          "1 to 4": "4",
+          "5+": "5"
+        }
+      },
+      "note": "Band to integer (D1)."
+    },
+    {
+      "id": "HO-16",
+      "report_no": 16,
+      "excel_column": "P",
+      "header": "Burglar Alarm",
+      "report_status": "Confirmed - Exact/Normalized",
+      "confidence": "High",
+      "target": {
+        "variant": "dwelling.property.us.personal",
+        "field": "burglar_alarm"
+      },
+      "alternatives": [],
+      "report_locations": [
+        "_view.dwelling.burglar_alarm [VIEW]",
+        "_view.dwelling_property_us_personal.burglar_alarm [VIEW]",
+        "jur_us_property_personal.dwelling.burglar_alarm [TABLE]"
+      ],
+      "transform": {}
+    },
+    {
+      "id": "HO-19",
+      "report_no": 19,
+      "excel_column": "S",
+      "header": "Building Code Effectiveness Grading",
+      "report_status": "Confirmed - Exact/Normalized",
+      "confidence": "High",
+      "target": {
+        "variant": "dwelling.property.us.personal",
+        "field": "building_code_effectiveness_grading"
+      },
+      "alternatives": [],
+      "report_locations": [
+        "_view.dwelling.building_code_effectiveness_grading [VIEW]",
+        "_view.dwelling_property_us_personal.building_code_effectiveness_grading [VIEW]",
+        "jur_us_property_personal.dwelling.building_code_effectiveness_grading [TABLE]"
+      ],
+      "transform": {}
+    },
+    {
+      "id": "HO-22",
+      "report_no": 22,
+      "excel_column": "V",
+      "header": "Roof Deck Attachment",
+      "report_status": "Confirmed - Exact/Normalized",
+      "confidence": "High",
+      "target": {
+        "variant": "dwelling.property.us.personal",
+        "field": "roof_deck_attachment"
+      },
+      "alternatives": [],
+      "report_locations": [
+        "_view.dwelling.roof_deck_attachment [VIEW]",
+        "_view.dwelling_property_us_personal.roof_deck_attachment [VIEW]",
+        "jur_us_property_personal.dwelling.roof_deck_attachment [TABLE]"
+      ],
+      "transform": {}
+    },
+    {
+      "id": "HO-23",
+      "report_no": 23,
+      "excel_column": "W",
+      "header": "Roof Shape",
+      "report_status": "Confirmed - Exact/Normalized",
+      "confidence": "High",
+      "target": {
+        "variant": "wind_mitigation_verification.property.us-fl.personal.safepoint",
+        "field": "roof_shape"
+      },
+      "alternatives": [
+        {
+          "variant": "wind_mitigation_verification.property.us-tx.personal.safepoint",
+          "field": "roof_shape"
+        }
+      ],
+      "report_locations": [
+        "_view.wind_mitigation_verification.roof_shape [VIEW]",
+        "_view.wind_mitigation_verification_property_us_fl_personal_safepoint.roof_shape [VIEW]",
+        "_view.wind_mitigation_verification_property_us_tx_personal_safepoint.roof_shape [VIEW]",
+        "jur_us_property_personal.wind_mitigation_verification.roof_shape [TABLE]"
+      ],
+      "transform": {
+        "map": {
+          "Flat": "flat",
+          "Gable": "gable",
+          "Hip": "hip",
+          "Hip Roof": "hip"
+        }
+      },
+      "attention": "Writing Roof Shape also creates a location, a dwelling asset and a wind mitigation verification with placeholder inspection fields (D4, S7)."
+    },
+    {
+      "id": "HO-25",
+      "report_no": 25,
+      "excel_column": "Y",
+      "header": "Secondary Water Resistance",
+      "report_status": "Confirmed - Exact/Normalized",
+      "confidence": "High",
+      "target": {
+        "variant": "dwelling.property.us.personal",
+        "field": "secondary_water_resistance"
+      },
+      "alternatives": [],
+      "report_locations": [
+        "_view.dwelling.secondary_water_resistance [VIEW]",
+        "_view.dwelling_property_us_personal.secondary_water_resistance [VIEW]",
+        "jur_us_property_personal.dwelling.secondary_water_resistance [TABLE]"
+      ],
+      "transform": {
+        "map": {
+          "No SWR": "false",
+          "SWR": "true"
+        }
+      }
+    },
+    {
+      "id": "HO-26",
+      "report_no": 26,
+      "excel_column": "Z",
+      "header": "Opening Protection",
+      "report_status": "Confirmed - Exact/Normalized",
+      "confidence": "High",
+      "target": {
+        "variant": "dwelling.property.us.personal",
+        "field": "opening_protection"
+      },
+      "alternatives": [
+        {
+          "variant": "wind_mitigation_verification.property.us-fl.personal.safepoint",
+          "field": "opening_protection"
+        },
+        {
+          "variant": "wind_mitigation_verification.property.us-tx.personal.safepoint",
+          "field": "opening_protection"
+        }
+      ],
+      "report_locations": [
+        "_view.dwelling.opening_protection [VIEW]",
+        "_view.dwelling_property_us_personal.opening_protection [VIEW]",
+        "_view.wind_mitigation_verification.opening_protection [VIEW]",
+        "_view.wind_mitigation_verification_property_us_fl_personal_safepoint.opening_protection [VIEW]",
+        "_view.wind_mitigation_verification_property_us_tx_personal_safepoint.opening_protection [VIEW]",
+        "jur_us_property_personal.dwelling.opening_protection [TABLE]",
+        "jur_us_property_personal.wind_mitigation_verification.opening_protection [TABLE]"
+      ],
+      "transform": {}
+    },
+    {
+      "id": "HO-27",
+      "report_no": 27,
+      "excel_column": "AA",
+      "header": "Wind Speed Design",
+      "report_status": "Confirmed - Exact/Normalized",
+      "confidence": "High",
+      "target": {
+        "variant": "dwelling.property.us.personal",
+        "field": "wind_speed_design"
+      },
+      "alternatives": [],
+      "report_locations": [
+        "_view.dwelling.wind_speed_design [VIEW]",
+        "_view.dwelling_property_us_personal.wind_speed_design [VIEW]",
+        "jur_us_property_personal.dwelling.wind_speed_design [TABLE]"
+      ],
+      "transform": {}
+    },
+    {
+      "id": "HO-28",
+      "report_no": 28,
+      "excel_column": "AB",
+      "header": "Wind Speed Location",
+      "report_status": "Confirmed - Exact/Normalized",
+      "confidence": "High",
+      "target": {
+        "variant": "dwelling.property.us.personal",
+        "field": "wind_speed_location"
+      },
+      "alternatives": [],
+      "report_locations": [
+        "_view.dwelling.wind_speed_location [VIEW]",
+        "_view.dwelling_property_us_personal.wind_speed_location [VIEW]",
+        "jur_us_property_personal.dwelling.wind_speed_location [TABLE]"
+      ],
+      "transform": {}
+    },
+    {
+      "id": "HO-45",
+      "report_no": 45,
+      "excel_column": "AS",
+      "header": "Equipment Breakdown",
+      "report_status": "Confirmed - Exact/Normalized",
+      "confidence": "High",
+      "target": {
+        "variant": "section_icoverages.property.us.personal",
+        "field": "equipment_breakdown"
+      },
+      "alternatives": [],
+      "report_locations": [
+        "_view.section_icoverages.equipment_breakdown [VIEW]",
+        "_view.section_icoverages_property_us_personal.equipment_breakdown [VIEW]",
+        "jur_us_property_personal.section_icoverages.equipment_breakdown [TABLE]"
+      ],
+      "transform": {}
+    },
+    {
+      "id": "HO-50",
+      "report_no": 50,
+      "excel_column": "AX",
+      "header": "Consent to Rate",
+      "report_status": "Confirmed - Exact/Normalized",
+      "confidence": "High",
+      "target": {
+        "variant": "line.property.us.personal",
+        "field": "consent_to_rate"
+      },
+      "alternatives": [],
+      "report_locations": [
+        "_view.line.consent_to_rate [VIEW]",
+        "_view.line_property_us_personal.consent_to_rate [VIEW]",
+        "jur_us_property_personal.line.consent_to_rate [TABLE]"
+      ],
+      "transform": {
+        "map": {
+          "0": "false",
+          "1": "true"
+        }
+      }
+    },
+    {
+      "id": "HO-73",
+      "report_no": 73,
+      "excel_column": "BU",
+      "header": "Policy Number",
+      "report_status": "Confirmed - Exact/Normalized",
+      "confidence": "High",
+      "target": {
+        "variant": "policy.property.us-fl.personal.safepoint",
+        "field": "policy_number"
+      },
+      "alternatives": [
+        {
+          "variant": "policy.motor.us.commercial",
+          "field": "policy_number"
+        },
+        {
+          "variant": "policy.motor.us.fleet",
+          "field": "policy_number"
+        },
+        {
+          "variant": "policy.motor.us.personal",
+          "field": "policy_number"
+        },
+        {
+          "variant": "policy.property.commercial",
+          "field": "policy_number"
+        },
+        {
+          "variant": "policy_lifecycle",
+          "field": "policy_number"
+        },
+        {
+          "variant": "raw_xml_document.property.us.personal",
+          "field": "policy_number"
+        }
+      ],
+      "report_locations": [
+        "_view.policy.policy_number [VIEW]",
+        "_view.policy_lifecycle.policy_number [VIEW]",
+        "_view.policy_motor_us_commercial.policy_number [VIEW]",
+        "_view.policy_motor_us_fleet.policy_number [VIEW]",
+        "_view.policy_motor_us_personal.policy_number [VIEW]",
+        "_view.policy_property_commercial.policy_number [VIEW]",
+        "_view.policy_property_us_fl_personal_safepoint.policy_number [VIEW]",
+        "_view.raw_xml_document.policy_number [VIEW]",
+        "_view.raw_xml_document_property_us_personal.policy_number [VIEW]",
+        "core_all.policy.policy_number [TABLE]",
+        "core_all.policy_lifecycle.policy_number [TABLE]",
+        "jur_us_property_personal.raw_xml_document.policy_number [TABLE]"
+      ],
+      "transform": {},
+      "note": "Second Policy Number column. Used only when non-empty; a value different from column A is a blocking conflict."
+    }
+  ]
+}
