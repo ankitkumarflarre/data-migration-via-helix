@@ -57,7 +57,18 @@ type Schema struct {
 	mu       sync.Mutex
 	variants map[string]*Variant
 	leaves   []Leaf
+	entities map[string]Entity
 	bundle   string
+}
+
+// Entity is one catalogue entity: its leaf variants and the entities that reference it.
+type Entity struct {
+	Entity       string   `json:"entity"`
+	Title        string   `json:"title"`
+	Module       string   `json:"module"`
+	Leaves       []string `json:"leaves"`
+	ReferencedBy []string `json:"referenced_by"`
+	Records      int      `json:"records"`
 }
 
 // New wraps a source.
@@ -104,16 +115,81 @@ func (s *Schema) Leaves(ctx context.Context) ([]Leaf, string, error) {
 		return nil, "", fmt.Errorf("catalogue: %w", err)
 	}
 	var out []Leaf
+	entities := map[string]Entity{}
 	for _, e := range ents {
+		entities[e.Entity] = Entity{Entity: e.Entity, Title: e.Title, Module: e.Module, Leaves: e.Leaves, ReferencedBy: e.ReferencedBy, Records: e.Records}
 		for _, l := range e.Leaves {
 			out = append(out, Leaf{Variant: l, Entity: e.Entity, Title: e.Title, Module: e.Module})
 		}
 	}
 	sort.Slice(out, func(i, j int) bool { return out[i].Variant < out[j].Variant })
 	s.mu.Lock()
-	s.leaves, s.bundle = out, bundle
+	s.leaves, s.bundle, s.entities = out, bundle, entities
 	s.mu.Unlock()
 	return out, bundle, nil
+}
+
+// Entities lists catalogue entities sorted by name.
+func (s *Schema) Entities(ctx context.Context) ([]Entity, error) {
+	if _, _, err := s.Leaves(ctx); err != nil {
+		return nil, err
+	}
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	out := make([]Entity, 0, len(s.entities))
+	for _, e := range s.entities {
+		out = append(out, e)
+	}
+	sort.Slice(out, func(i, j int) bool { return out[i].Entity < out[j].Entity })
+	return out, nil
+}
+
+// Entity returns one catalogue entity.
+func (s *Schema) Entity(ctx context.Context, name string) (Entity, bool, error) {
+	if _, _, err := s.Leaves(ctx); err != nil {
+		return Entity{}, false, err
+	}
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	e, ok := s.entities[name]
+	return e, ok, nil
+}
+
+// EntityField is a field of any leaf of an entity.
+type EntityField struct {
+	Field
+	Variants []string `json:"variants"` // leaves that have it
+}
+
+// EntityFields is the union of an entity's leaf fields, sorted by key.
+func (s *Schema) EntityFields(ctx context.Context, name string) ([]EntityField, error) {
+	e, ok, err := s.Entity(ctx, name)
+	if err != nil {
+		return nil, err
+	}
+	if !ok {
+		return nil, fmt.Errorf("no entity %q", name)
+	}
+	byKey := map[string]*EntityField{}
+	for _, leaf := range e.Leaves {
+		v, err := s.Variant(ctx, leaf)
+		if err != nil {
+			return nil, err
+		}
+		for _, f := range v.Fields {
+			if ef, ok := byKey[f.Key]; ok {
+				ef.Variants = append(ef.Variants, leaf)
+				continue
+			}
+			byKey[f.Key] = &EntityField{Field: f, Variants: []string{leaf}}
+		}
+	}
+	out := make([]EntityField, 0, len(byKey))
+	for _, f := range byKey {
+		out = append(out, *f)
+	}
+	sort.Slice(out, func(i, j int) bool { return out[i].Key < out[j].Key })
+	return out, nil
 }
 
 // FileSource serves describe answers from a JSON file {variant: description}
@@ -143,13 +219,27 @@ func (f *FileSource) Describe(_ context.Context, v string) (helix.Description, e
 
 func (f *FileSource) Catalogue(context.Context) (string, []helix.CatalogueEntity, error) {
 	byEntity := map[string][]string{}
+	refBy := map[string]map[string]bool{}
 	for id, d := range f.Descs {
 		byEntity[d.Entity] = append(byEntity[d.Entity], id)
+		for _, fld := range d.Fields {
+			if fld.Reference != nil && fld.Reference.Entity != "" {
+				if refBy[fld.Reference.Entity] == nil {
+					refBy[fld.Reference.Entity] = map[string]bool{}
+				}
+				refBy[fld.Reference.Entity][d.Entity] = true
+			}
+		}
 	}
 	var out []helix.CatalogueEntity
 	for e, leaves := range byEntity {
 		sort.Strings(leaves)
-		out = append(out, helix.CatalogueEntity{Entity: e, Title: e, Leaves: leaves})
+		var rb []string
+		for x := range refBy[e] {
+			rb = append(rb, x)
+		}
+		sort.Strings(rb)
+		out = append(out, helix.CatalogueEntity{Entity: e, Title: e, Leaves: leaves, ReferencedBy: rb})
 	}
 	sort.Slice(out, func(i, j int) bool { return out[i].Entity < out[j].Entity })
 	return f.Bundle, out, nil

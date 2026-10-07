@@ -7,8 +7,7 @@
   let acked = $state<Record<string, boolean>>({});
   let rowLimit = $state(5);
   let allRows = $state(false);
-  let dryRun = $state(true);
-  let confirmText = $state('');
+  let dryRun = $state(false);
   let busy = $state(false);
   let error = $state('');
 
@@ -16,7 +15,7 @@
   const rowsToWrite = $derived(allRows ? plan.row_count - plan.blocked_rows : Math.min(rowLimit, plan.row_count - plan.blocked_rows));
   const perRow = $derived(plan.impact.filter((v) => v.scope === 'row'));
   const host = $derived(job.helix_url.replace(/^https?:\/\//, ''));
-  const canApprove = $derived(allAcked && plan.blocking_count === 0 && (dryRun || confirmText.trim() === 'WRITE') && rowsToWrite > 0 && !busy);
+  const canApprove = $derived(allAcked && plan.blocking_count === 0 && rowsToWrite > 0 && !busy);
 
   const kindLabel: Record<string, string> = { rule: 'Mapping', template: 'Template value', generated: 'Generated', override: 'Your override' };
 
@@ -83,7 +82,7 @@
 
       <label class="row mode" class:dry={dryRun}>
         <input type="checkbox" bind:checked={dryRun} />
-        <span class="stack tight"><strong>Dry run</strong><span class="xs muted">Look up existing records in Helix and report create / update / unchanged, but write nothing.</span></span>
+        <span class="stack tight"><strong>Dry run only</strong><span class="xs muted">Optional: look up existing records and report create / update / unchanged without writing anything.</span></span>
       </label>
 
       <div class="small">
@@ -93,10 +92,9 @@
       </div>
 
       {#if !dryRun}
-        <div class="warnbox stack tight">
-          <strong>⚠ This writes to {host}.</strong>
-          <label for="confirm" class="small">Type <code>WRITE</code> to confirm</label>
-          <input id="confirm" type="text" bind:value={confirmText} autocomplete="off" />
+        <div class="warnbox small">
+          <strong>Writes to {host}</strong> through the Helix records API: creates new records, updates sheet-sourced
+          fields of existing ones, and undoes a row's writes if any of them fails. <code>migrator cleanup</code> removes what was written.
         </div>
       {/if}
 
@@ -104,7 +102,7 @@
       {#if error}<div class="err" role="alert">✕ {error}</div>{/if}
 
       <button class="btn primary big" disabled={!canApprove} onclick={approve}>
-        {busy ? 'Starting…' : dryRun ? `Approve dry run (${rowsToWrite} rows)` : `Approve & write ${rowsToWrite} rows`}
+        {busy ? 'Starting…' : dryRun ? `Approve dry run (${rowsToWrite} rows)` : `Approve & write ${rowsToWrite} rows to Helix`}
       </button>
       {#if !allAcked}<span class="xs muted">Acknowledge every attention item to enable approval.</span>{/if}
     </div>
@@ -131,7 +129,6 @@
   .mode.dry { background: var(--info-soft); border-color: var(--info); }
   .mode input { margin-top: 3px; }
   .warnbox { padding: var(--space-3); background: var(--warning-soft); color: var(--warning); border-radius: var(--radius-sm); }
-  .warnbox label { color: var(--warning); }
   .err { background: var(--danger-soft); color: var(--danger); padding: var(--space-3); border-radius: var(--radius-sm); }
   .big { justify-content: center; padding: 10px 16px; }
   @media (max-width: 960px) { .grid { grid-template-columns: 1fr; } }

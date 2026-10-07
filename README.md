@@ -5,7 +5,7 @@ Upload a rater workbook. The tool reads its **Policy Data** sheet and applies th
 need, approve, and the records are written through the Helix entity API.
 
 Iteration 1 ships one rule set: **Manatee FL Select HO Rater Effective 12.1.25** (20 confirmed columns).
-The design, the decisions (D1–D12) and the schema backlog (S1–S15) are in `../pythonProjects/PROJECT_PLAN.md`.
+The design, the decisions (D1–D12) and the schema backlog (S1–S15) are in [PROJECT_PLAN.md](PROJECT_PLAN.md).
 
 ## Run
 
@@ -44,6 +44,19 @@ For UI development, run `cd web && npm run dev` beside a running server; Vite pr
    - If any write in a row fails, that row's writes are undone (deletes verified by 404).
    - Download a CSV of the results.
 
+## Browse data
+
+The **Browse data** page (header) reads Helix back:
+
+- **By policy number** lists every record linked to the policy, grouped by table. Each record shows how it was found:
+  - 🔑 matched on `policy_number`;
+  - 📒 the migrator's ledger (needed for tables with no reference to the policy, D2);
+  - → referenced by a policy-owned record (party, product, issuer…);
+  - ← references a policy-owned record (terms, versions, coverages…).
+  
+  Reverse references are followed up to 4 levels. Shared records such as the product are shown but not expanded, so other policies don't leak in. Reference values link to the record they point at.
+- **By table** lists any of the ~1,000 entities, optionally filtered by one column = value. Strings are quoted and numbers and booleans are not, as the Helix `where=` filter expects. Pages use the API cursor, and clicking a row shows every field.
+
 ## Layout
 
 | Path | What |
@@ -56,6 +69,7 @@ For UI development, run `cd web && npm run dev` beside a running server; Vite pr
 | `internal/execute` | Find-or-create, update, per-row rollback, cleanup |
 | `internal/ledger` | Append-only JSONL of created records (`data/ledger.jsonl`) |
 | `internal/helix` | Go port of the Python Helix client (+ `where=` key lookup) |
+| `internal/browse` | Policy traversal and table listing for the Browse page |
 | `internal/api` | JSON API; in-memory jobs (single user) |
 | `web/` | Svelte 5 + Vite UI, embedded into the binary |
 

@@ -166,6 +166,20 @@ func (l *Ledger) ByPolicy(policyNumber, variant string) (Entry, bool) {
 	return Entry{}, false
 }
 
+// ForPolicy returns every record created for a policy number, oldest first.
+func (l *Ledger) ForPolicy(policyNumber string) []Entry {
+	l.mu.Lock()
+	defer l.mu.Unlock()
+	var out []Entry
+	for _, e := range l.byID {
+		if e.PolicyNumber == policyNumber {
+			out = append(out, *e)
+		}
+	}
+	sort.Slice(out, func(i, j int) bool { return out[i].Seq < out[j].Seq })
+	return out
+}
+
 // All returns entries newest first (children before the parents they reference).
 func (l *Ledger) All() []Entry {
 	l.mu.Lock()

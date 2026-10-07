@@ -99,3 +99,29 @@ export const api = {
 
 export const short = (v: string) => v.replace('.property.', '.prop.').replace('.personal', '.pers.');
 export const fmtValue = (v: unknown) => (v === null || v === undefined ? '' : typeof v === 'string' ? v : JSON.stringify(v));
+
+// ---- browse ----
+export interface Link { kind: 'key' | 'ledger' | 'references' | 'referenced_by'; text: string; from?: string; field?: string }
+export interface BrowseItem {
+  id: string; entity: string; variant: string; version: number; created_at?: string; updated_at?: string;
+  fields: Record<string, unknown>; links?: Link[]; depth?: number; generated?: string[];
+}
+export interface BrowseTable { entity: string; variant: string; records: BrowseItem[] }
+export interface PolicyResult {
+  policy_number: string; tables: BrowseTable[]; records: number; queries: number;
+  elapsed_ms: number; truncated: boolean; notes: string[];
+}
+export interface TableResult { entity: string; where?: string; columns: string[]; records: BrowseItem[]; next_cursor?: string }
+export interface EntityInfo { entity: string; title: string; module: string; leaves: string[]; referenced_by: string[] | null; records: number }
+export interface EntityField extends SchemaField { variants: string[] }
+
+const qs = (o: Record<string, string | number | undefined>) =>
+  Object.entries(o).filter(([, v]) => v !== undefined && v !== '').map(([k, v]) => `${k}=${encodeURIComponent(String(v))}`).join('&');
+
+export const browse = {
+  policy: (pn: string) => call<PolicyResult>('GET', `/api/browse/policy?${qs({ policy_number: pn })}`),
+  table: (entity: string, field: string, value: string, after = '', limit = 50) =>
+    call<TableResult>('GET', `/api/browse/table?${qs({ entity, field, value, after, limit })}`),
+  entities: () => call<EntityInfo[]>('GET', '/api/schema/entities'),
+  entityFields: (e: string) => call<EntityField[]>('GET', `/api/schema/entities/${encodeURIComponent(e)}/fields`),
+};

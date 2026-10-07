@@ -299,10 +299,12 @@ func part(s string) string { return url.PathEscape(s) }
 
 // Record is one stored record as the records API returns it.
 type Record struct {
-	ID      string         `json:"id"`
-	Version int64          `json:"version"`
-	Variant string         `json:"variant,omitempty"`
-	Fields  map[string]any `json:"fields"`
+	ID        string         `json:"id"`
+	Version   int64          `json:"version"`
+	Variant   string         `json:"variant,omitempty"`
+	CreatedAt string         `json:"created_at,omitempty"`
+	UpdatedAt string         `json:"updated_at,omitempty"`
+	Fields    map[string]any `json:"fields"`
 }
 
 // Create stores a new record of a leaf variant.
@@ -334,6 +336,41 @@ func (c *Client) Patch(ctx context.Context, variant, id string, version int64, f
 // Delete removes a record.
 func (c *Client) Delete(ctx context.Context, variant, id string) error {
 	return c.Do(ctx, http.MethodDelete, "/api/entities/records/"+part(variant)+"/"+part(id), Writer, nil, nil, nil, nil)
+}
+
+// ListQuery filters and pages /list/{entity}.
+type ListQuery struct {
+	Where string // e.g. policy_number="X" (value JSON-quoted for strings)
+	Limit int
+	After string
+	Order string
+	Desc  bool
+}
+
+// List returns one page of an entity's records (every leaf variant beneath it) and the next cursor.
+func (c *Client) List(ctx context.Context, entity string, q ListQuery) ([]Record, string, error) {
+	v := url.Values{}
+	if q.Where != "" {
+		v.Set("where", q.Where)
+	}
+	if q.Limit > 0 {
+		v.Set("limit", fmt.Sprint(q.Limit))
+	}
+	if q.After != "" {
+		v.Set("after", q.After)
+	}
+	if q.Order != "" {
+		v.Set("order", q.Order)
+	}
+	if q.Desc {
+		v.Set("desc", "true")
+	}
+	var page struct {
+		Records    []Record `json:"records"`
+		NextCursor string   `json:"next_cursor"`
+	}
+	err := c.Do(ctx, http.MethodGet, "/api/entities/list/"+part(entity), Reader, v, nil, nil, &page)
+	return page.Records, page.NextCursor, err
 }
 
 // FindByKey returns records of an entity whose field equals value (where=field="value").
@@ -375,10 +412,12 @@ func (c *Client) Describe(ctx context.Context, variant string) (Description, err
 
 // CatalogueEntity is the subset of /catalogue the migrator uses.
 type CatalogueEntity struct {
-	Entity string   `json:"entity"`
-	Title  string   `json:"title"`
-	Module string   `json:"module"`
-	Leaves []string `json:"leaves"`
+	Entity       string   `json:"entity"`
+	Title        string   `json:"title"`
+	Module       string   `json:"module"`
+	Leaves       []string `json:"leaves"`
+	ReferencedBy []string `json:"referenced_by"`
+	Records      int      `json:"records"`
 }
 
 // Catalogue lists entities with their leaf variants.

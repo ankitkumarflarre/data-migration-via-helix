@@ -22,6 +22,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/ankitkumarflarre/datamigration/internal/browse"
 	"github.com/ankitkumarflarre/datamigration/internal/excel"
 	"github.com/ankitkumarflarre/datamigration/internal/execute"
 	"github.com/ankitkumarflarre/datamigration/internal/helix"
@@ -40,6 +41,7 @@ type Server struct {
 	Schema *schema.Schema
 	Ledger *ledger.Ledger
 	Web    fs.FS // built UI; nil serves a notice
+	Browse *browse.Browser
 
 	mu      sync.Mutex
 	jobs    map[string]*job
@@ -72,7 +74,10 @@ type job struct {
 
 // NewServer wires the dependencies.
 func NewServer(h *helix.Client, api execute.API, s *schema.Schema, l *ledger.Ledger, web fs.FS) *Server {
-	return &Server{Helix: h, API: api, Schema: s, Ledger: l, Web: web, jobs: map[string]*job{}}
+	srv := &Server{Helix: h, API: api, Schema: s, Ledger: l, Web: web, jobs: map[string]*job{}}
+	srv.Browse = &browse.Browser{Helix: h, Schema: s, Ledger: l}
+	go srv.Browse.Warm(context.Background(), "policy", "party", "location", "dwelling_asset", "wind_mitigation_verification")
+	return srv
 }
 
 // Handler returns the HTTP routes.
@@ -90,6 +95,10 @@ func (s *Server) Handler() http.Handler {
 	mux.HandleFunc("GET /api/jobs/{id}/results.csv", s.resultsCSV)
 	mux.HandleFunc("GET /api/schema/variants", s.variants)
 	mux.HandleFunc("GET /api/schema/variants/{variant}", s.variant)
+	mux.HandleFunc("GET /api/schema/entities", s.entities)
+	mux.HandleFunc("GET /api/schema/entities/{entity}/fields", s.entityFields)
+	mux.HandleFunc("GET /api/browse/policy", s.browsePolicy)
+	mux.HandleFunc("GET /api/browse/table", s.browseTable)
 	mux.HandleFunc("/", s.static)
 	return logRequests(mux)
 }
@@ -509,4 +518,49 @@ func (s *Server) static(w http.ResponseWriter, r *http.Request) {
 		path = "index.html" // single-page app
 	}
 	http.ServeFileFS(w, r, s.Web, path)
+}
+
+func (s *Server) entities(w http.ResponseWriter, r *http.Request) {
+	ents, err := s.Schema.Entities(r.Context())
+	if err != nil {
+		fail(w, http.StatusBadGateway, "%v", err)
+		return
+	}
+	writeJSON(w, http.StatusOK, ents)
+}
+
+func (s *Server) entityFields(w http.ResponseWriter, r *http.Request) {
+	fields, err := s.Schema.EntityFields(r.Context(), r.PathValue("entity"))
+	if err != nil {
+		fail(w, http.StatusBadRequest, "%v", err)
+		return
+	}
+	writeJSON(w, http.StatusOK, fields)
+}
+
+func (s *Server) browsePolicy(w http.ResponseWriter, r *http.Request) {
+	ctx, cancel := context.WithTimeout(r.Context(), 2*time.Minute)
+	defer cancel()
+	res, err := s.Browse.Policy(ctx, r.URL.Query().Get("policy_number"))
+	if err != nil {
+		fail(w, http.StatusBadRequest, "%v", err)
+		return
+	}
+	writeJSON(w, http.StatusOK, res)
+}
+
+func (s *Server) browseTable(w http.ResponseWriter, r *http.Request) {
+	q := r.URL.Query()
+	limit, _ := strconv.Atoi(q.Get("limit"))
+	res, err := s.Browse.Table(r.Context(), q.Get("entity"), q.Get("field"), q.Get("value"), q.Get("after"), limit)
+	if err != nil {
+		status := http.StatusBadRequest
+		var he *helix.Error
+		if errors.As(err, &he) && he.Status >= 500 {
+			status = http.StatusBadGateway
+		}
+		fail(w, status, "%v", err)
+		return
+	}
+	writeJSON(w, http.StatusOK, res)
 }

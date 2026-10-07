@@ -6,6 +6,10 @@
   import Approve from './lib/Approve.svelte';
   import Run from './lib/Run.svelte';
   import ThemeToggle from './lib/ThemeToggle.svelte';
+  import Browse from './lib/Browse.svelte';
+
+  type View = 'migrate' | 'browse';
+  let view = $state<View>(location.hash.startsWith('#browse') ? 'browse' : 'migrate');
 
   type Step = 'upload' | 'review' | 'approve' | 'run';
   const steps: { id: Step; label: string }[] = [
@@ -32,7 +36,7 @@
 
   // Keep the job in the URL so a refresh returns to it.
   $effect(() => {
-    const want = job ? `#job=${job.id}` : '';
+    const want = view === 'browse' ? '#browse' : job ? `#job=${job.id}` : '';
     if (location.hash !== want) history.replaceState(null, '', location.pathname + want);
   });
 
@@ -52,6 +56,10 @@
       <div class="xs muted">Policy Data · confirmed mapping rules · iteration 1 demo</div>
     </div>
   </div>
+  <nav class="views" aria-label="Sections">
+    <button class:on={view === 'migrate'} aria-current={view === 'migrate' ? 'page' : undefined} onclick={() => (view = 'migrate')}>Migrate</button>
+    <button class:on={view === 'browse'} aria-current={view === 'browse' ? 'page' : undefined} onclick={() => (view = 'browse')}>Browse data</button>
+  </nav>
   <div class="spacer"></div>
   {#if health}
     <span class="badge {health.helix_reachable ? 'ok' : 'bad'}" title={health.helix_error ?? health.helix_url}>
@@ -62,6 +70,9 @@
   <ThemeToggle />
 </header>
 
+{#if view === 'browse'}
+<main><Browse /></main>
+{:else}
 <nav class="stepper" aria-label="Progress">
   {#each steps as s, i}
     <button
@@ -94,6 +105,7 @@
     <Run bind:job onBack={() => (step = 'review')} />
   {/if}
 </main>
+{/if}
 
 <style>
   .topbar {
@@ -107,6 +119,13 @@
     background: var(--accent); color: var(--accent-text); font-size: 18px; font-weight: 700;
   }
   .title { font-weight: 650; font-size: var(--fs-lg); }
+  .views { display: flex; gap: 2px; margin-left: var(--space-5); }
+  .views button {
+    border: none; background: none; color: var(--text-muted); font: 500 var(--fs) var(--font);
+    padding: 7px 12px; border-radius: var(--radius-sm); cursor: pointer; white-space: nowrap;
+  }
+  .views button:hover { background: var(--surface-2); color: var(--text); }
+  .views button.on { background: var(--accent-soft); color: var(--text); }
   .spacer { flex: 1; }
   .host { max-width: 240px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .stepper {
@@ -133,5 +152,6 @@
     .topbar, .stepper { padding: var(--space-3) var(--space-4); }
     main { padding: var(--space-4); }
     .sep, .host { display: none; }
+    .views { margin-left: 0; }
   }
 </style>

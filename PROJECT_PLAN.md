@@ -453,3 +453,16 @@ SSE progress, pause/resume, SQLite, business-key lookup in Helix beyond the ledg
 
 **Main schedule risk:** step 4. If time runs short, the review table will offer override by editing only, without searchable comboboxes.
 
+
+---
+
+## 15. Browse data page (added 2026-10-07)
+
+A second page reads Helix back, using only the read APIs.
+
+| Mode | How it works |
+|---|---|
+| By policy number | 1. Match `policy` on `policy_number` (`/list/policy?where=policy_number="…"`), and add the ledger's records for that policy. 2. Follow each record's outgoing reference fields one hop (`/list/{entity}?where={entity}_id="…"`). 3. For policy-owned records, query every entity whose fields reference them (from catalogue `referenced_by` plus `/describe`), recursively up to 4 levels and 500 records. Shared targets (product, issuer) are shown but not expanded. |
+| By table | `/list/{entity}` with an optional `where=column=value` (strings JSON-quoted; integers, numbers and booleans bare), paged with `next_cursor`. |
+
+The spike in §6.3 is resolved: `where=` works on any field, including `<entity>_id`, so S8 (no business-key lookup) is closed.
