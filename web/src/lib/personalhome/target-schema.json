@@ -1,0 +1,556 @@
+{
+  "dwelling.property.us.personal.building_code_effectiveness_grading": {
+    "enum": null,
+    "key": "building_code_effectiveness_grading",
+    "owner": "dwelling.property.us.personal",
+    "reference": null,
+    "required": false,
+    "type": "string(255)",
+    "write_once": false
+  },
+  "dwelling.property.us.personal.burglar_alarm": {
+    "enum": null,
+    "key": "burglar_alarm",
+    "owner": "dwelling.property.us.personal",
+    "reference": null,
+    "required": false,
+    "type": "string(255)",
+    "write_once": false
+  },
+  "dwelling.property.us.personal.construction": {
+    "enum": null,
+    "key": "construction",
+    "owner": "dwelling.property.us.personal",
+    "reference": null,
+    "required": false,
+    "type": "string(255)",
+    "write_once": false
+  },
+  "dwelling.property.us.personal.number_of_stories": {
+    "enum": null,
+    "key": "number_of_stories",
+    "owner": "dwelling.property.us.personal",
+    "reference": null,
+    "required": false,
+    "type": "integer",
+    "write_once": false
+  },
+  "dwelling.property.us.personal.number_of_units": {
+    "enum": null,
+    "key": "number_of_units",
+    "owner": "dwelling.property.us.personal",
+    "reference": null,
+    "required": false,
+    "type": "integer",
+    "write_once": false
+  },
+  "dwelling.property.us.personal.opening_protection": {
+    "enum": null,
+    "key": "opening_protection",
+    "owner": "dwelling.property.us.personal",
+    "reference": null,
+    "required": false,
+    "type": "string(255)",
+    "write_once": false
+  },
+  "dwelling.property.us.personal.roof_deck_attachment": {
+    "enum": null,
+    "key": "roof_deck_attachment",
+    "owner": "dwelling.property.us.personal",
+    "reference": null,
+    "required": false,
+    "type": "string(255)",
+    "write_once": false
+  },
+  "dwelling.property.us.personal.secondary_water_resistance": {
+    "enum": null,
+    "key": "secondary_water_resistance",
+    "owner": "dwelling.property.us.personal",
+    "reference": null,
+    "required": false,
+    "type": "boolean",
+    "write_once": false
+  },
+  "dwelling.property.us.personal.wind_speed_design": {
+    "enum": null,
+    "key": "wind_speed_design",
+    "owner": "dwelling.property.us.personal",
+    "reference": null,
+    "required": false,
+    "type": "string(255)",
+    "write_once": false
+  },
+  "dwelling.property.us.personal.wind_speed_location": {
+    "enum": null,
+    "key": "wind_speed_location",
+    "owner": "dwelling.property.us.personal",
+    "reference": null,
+    "required": false,
+    "type": "string(255)",
+    "write_once": false
+  },
+  "dwelling.property.us.personal.year_built": {
+    "enum": null,
+    "key": "year_built",
+    "owner": "dwelling.property.us.personal",
+    "reference": null,
+    "required": false,
+    "type": "integer",
+    "write_once": false
+  },
+  "dwelling_asset.property.personal.dwelling_asset_reference": {
+    "enum": null,
+    "key": "dwelling_asset_reference",
+    "owner": "dwelling_asset.property.personal",
+    "reference": null,
+    "required": true,
+    "type": "string(255)",
+    "write_once": false
+  },
+  "dwelling_asset.property.personal.dwelling_type": {
+    "enum": null,
+    "key": "dwelling_type",
+    "owner": "dwelling_asset.property.personal",
+    "reference": null,
+    "required": true,
+    "type": "string(64)",
+    "write_once": false
+  },
+  "dwelling_asset.property.personal.is_under_renovation": {
+    "enum": null,
+    "key": "is_under_renovation",
+    "owner": "dwelling_asset.property.personal",
+    "reference": null,
+    "required": true,
+    "type": "boolean",
+    "write_once": false
+  },
+  "dwelling_asset.property.personal.location_reference": {
+    "enum": null,
+    "key": "location_reference",
+    "owner": "dwelling_asset.property.personal",
+    "reference": {
+      "entity": "location",
+      "field": "location_id",
+      "key": "location_identifier",
+      "key_with": [
+        "party_reference"
+      ]
+    },
+    "required": true,
+    "type": "reference(location)",
+    "write_once": false
+  },
+  "dwelling_asset.property.personal.protection_class": {
+    "enum": null,
+    "key": "protection_class",
+    "owner": "dwelling_asset.property.personal",
+    "reference": null,
+    "required": false,
+    "type": "string(255)",
+    "write_once": false
+  },
+  "line.property.us.personal.consent_to_rate": {
+    "enum": null,
+    "key": "consent_to_rate",
+    "owner": "line.property.us.personal",
+    "reference": null,
+    "required": false,
+    "type": "boolean",
+    "write_once": false
+  },
+  "location.property.us.personal.address_text": {
+    "enum": null,
+    "key": "address_text",
+    "owner": "location",
+    "reference": null,
+    "required": true,
+    "type": "string(255)",
+    "write_once": false
+  },
+  "location.property.us.personal.effective_date": {
+    "enum": null,
+    "key": "effective_date",
+    "owner": "location",
+    "reference": null,
+    "required": true,
+    "type": "date",
+    "write_once": false
+  },
+  "location.property.us.personal.location_identifier": {
+    "enum": null,
+    "key": "location_identifier",
+    "owner": "location",
+    "reference": null,
+    "required": true,
+    "type": "string(255)",
+    "write_once": false
+  },
+  "location.property.us.personal.location_type": {
+    "enum": [
+      "primary_premises",
+      "secondary_site",
+      "temporary_location",
+      "in_transit_point"
+    ],
+    "key": "location_type",
+    "owner": "location",
+    "reference": null,
+    "required": true,
+    "type": "enum(primary_premises,secondary_site,temporary_location,in_transit_point)",
+    "write_once": false
+  },
+  "location.property.us.personal.party_reference": {
+    "enum": null,
+    "key": "party_reference",
+    "owner": "location",
+    "reference": {
+      "entity": "party",
+      "field": "party_id",
+      "key": "party_reference"
+    },
+    "required": true,
+    "type": "reference(party)",
+    "write_once": false
+  },
+  "location_address.property.us.personal.county": {
+    "enum": null,
+    "key": "county",
+    "owner": "location_address.property.us.personal",
+    "reference": null,
+    "required": false,
+    "type": "string(255)",
+    "write_once": false
+  },
+  "loss_ratio_analysis.territory": {
+    "enum": null,
+    "key": "territory",
+    "owner": "loss_ratio_analysis",
+    "reference": null,
+    "required": false,
+    "type": "string(255)",
+    "write_once": false
+  },
+  "organization.legal_name": {
+    "enum": null,
+    "key": "legal_name",
+    "owner": "organization",
+    "reference": null,
+    "required": true,
+    "type": "string(255)",
+    "write_once": false
+  },
+  "organization.party_reference": {
+    "enum": null,
+    "key": "party_reference",
+    "owner": "organization",
+    "reference": null,
+    "required": true,
+    "type": "string(128)",
+    "write_once": false
+  },
+  "organization.record_status": {
+    "enum": [
+      "active",
+      "merged",
+      "superseded"
+    ],
+    "key": "record_status",
+    "owner": "organization",
+    "reference": null,
+    "required": true,
+    "type": "enum(active,merged,superseded)",
+    "write_once": false
+  },
+  "organization.registration_status": {
+    "enum": [
+      "active",
+      "dissolved",
+      "suspended",
+      "unknown"
+    ],
+    "key": "registration_status",
+    "owner": "organization",
+    "reference": null,
+    "required": true,
+    "type": "enum(active,dissolved,suspended,unknown)",
+    "write_once": false
+  },
+  "party.party_reference": {
+    "enum": null,
+    "key": "party_reference",
+    "owner": "party",
+    "reference": null,
+    "required": true,
+    "type": "string(128)",
+    "write_once": false
+  },
+  "party.party_type": {
+    "enum": null,
+    "key": "party_type",
+    "owner": "party",
+    "reference": null,
+    "required": true,
+    "type": "string(128)",
+    "write_once": false
+  },
+  "party.record_status": {
+    "enum": [
+      "active",
+      "merged",
+      "superseded"
+    ],
+    "key": "record_status",
+    "owner": "party",
+    "reference": null,
+    "required": true,
+    "type": "enum(active,merged,superseded)",
+    "write_once": false
+  },
+  "policy.property.us-fl.personal.safepoint.effective_date": {
+    "enum": null,
+    "key": "effective_date",
+    "owner": "policy.property.us.personal",
+    "reference": null,
+    "required": false,
+    "type": "date",
+    "write_once": false
+  },
+  "policy.property.us-fl.personal.safepoint.issue_date": {
+    "enum": null,
+    "key": "issue_date",
+    "owner": "policy",
+    "reference": null,
+    "required": true,
+    "type": "date",
+    "write_once": false
+  },
+  "policy.property.us-fl.personal.safepoint.issuing_party_reference": {
+    "enum": null,
+    "key": "issuing_party_reference",
+    "owner": "policy",
+    "reference": {
+      "entity": "organization",
+      "field": "organization_id",
+      "key": "party_reference"
+    },
+    "required": true,
+    "type": "reference(organization)",
+    "write_once": false
+  },
+  "policy.property.us-fl.personal.safepoint.personal_policy_form": {
+    "enum": [
+      "ho_2",
+      "ho_3",
+      "ho_4",
+      "ho_5",
+      "ho_6",
+      "ho_8",
+      "dp_1",
+      "dp_2",
+      "dp_3"
+    ],
+    "key": "personal_policy_form",
+    "owner": "policy.property.personal",
+    "reference": null,
+    "required": true,
+    "type": "enum(ho_2,ho_3,ho_4,ho_5,ho_6,ho_8,dp_1,dp_2,dp_3)",
+    "write_once": false
+  },
+  "policy.property.us-fl.personal.safepoint.policy_number": {
+    "enum": null,
+    "key": "policy_number",
+    "owner": "policy",
+    "reference": null,
+    "required": true,
+    "type": "string(255)",
+    "write_once": false
+  },
+  "policy.property.us-fl.personal.safepoint.policy_reference": {
+    "enum": null,
+    "key": "policy_reference",
+    "owner": "policy.property.us.personal",
+    "reference": null,
+    "required": true,
+    "type": "string(128)",
+    "write_once": false
+  },
+  "policy.property.us-fl.personal.safepoint.policyholder_reference": {
+    "enum": null,
+    "key": "policyholder_reference",
+    "owner": "policy",
+    "reference": {
+      "entity": "party",
+      "field": "party_id",
+      "key": "party_reference"
+    },
+    "required": true,
+    "type": "reference(party)",
+    "write_once": false
+  },
+  "policy.property.us-fl.personal.safepoint.product_reference": {
+    "enum": null,
+    "key": "product_reference",
+    "owner": "policy",
+    "reference": {
+      "entity": "product",
+      "field": "product_id",
+      "key": "product_code"
+    },
+    "required": true,
+    "type": "reference(product)",
+    "write_once": false
+  },
+  "policy.property.us-fl.personal.safepoint.program_code": {
+    "enum": [
+      "safepoint",
+      "manatee",
+      "cajun"
+    ],
+    "key": "program_code",
+    "owner": "policy.property.us.personal.safepoint",
+    "reference": null,
+    "required": true,
+    "type": "enum(safepoint,manatee,cajun)",
+    "write_once": false
+  },
+  "policy.property.us-fl.personal.safepoint.sinkhole_coverage_option": {
+    "enum": [
+      "catastrophic_ground_cover_collapse_only",
+      "sinkhole_loss"
+    ],
+    "key": "sinkhole_coverage_option",
+    "owner": "policy.property.us-fl.personal.safepoint",
+    "reference": null,
+    "required": true,
+    "type": "enum(catastrophic_ground_cover_collapse_only,sinkhole_loss)",
+    "write_once": false
+  },
+  "product.effective_date": {
+    "enum": null,
+    "key": "effective_date",
+    "owner": "product",
+    "reference": null,
+    "required": true,
+    "type": "date",
+    "write_once": false
+  },
+  "product.product_category": {
+    "enum": null,
+    "key": "product_category",
+    "owner": "product",
+    "reference": null,
+    "required": true,
+    "type": "string(128)",
+    "write_once": false
+  },
+  "product.product_code": {
+    "enum": null,
+    "key": "product_code",
+    "owner": "product",
+    "reference": null,
+    "required": true,
+    "type": "string(255)",
+    "write_once": false
+  },
+  "product.product_name": {
+    "enum": null,
+    "key": "product_name",
+    "owner": "product",
+    "reference": null,
+    "required": true,
+    "type": "string(255)",
+    "write_once": false
+  },
+  "product.product_status": {
+    "enum": [
+      "draft",
+      "active",
+      "withdrawn",
+      "retired"
+    ],
+    "key": "product_status",
+    "owner": "product",
+    "reference": null,
+    "required": true,
+    "type": "enum(draft,active,withdrawn,retired)",
+    "write_once": false
+  },
+  "section_icoverages.property.us.personal.equipment_breakdown": {
+    "enum": null,
+    "key": "equipment_breakdown",
+    "owner": "section_icoverages.property.us.personal",
+    "reference": null,
+    "required": false,
+    "type": "text",
+    "write_once": false
+  },
+  "wind_mitigation_verification.property.us-fl.personal.safepoint.dwelling_asset_reference": {
+    "enum": null,
+    "key": "dwelling_asset_reference",
+    "owner": "wind_mitigation_verification.property.us.personal",
+    "reference": {
+      "entity": "dwelling_asset",
+      "field": "dwelling_asset_id",
+      "key": null
+    },
+    "required": true,
+    "type": "reference(dwelling_asset)",
+    "write_once": false
+  },
+  "wind_mitigation_verification.property.us-fl.personal.safepoint.inspection_date": {
+    "enum": null,
+    "key": "inspection_date",
+    "owner": "wind_mitigation_verification.property.us.personal",
+    "reference": null,
+    "required": true,
+    "type": "date",
+    "write_once": false
+  },
+  "wind_mitigation_verification.property.us-fl.personal.safepoint.oir_b1_1802_form_revision": {
+    "enum": null,
+    "key": "oir_b1_1802_form_revision",
+    "owner": "wind_mitigation_verification.property.us-fl.personal.safepoint",
+    "reference": null,
+    "required": true,
+    "type": "string(255)",
+    "write_once": false
+  },
+  "wind_mitigation_verification.property.us-fl.personal.safepoint.roof_shape": {
+    "enum": [
+      "hip",
+      "gable",
+      "flat",
+      "other"
+    ],
+    "key": "roof_shape",
+    "owner": "wind_mitigation_verification.property.us.personal",
+    "reference": null,
+    "required": false,
+    "type": "enum(hip,gable,flat,other)",
+    "write_once": false
+  },
+  "wind_mitigation_verification.property.us-fl.personal.safepoint.verification_status": {
+    "enum": [
+      "submitted",
+      "verified",
+      "rejected",
+      "expired"
+    ],
+    "key": "verification_status",
+    "owner": "wind_mitigation_verification.property.us.personal",
+    "reference": null,
+    "required": true,
+    "type": "enum(submitted,verified,rejected,expired)",
+    "write_once": false
+  },
+  "wind_mitigation_verification.property.us-fl.personal.safepoint.wind_mitigation_verification_reference": {
+    "enum": null,
+    "key": "wind_mitigation_verification_reference",
+    "owner": "wind_mitigation_verification.property.us.personal",
+    "reference": null,
+    "required": true,
+    "type": "string(128)",
+    "write_once": false
+  }
+}

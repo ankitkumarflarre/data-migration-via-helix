@@ -1,0 +1,1635 @@
+{
+  "version": 1,
+  "pages": [
+    {
+      "id": "newquote",
+      "title": "New quote",
+      "fields": [
+        {
+          "key": "Quote.Product",
+          "label": "Product",
+          "type": "text",
+          "required": true,
+          "options": [
+            "Manatee FL Select PersonalHome"
+          ],
+          "default": "Manatee FL Select PersonalHome"
+        },
+        {
+          "key": "Quote.State",
+          "label": "Risk state",
+          "type": "text",
+          "required": true,
+          "options": [
+            "FL"
+          ],
+          "default": "FL"
+        },
+        {
+          "key": "DwellingInput.Form",
+          "label": "Policy form",
+          "type": "text",
+          "required": true,
+          "options": [
+            "HO3",
+            "HO6"
+          ],
+          "default": "HO3"
+        },
+        {
+          "key": "PolicyInput.EffectiveDate",
+          "label": "Effective date",
+          "type": "date",
+          "required": true
+        },
+        {
+          "key": "Quote.DCTBilling",
+          "label": "Include billing instructions",
+          "type": "boolean",
+          "required": false,
+          "default": false
+        }
+      ]
+    },
+    {
+      "id": "account",
+      "title": "Applicant",
+      "fields": [
+        {
+          "key": "AccountInput.FirstName",
+          "label": "First Name",
+          "type": "text",
+          "required": true,
+          "group": "Applicant Info",
+          "hint": "MaxLength: 16",
+          "source": "AccountInput.FirstName",
+          "maxLength": 16
+        },
+        {
+          "key": "AccountInput.MiddleName",
+          "label": "Middle Initial (MI)",
+          "type": "text",
+          "required": false,
+          "group": "Applicant Info",
+          "hint": "MaxLength: 11",
+          "source": "AccountInput.MiddleName",
+          "maxLength": 11
+        },
+        {
+          "key": "AccountInput.LastName",
+          "label": "Last Name",
+          "type": "text",
+          "required": true,
+          "group": "Applicant Info",
+          "hint": "MaxLength: 20",
+          "source": "AccountInput.LastName",
+          "maxLength": 20
+        },
+        {
+          "key": "AccountInput.PrimaryPhone",
+          "label": "Phone Number",
+          "type": "text",
+          "required": true,
+          "group": "Contact",
+          "hint": "FormatMask: PhoneFax; MaxLength: PhoneFax",
+          "source": "AccountInput.PrimaryPhone"
+        },
+        {
+          "key": "AccountInput.Email",
+          "label": "E-mail Address",
+          "type": "email",
+          "required": true,
+          "group": "Contact",
+          "hint": "FormatMask: email",
+          "source": "AccountInput.Email"
+        },
+        {
+          "key": "AccountInput.Address1",
+          "label": "Address 1",
+          "type": "text",
+          "required": true,
+          "group": "Address",
+          "hint": "MaxLength: Address",
+          "source": "AccountInput.Address1"
+        },
+        {
+          "key": "AccountInput.Address2",
+          "label": "Address 2",
+          "type": "text",
+          "required": false,
+          "group": "Address",
+          "hint": "MaxLength: Address",
+          "source": "AccountInput.Address2"
+        },
+        {
+          "key": "AccountInput.City",
+          "label": "City",
+          "type": "text",
+          "required": true,
+          "group": "Address",
+          "hint": "MaxLength: City",
+          "source": "AccountInput.City"
+        },
+        {
+          "key": "AccountInput.State",
+          "label": "State",
+          "type": "text",
+          "required": true,
+          "group": "Address",
+          "hint": "MaxLength: State; Options: US states; validRef: License",
+          "source": "AccountInput.State",
+          "default": "FL",
+          "maxLength": 2
+        },
+        {
+          "key": "AccountInput.ZipCode",
+          "label": "Zip Code",
+          "type": "zip",
+          "required": true,
+          "group": "Address",
+          "hint": "FormatMask: Zipcode; MaxLength: Zip",
+          "source": "AccountInput.ZipCode"
+        },
+        {
+          "key": "AccountInput.County",
+          "label": "County",
+          "type": "text",
+          "required": false,
+          "group": "Address",
+          "hint": "DataService: dkCountyUS keyed by ACT + State",
+          "source": "AccountInput.County"
+        }
+      ],
+      "collection": {
+        "key": "coapplicants",
+        "label": "Co-applicants",
+        "fields": [
+          {
+            "key": "PersonInput.FirstName",
+            "label": "Co-Applicant First Name",
+            "type": "text",
+            "required": true,
+            "group": "Co-Applicant",
+            "hint": "MaxLength: 16",
+            "source": "PersonInput.FirstName",
+            "maxLength": 16
+          },
+          {
+            "key": "PersonInput.MiddleName",
+            "label": "Co-Applicant MI",
+            "type": "text",
+            "required": false,
+            "group": "Co-Applicant",
+            "hint": "MaxLength: 11",
+            "source": "PersonInput.MiddleName",
+            "maxLength": 11
+          },
+          {
+            "key": "PersonInput.LastName",
+            "label": "Co-Applicant Last Name",
+            "type": "text",
+            "required": true,
+            "group": "Co-Applicant",
+            "hint": "MaxLength: 20",
+            "source": "PersonInput.LastName",
+            "maxLength": 20
+          }
+        ]
+      }
+    },
+    {
+      "id": "dwellinginfo",
+      "title": "Risk schedule",
+      "fields": [
+        {
+          "key": "LocationInput.Address1",
+          "label": "Address 1",
+          "type": "text",
+          "required": true,
+          "group": "Risk address",
+          "hint": "MaxLength: Address",
+          "source": "LocationInput.Address1"
+        },
+        {
+          "key": "LocationInput.Address2",
+          "label": "Address 2",
+          "type": "text",
+          "required": false,
+          "group": "Risk address",
+          "hint": "MaxLength: Address",
+          "source": "LocationInput.Address2"
+        },
+        {
+          "key": "LocationInput.City",
+          "label": "City",
+          "type": "text",
+          "required": true,
+          "group": "Risk address",
+          "hint": "MaxLength: City",
+          "source": "LocationInput.City"
+        },
+        {
+          "key": "LocationInput.State",
+          "label": "State",
+          "type": "text",
+          "required": true,
+          "group": "Risk address",
+          "hint": "Options: US states",
+          "source": "LocationInput.State",
+          "options": [
+            "FL"
+          ],
+          "default": "FL"
+        },
+        {
+          "key": "LocationInput.ZipCode",
+          "label": "ZIP Code",
+          "type": "zip",
+          "required": true,
+          "group": "Risk address",
+          "hint": "FormatMask: Zipcode",
+          "source": "LocationInput.ZipCode"
+        },
+        {
+          "key": "LocationInput.County",
+          "label": "County",
+          "type": "text",
+          "required": true,
+          "group": "Risk address",
+          "hint": "DataService: dkCountyUS",
+          "source": "LocationInput.County"
+        },
+        {
+          "key": "DwellingInput.UseType",
+          "label": "Usage",
+          "type": "text",
+          "required": true,
+          "group": "Basic Info",
+          "hint": "Options: Primary, Secondary, Seasonal(3-6), Seasonal(>6), FarmRanch, UnderConstruction, Rental(HO6 only)",
+          "source": "DwellingInput.UseType",
+          "options": [
+            "Primary",
+            "Secondary",
+            "Seasonal3to6",
+            "Seasonal6Mths",
+            "FarmRanch",
+            "UnderConstruction",
+            "Rental"
+          ],
+          "default": "Primary"
+        },
+        {
+          "key": "DwellingInput.OccupancyType",
+          "label": "Occupancy",
+          "type": "text",
+          "required": true,
+          "group": "Basic Info",
+          "hint": "Options: Owner, Tenant, Unoccupied, Vacant",
+          "source": "DwellingInput.OccupancyType",
+          "options": [
+            "Owner",
+            "Tenant",
+            "Unoccupied",
+            "Vacant"
+          ],
+          "default": "Owner"
+        },
+        {
+          "key": "DwellingInput.MonthsUnoccupied",
+          "label": "# of Months Unoccupied",
+          "type": "integer",
+          "required": false,
+          "group": "Basic Info",
+          "hint": "Options: 0-12",
+          "source": "DwellingInput.MonthsUnoccupied",
+          "min": 0,
+          "max": 12
+        },
+        {
+          "key": "DwellingInput.BuildingType",
+          "label": "Structure",
+          "type": "text",
+          "required": true,
+          "group": "Basic Info",
+          "hint": "Options: Apartment(HO4), Condo(HO6), Dwelling, Rowhouse, Townhouse, Modular/Prefab",
+          "source": "DwellingInput.BuildingType",
+          "options": [
+            "Condo",
+            "Dwelling",
+            "Rowhouse",
+            "Townhouse",
+            "Modular/Prefab"
+          ]
+        },
+        {
+          "key": "DwellingInput.YearBuilt",
+          "label": "Year Built",
+          "type": "integer",
+          "required": true,
+          "group": "Basic Info",
+          "hint": "1600 \u2264 year \u2264 EffectiveYear+1",
+          "source": "DwellingInput.YearBuilt",
+          "min": 1600,
+          "requiredWhen": {
+            "key": "DwellingInput.Form",
+            "values": [
+              "HO3"
+            ]
+          }
+        },
+        {
+          "key": "DwellingInput.Construction",
+          "label": "Construction",
+          "type": "text",
+          "required": true,
+          "group": "Basic Info",
+          "hint": "Options: Frame, Aluminum, PlasticSiding, Masonry, MasonryVeneer, Superior",
+          "source": "DwellingInput.Construction",
+          "options": [
+            "Frame",
+            "Aluminum",
+            "PlasticSiding",
+            "Masonry",
+            "MasonryVeneer",
+            "Superior"
+          ],
+          "default": "Frame"
+        },
+        {
+          "key": "DwellingInput.RatedProtectionClass",
+          "label": "Protection Class",
+          "type": "text",
+          "required": true,
+          "group": "Basic Info",
+          "hint": "Options: 01-10, Y/X/B variants; FormatMask: BlankOption",
+          "source": "DwellingInput.RatedProtectionClass"
+        },
+        {
+          "key": "DwellingInput.NumberOfFamilies",
+          "label": "# of Families",
+          "type": "integer",
+          "required": false,
+          "group": "Basic Info",
+          "hint": "Options: 1-4",
+          "source": "DwellingInput.NumberOfFamilies",
+          "min": 1,
+          "default": 1,
+          "max": 4
+        },
+        {
+          "key": "DwellingInput.NumberOfUnits",
+          "label": "# of Units in Fire Division",
+          "type": "integer",
+          "required": true,
+          "group": "Basic Info",
+          "hint": "Options: 1-9(9=9+); FormatMask: BlankOption",
+          "source": "DwellingInput.NumberOfUnits",
+          "min": 1,
+          "max": 9
+        },
+        {
+          "key": "DwellingInput.NumberOfFloor",
+          "label": "Floor Unit (Floor #)",
+          "type": "text",
+          "required": false,
+          "group": "Basic Info",
+          "hint": "MaxLength: Mods",
+          "source": "DwellingInput.NumberOfFloor",
+          "showWhen": {
+            "key": "DwellingInput.Form",
+            "values": [
+              "HO6"
+            ]
+          }
+        },
+        {
+          "key": "DwellingInput.FoundationType",
+          "label": "Foundation Type",
+          "type": "text",
+          "required": false,
+          "group": "Basic Info",
+          "hint": "Options: Closed, Open (others validRef=False)",
+          "source": "DwellingInput.FoundationType",
+          "options": [
+            "Closed",
+            "Open"
+          ]
+        },
+        {
+          "key": "DwellingInput.SquareFeet",
+          "label": "Square Feet",
+          "type": "integer",
+          "required": true,
+          "group": "Basic Info",
+          "hint": "MaxLength: iValue; FormatMask: Limit",
+          "source": "DwellingInput.SquareFeet",
+          "min": 1
+        },
+        {
+          "key": "DwellingInput.SwimmingPool",
+          "label": "Pool on Premises?",
+          "type": "text",
+          "required": false,
+          "group": "Property Features",
+          "hint": "Options: None, Inground, AboveGround",
+          "source": "DwellingInput.SwimmingPool",
+          "options": [
+            "None",
+            "Inground",
+            "AboveGround"
+          ],
+          "default": "None"
+        },
+        {
+          "key": "DwellingInput.PoolSlide",
+          "label": "Slide (Pool)",
+          "type": "text",
+          "required": true,
+          "group": "Property Features",
+          "hint": "Options: N=No, Y=Yes; FormatMask: BlankOption",
+          "source": "DwellingInput.PoolSlide",
+          "options": [
+            "N",
+            "Y"
+          ],
+          "showWhen": {
+            "key": "DwellingInput.SwimmingPool",
+            "values": [
+              "Inground",
+              "AboveGround"
+            ]
+          }
+        },
+        {
+          "key": "DwellingInput.PoolApprovedFence",
+          "label": "Is pool surrounded by fence?",
+          "type": "text",
+          "required": true,
+          "group": "Property Features",
+          "hint": "Options: N=No, Y=Yes; FormatMask: BlankOption",
+          "source": "DwellingInput.PoolApprovedFence",
+          "options": [
+            "N",
+            "Y"
+          ],
+          "showWhen": {
+            "key": "DwellingInput.SwimmingPool",
+            "values": [
+              "Inground",
+              "AboveGround"
+            ]
+          }
+        },
+        {
+          "key": "DwellingInput.PoolDivingBoard",
+          "label": "Diving Board (Pool)",
+          "type": "text",
+          "required": true,
+          "group": "Property Features",
+          "hint": "Options: N=No, Y=Yes; FormatMask: BlankOption",
+          "source": "DwellingInput.PoolDivingBoard",
+          "options": [
+            "N",
+            "Y"
+          ],
+          "showWhen": {
+            "key": "DwellingInput.SwimmingPool",
+            "values": [
+              "Inground",
+              "AboveGround"
+            ]
+          }
+        },
+        {
+          "key": "DwellingInput.NumberOfStories",
+          "label": "Number of Stories",
+          "type": "number",
+          "required": false,
+          "group": "Construction",
+          "hint": "Options: 1.0, 1.5, 2.0, 2.5, 3.0, 4, 5, 6, 7+",
+          "source": "DwellingInput.NumberOfStories",
+          "min": 0,
+          "default": 1
+        },
+        {
+          "key": "DwellingInput.PrimaryHeatType",
+          "label": "Primary Heat Type",
+          "type": "text",
+          "required": false,
+          "group": "Construction",
+          "hint": "Options: Electric, Other, Gas, Unknown",
+          "source": "DwellingInput.PrimaryHeatType",
+          "options": [
+            "Electric",
+            "Other",
+            "Gas",
+            "Unknown"
+          ]
+        },
+        {
+          "key": "DwellingInput.SupplementalHeatType",
+          "label": "Supplemental Heat Type",
+          "type": "text",
+          "required": false,
+          "group": "Construction",
+          "hint": "Options: FireplaceInsert, Electric, Gas, Other, Unknown",
+          "source": "DwellingInput.SupplementalHeatType",
+          "options": [
+            "FireplaceInsert",
+            "Electric",
+            "Gas",
+            "Other",
+            "Unknown"
+          ]
+        },
+        {
+          "key": "DwellingInput.BuildingCodeEffectivenessGrading",
+          "label": "Building Code Grade (BCEG)",
+          "type": "integer",
+          "required": false,
+          "group": "Construction",
+          "hint": "Options: 1-10, 98=Non Participating, 99=Ungraded; Cross-field: YearBuilt<1995\u2192BCEG=99; YearBuilt>1995\u2192BCEG\u226099",
+          "source": "DwellingInput.BuildingCodeEffectivenessGrading",
+          "min": 0
+        },
+        {
+          "key": "DwellingInput.ElectricalSystem",
+          "label": "Electrical System",
+          "type": "text",
+          "required": false,
+          "group": "Construction",
+          "hint": "Options: Breaker, Fuse, Other, Unknown",
+          "source": "DwellingInput.ElectricalSystem",
+          "options": [
+            "Breaker",
+            "Fuse",
+            "Other",
+            "Unknown"
+          ],
+          "default": "Unknown"
+        },
+        {
+          "key": "DwellingInput.OpeningProtection",
+          "label": "Opening Protection",
+          "type": "text",
+          "required": false,
+          "group": "Wind Mitigation",
+          "hint": "Options: ClassA, ClassB, ClassC, None, Unknown",
+          "source": "DwellingInput.OpeningProtection",
+          "options": [
+            "ClassA",
+            "ClassB",
+            "ClassC",
+            "None",
+            "Unknown"
+          ]
+        },
+        {
+          "key": "DwellingInput.RoofType",
+          "label": "Roof Type",
+          "type": "text",
+          "required": true,
+          "group": "Roof",
+          "hint": "Options: Architectural, Asphalt, Builtup, Concrete, Fiberglass, Metal, Other, Slate, TileBarrelTile, TileFlatTile, Wood",
+          "source": "DwellingInput.RoofType",
+          "options": [
+            "Architectural",
+            "Asphalt",
+            "Builtup",
+            "Concrete",
+            "Fiberglass",
+            "Metal",
+            "Other",
+            "Slate",
+            "TileBarrelTile",
+            "TileFlatTile",
+            "Wood"
+          ]
+        },
+        {
+          "key": "DwellingInput.Sprinkler",
+          "label": "Sprinkler System",
+          "type": "text",
+          "required": false,
+          "group": "Safety Devices",
+          "hint": "Options: None, SinglePoint, WholeHome, Shutoff, ClassB=Full, ClassA=Partial",
+          "source": "DwellingInput.Sprinkler",
+          "options": [
+            "None",
+            "SinglePoint",
+            "WholeHome",
+            "Shutoff",
+            "ClassB",
+            "ClassA"
+          ]
+        },
+        {
+          "key": "DwellingInput.LockedSecurityGate",
+          "label": "Locked Security Gate",
+          "type": "boolean",
+          "required": false,
+          "group": "Safety Devices",
+          "hint": "Options: Yes=1, No=0",
+          "source": "DwellingInput.LockedSecurityGate",
+          "default": false
+        },
+        {
+          "key": "DwellingInput.SecurityAttendant",
+          "label": "Security Guard",
+          "type": "boolean",
+          "required": false,
+          "group": "Safety Devices",
+          "hint": "Options: Yes=1, No=0",
+          "source": "DwellingInput.SecurityAttendant",
+          "default": false
+        },
+        {
+          "key": "DwellingInput.Wiring",
+          "label": "Wiring",
+          "type": "text",
+          "required": false,
+          "group": "Construction",
+          "hint": "Options: Copper, Aluminum, KnobAndTube, Unknown",
+          "source": "DwellingInput.Wiring",
+          "options": [
+            "Copper",
+            "Aluminum",
+            "KnobAndTube",
+            "Unknown"
+          ]
+        },
+        {
+          "key": "DwellingInput.NumberOfAmps",
+          "label": "# of Amps",
+          "type": "integer",
+          "required": false,
+          "group": "Construction",
+          "hint": "",
+          "source": "DwellingInput.NumberOfAmps",
+          "min": 0
+        },
+        {
+          "key": "DwellingInput.PlumbingType",
+          "label": "Plumbing Pipe Material",
+          "type": "text",
+          "required": false,
+          "group": "Construction",
+          "hint": "Options: PVCCPVC, PEPEX, Copper, Polybutylene, GalvanizedSteel, Other",
+          "source": "DwellingInput.PlumbingType",
+          "options": [
+            "PVCCPVC",
+            "PEPEX",
+            "Copper",
+            "Polybutylene",
+            "GalvanizedSteel",
+            "Other"
+          ]
+        },
+        {
+          "key": "DwellingInput.RoofGeometry",
+          "label": "Roof Shape",
+          "type": "text",
+          "required": true,
+          "group": "Wind Mitigation",
+          "hint": "Options: Hip, Gable, Flat, Other, NA; masonry/HO6\u2192must=NA",
+          "source": "DwellingInput.RoofGeometry",
+          "options": [
+            "Hip",
+            "Gable",
+            "Flat",
+            "Other",
+            "NA"
+          ],
+          "default": "Gable"
+        },
+        {
+          "key": "DwellingInput.DistanceToFireStation",
+          "label": "Miles To Fire Station",
+          "type": "text",
+          "required": true,
+          "group": "Fire Protection",
+          "hint": "Options: Within5miles, Greaterthan5miles",
+          "source": "DwellingInput.DistanceToFireStation",
+          "options": [
+            "Within5miles",
+            "Greaterthan5miles"
+          ]
+        },
+        {
+          "key": "DwellingInput.DistanceToHydrant",
+          "label": "Feet To Hydrant",
+          "type": "text",
+          "required": true,
+          "group": "Fire Protection",
+          "hint": "Options: Within1000ft, Greaterthan1000ft",
+          "source": "DwellingInput.DistanceToHydrant",
+          "options": [
+            "Within1000ft",
+            "Greaterthan1000ft"
+          ]
+        },
+        {
+          "key": "DwellingInput.RespondingFireDepartment",
+          "label": "Responding Fire Department",
+          "type": "text",
+          "required": true,
+          "group": "Fire Protection",
+          "hint": "MaxLength: City",
+          "source": "DwellingInput.RespondingFireDepartment"
+        },
+        {
+          "key": "UpdatedServicesInfo.RemainingRoofLife",
+          "label": "Remaining Useful Life of Roof",
+          "type": "integer",
+          "required": false,
+          "group": "Property Updates",
+          "hint": "",
+          "source": "UpdatedServicesInfo.RemainingRoofLife",
+          "min": 0
+        },
+        {
+          "key": "UpdatedServicesInfo.ElectricSystemUpdateYear",
+          "label": "Year Electrical Updated",
+          "type": "integer",
+          "required": false,
+          "group": "Property Updates",
+          "hint": "MaxLength: Year",
+          "source": "UpdatedServicesInfo.ElectricSystemUpdateYear",
+          "min": 0
+        },
+        {
+          "key": "UpdatedServicesInfo.HeatingUpdateYear",
+          "label": "Year Heating Updated",
+          "type": "integer",
+          "required": false,
+          "group": "Property Updates",
+          "hint": "MaxLength: Year",
+          "source": "UpdatedServicesInfo.HeatingUpdateYear",
+          "min": 0
+        },
+        {
+          "key": "UpdatedServicesInfo.PlumbingUpdateYear",
+          "label": "Year Plumbing Updated",
+          "type": "integer",
+          "required": false,
+          "group": "Property Updates",
+          "hint": "MaxLength: Year",
+          "source": "UpdatedServicesInfo.PlumbingUpdateYear",
+          "min": 0
+        },
+        {
+          "key": "UpdatedServicesInfo.RoofUpdateYear",
+          "label": "Year Roof Updated",
+          "type": "integer",
+          "required": false,
+          "group": "Property Updates",
+          "hint": "min=YearBuilt; max=EffectiveYear",
+          "source": "UpdatedServicesInfo.RoofUpdateYear",
+          "min": 0
+        },
+        {
+          "key": "DwellingInput.SecondaryWaterResistance",
+          "label": "Secondary Water Resistance",
+          "type": "text",
+          "required": false,
+          "group": "Wind Mitigation",
+          "hint": "Options: Yes, No, Unknown; SWR=No AND RoofDeck=Reinforce \u2192 validation error",
+          "source": "DwellingInput.SecondaryWaterResistance",
+          "options": [
+            "Yes",
+            "No",
+            "Unknown"
+          ]
+        },
+        {
+          "key": "DwellingInput.DwellingAccessibleToFireEquipment",
+          "label": "Accessible all year",
+          "type": "text",
+          "required": false,
+          "group": "Fire Protection",
+          "hint": "Options: N=No, Y=Yes, U=Unknown",
+          "source": "DwellingInput.DwellingAccessibleToFireEquipment",
+          "options": [
+            "N",
+            "Y",
+            "U"
+          ]
+        },
+        {
+          "key": "DwellingInput.RoofToWallAttachment",
+          "label": "Roof to Wall Attachment",
+          "type": "text",
+          "required": false,
+          "group": "Wind Mitigation",
+          "hint": "Options: ToeNails, Clips, SingleWraps, DoubleWraps, Unknown, NA; complex validation vs RoofDeckAttachment, YearBuilt",
+          "source": "DwellingInput.RoofToWallAttachment",
+          "options": [
+            "ToeNails",
+            "Clips",
+            "SingleWraps",
+            "DoubleWraps",
+            "Unknown",
+            "NA"
+          ]
+        },
+        {
+          "key": "DwellingInput.RoofCover",
+          "label": "Roof Cover",
+          "type": "text",
+          "required": false,
+          "group": "Wind Mitigation",
+          "hint": "Options: NonFBCEquivalent, FBCEquivalent, ReinforcedConcreteRoofDeck, NA",
+          "source": "DwellingInput.RoofCover",
+          "options": [
+            "NonFBCEquivalent",
+            "FBCEquivalent",
+            "ReinforcedConcreteRoofDeck",
+            "NA"
+          ]
+        },
+        {
+          "key": "DwellingInput.Terrain",
+          "label": "Terrain",
+          "type": "text",
+          "required": true,
+          "group": "Wind Mitigation",
+          "hint": "Options: B, C, H, Unknown; Terrain=C\u2192various UW rules on OpeningProtection, WindSpeedLocation",
+          "source": "DwellingInput.Terrain",
+          "options": [
+            "B",
+            "C",
+            "H",
+            "Unknown"
+          ],
+          "default": "Unknown"
+        },
+        {
+          "key": "DwellingInput.FloorToFoundationAttachment",
+          "label": "Floor to Foundation Attachment",
+          "type": "text",
+          "required": false,
+          "group": "Wind Mitigation",
+          "hint": "MaxLength: sValue",
+          "source": "DwellingInput.FloorToFoundationAttachment"
+        },
+        {
+          "key": "DwellingInput.WindSpeedDesign",
+          "label": "Wind Speed Design",
+          "type": "text",
+          "required": false,
+          "group": "Wind Mitigation",
+          "hint": "Options: 100, 110, 120 mph+, Unknown; YearBuilt\u22652002\u2192WindSpeedDesign\u2260Unknown",
+          "source": "DwellingInput.WindSpeedDesign",
+          "options": [
+            "100",
+            "110",
+            "120 mph+",
+            "Unknown"
+          ]
+        },
+        {
+          "key": "DwellingInput.WindSpeedLocation",
+          "label": "Wind Speed Location",
+          "type": "text",
+          "required": false,
+          "group": "Wind Mitigation",
+          "hint": "Options: 100, 110, 120+, 120WBDR, Unknown; complex validation with WindSpeedDesign combos",
+          "source": "DwellingInput.WindSpeedLocation",
+          "options": [
+            "100",
+            "110",
+            "120+",
+            "120WBDR",
+            "Unknown"
+          ]
+        },
+        {
+          "key": "DwellingInput.RoofDeckAttachment",
+          "label": "Roof Deck Attachment",
+          "type": "text",
+          "required": false,
+          "group": "Wind Mitigation",
+          "hint": "Options: A6d@612, B8d@612, C8d@66, WoodDeck, MetalDeck, Reinforce, NA; complex UW validation rules",
+          "source": "DwellingInput.RoofDeckAttachment",
+          "options": [
+            "A6d@612",
+            "B8d@612",
+            "C8d@66",
+            "WoodDeck",
+            "MetalDeck",
+            "Reinforce",
+            "NA"
+          ]
+        },
+        {
+          "key": "DwellingInput.NumberOfBathrooms",
+          "label": "Number Of Bathrooms",
+          "type": "text",
+          "required": false,
+          "group": "Construction",
+          "hint": "Options: 1-5+",
+          "source": "DwellingInput.NumberOfBathrooms"
+        }
+      ]
+    },
+    {
+      "id": "dwellingcoverage",
+      "title": "Dwelling coverage",
+      "fields": [
+        {
+          "key": "CoverageADwellingInput.Limit",
+          "label": "Dwelling Limit (A)",
+          "type": "integer",
+          "required": true,
+          "group": "Core Coverages",
+          "hint": "Min=0; if 0<Limit<40000 \u2192 forced to 40000 (MinimumLimit)",
+          "source": "CoverageADwellingInput.Limit",
+          "min": 40000,
+          "showWhen": {
+            "key": "DwellingInput.Form",
+            "values": [
+              "HO3"
+            ]
+          }
+        },
+        {
+          "key": "CoverageBOtherStructuresInput.Limit",
+          "label": "Other Structures Limit (B)",
+          "type": "integer",
+          "required": false,
+          "group": "Core Coverages",
+          "hint": "FormatMask: Limit; if<IncludedLimit\u2192reset to IncludedLimit",
+          "source": "CoverageBOtherStructuresInput.Limit",
+          "min": 0
+        },
+        {
+          "key": "CoverageCPersonalPropertyHO3Input.Limit",
+          "label": "Personal Property Limit (C) \u2013 HO3",
+          "type": "integer",
+          "required": false,
+          "group": "Core Coverages",
+          "hint": "Min/max rules; if<IncludedLimit\u2192reset",
+          "source": "CoverageCPersonalPropertyHO3Input.Limit",
+          "min": 0,
+          "showWhen": {
+            "key": "DwellingInput.Form",
+            "values": [
+              "HO3"
+            ]
+          }
+        },
+        {
+          "key": "CoverageCPersonalPropertyHO46Input.Limit",
+          "label": "Personal Property Limit (C) \u2013 HO6",
+          "type": "integer",
+          "required": true,
+          "group": "Core Coverages",
+          "hint": "Minimum: 10,000",
+          "source": "CoverageCPersonalPropertyHO46Input.Limit",
+          "min": 10000,
+          "showWhen": {
+            "key": "DwellingInput.Form",
+            "values": [
+              "HO6"
+            ]
+          }
+        },
+        {
+          "key": "CoverageDLossOfUseInput.Limit",
+          "label": "Loss of Use Limit (D)",
+          "type": "integer",
+          "required": false,
+          "group": "Core Coverages",
+          "hint": "FormatMask: Limit; if<IncludedLimit\u2192reset",
+          "source": "CoverageDLossOfUseInput.Limit",
+          "min": 0
+        },
+        {
+          "key": "DwellingInput.Deductible",
+          "label": "All-Peril Deductible",
+          "type": "text",
+          "required": true,
+          "group": "Deductibles",
+          "hint": "$500, $1000, $2500 primarily; cross-field UW validations",
+          "source": "DwellingInput.Deductible",
+          "options": [
+            "500",
+            "1000",
+            "2500"
+          ],
+          "default": "500"
+        },
+        {
+          "key": "DwellingInput.HurricaneDeductible",
+          "label": "Hurricane Deductible",
+          "type": "text",
+          "required": true,
+          "group": "Deductibles",
+          "hint": "N, $500, 2%, 5%, 10%; 30+ cross-field UW validations",
+          "source": "DwellingInput.HurricaneDeductible",
+          "options": [
+            "N",
+            "500",
+            "2%",
+            "5%",
+            "10%"
+          ],
+          "default": "N"
+        },
+        {
+          "key": "ReplacementCostDwellingInput.Indicator",
+          "label": "Replacement Cost \u2013 Dwelling",
+          "type": "boolean",
+          "required": false,
+          "group": "Section I Endorsements",
+          "hint": "misc: forced False if form not HO2/HO3",
+          "source": "ReplacementCostDwellingInput.Indicator",
+          "default": true,
+          "showWhen": {
+            "key": "DwellingInput.Form",
+            "values": [
+              "HO3"
+            ]
+          }
+        },
+        {
+          "key": "ReplacementCostDwellingInput.ReplacementCostValue",
+          "label": "Replacement Cost Value",
+          "type": "integer",
+          "required": true,
+          "group": "Section I Endorsements",
+          "hint": "Maximum: 1,000,000; if=0 AND CovA>0\u2192set to CovA",
+          "source": "ReplacementCostDwellingInput.ReplacementCostValue",
+          "min": 0,
+          "showWhen": {
+            "key": "ReplacementCostDwellingInput.Indicator",
+            "values": [
+              true
+            ]
+          },
+          "max": 1000000
+        },
+        {
+          "key": "SinkholeInput.Indicator",
+          "label": "Sinkhole Indicator",
+          "type": "boolean",
+          "required": false,
+          "group": "Section I Endorsements",
+          "hint": "UW message 57 on endorsement timing",
+          "source": "SinkholeInput.Indicator",
+          "default": false
+        },
+        {
+          "key": "OrdinanceOrLawInput.Limit",
+          "label": "Ordinance Or Law",
+          "type": "text",
+          "required": false,
+          "group": "Section I Endorsements",
+          "hint": "Options: N=None, 25%, 50%",
+          "source": "OrdinanceOrLawInput.Limit",
+          "options": [
+            "N",
+            "25",
+            "50"
+          ],
+          "default": "25"
+        },
+        {
+          "key": "WaterBackupAndSumpOverflowInput.Indicator",
+          "label": "Water Back Up and Sump Overflow",
+          "type": "boolean",
+          "required": false,
+          "group": "Section I Endorsements",
+          "hint": "",
+          "source": "WaterBackupAndSumpOverflowInput.Indicator",
+          "default": false
+        },
+        {
+          "key": "LimitedFungiBacteriaInput.Limit",
+          "label": "Limited Fungi or Bacteria",
+          "type": "text",
+          "required": false,
+          "group": "Section I Endorsements",
+          "hint": "Options: N, $10K/$50K, $25K/$50K, $50K/$50K",
+          "source": "LimitedFungiBacteriaInput.Limit",
+          "options": [
+            "N",
+            "10/50",
+            "25/50",
+            "50/50"
+          ],
+          "default": "10/50"
+        },
+        {
+          "key": "LossAssessmentInput.Indicator",
+          "label": "Loss Assessment Coverage",
+          "type": "boolean",
+          "required": false,
+          "group": "Section I Endorsements",
+          "hint": "",
+          "source": "LossAssessmentInput.Indicator",
+          "default": false
+        },
+        {
+          "key": "LossAssessmentInput.Limit",
+          "label": "Loss Assessment Limit",
+          "type": "integer",
+          "required": false,
+          "group": "Section I Endorsements",
+          "hint": "Options: $1,000 to $50,000",
+          "source": "LossAssessmentInput.Limit",
+          "min": 1000,
+          "showWhen": {
+            "key": "LossAssessmentInput.Indicator",
+            "values": [
+              true
+            ]
+          },
+          "max": 50000
+        },
+        {
+          "key": "CarportsPoolCagesInput.Limit",
+          "label": "Carports, Pool Cages & Screen Enclosures",
+          "type": "integer",
+          "required": false,
+          "group": "Section I Endorsements",
+          "hint": "Max: CarportsPoolCagesPrivate.MaximumLimit; if >0 AND <10000\u2192set to 10000; UW: limit \u2264 $75,000 (message 62)",
+          "source": "CarportsPoolCagesInput.Limit",
+          "min": 0,
+          "max": 75000
+        },
+        {
+          "key": "ReplacementCostContentsInput.Indicator",
+          "label": "Replacement Cost \u2013 Contents",
+          "type": "boolean",
+          "required": false,
+          "group": "Section I Endorsements",
+          "hint": "misc: forced True if HO15",
+          "source": "ReplacementCostContentsInput.Indicator",
+          "default": false
+        },
+        {
+          "key": "IdentityFraudExpenseCoverageInput.Indicator",
+          "label": "Identity Fraud Expense",
+          "type": "boolean",
+          "required": false,
+          "group": "Section I Endorsements",
+          "hint": "",
+          "source": "IdentityFraudExpenseCoverageInput.Indicator",
+          "default": false
+        },
+        {
+          "key": "UnscheduledJewelryInput.Limit",
+          "label": "Unscheduled Jewelry Limit",
+          "type": "integer",
+          "required": false,
+          "group": "Section I Endorsements",
+          "hint": "min: MinimumLimit; max: MaximumLimit",
+          "source": "UnscheduledJewelryInput.Limit",
+          "min": 0
+        },
+        {
+          "key": "WaterBackupOfSewersOrDrainsInput.Indicator",
+          "label": "Water Backup of Sewers or Drains",
+          "type": "boolean",
+          "required": false,
+          "group": "Section I Endorsements",
+          "hint": "",
+          "source": "WaterBackupOfSewersOrDrainsInput.Indicator",
+          "default": false
+        },
+        {
+          "key": "PersonalPropertyOtherResidenceInput.Indicator",
+          "label": "Personal Property Other Residence",
+          "type": "boolean",
+          "required": false,
+          "group": "Section I Endorsements",
+          "hint": "",
+          "source": "PersonalPropertyOtherResidenceInput.Indicator",
+          "default": false
+        },
+        {
+          "key": "PersonalInjuryInput.Indicator",
+          "label": "Personal Injury",
+          "type": "boolean",
+          "required": false,
+          "group": "Section II Endorsements",
+          "hint": "misc: if CovE Limit=0 \u2192 forced False; Limit: $5,000 (readOnly)",
+          "source": "PersonalInjuryInput.Indicator",
+          "default": false
+        },
+        {
+          "key": "UnitsRegularlyRentedToOthersInput.Indicator",
+          "label": "Unit-Owners Rental to Others",
+          "type": "boolean",
+          "required": false,
+          "group": "Section II Endorsements",
+          "hint": "misc: forced False if not HO6",
+          "source": "UnitsRegularlyRentedToOthersInput.Indicator",
+          "default": false,
+          "showWhen": {
+            "key": "DwellingInput.Form",
+            "values": [
+              "HO6"
+            ]
+          }
+        },
+        {
+          "key": "RiskInput.EquipmentBreakdown",
+          "label": "Equipment Breakdown",
+          "type": "boolean",
+          "required": false,
+          "group": "Risk Options",
+          "hint": "",
+          "source": "RiskInput.EquipmentBreakdown",
+          "default": false
+        },
+        {
+          "key": "RiskInput.PermittedIncidentalOccupancy",
+          "label": "Permitted Incidental Occupancy",
+          "type": "boolean",
+          "required": false,
+          "group": "Risk Options",
+          "hint": "UW message 56 (SOS rented + PIO combo)",
+          "source": "RiskInput.PermittedIncidentalOccupancy",
+          "default": false
+        },
+        {
+          "key": "SpecialComputerCoverageInput.Indicator",
+          "label": "Special Computer Coverage",
+          "type": "boolean",
+          "required": false,
+          "group": "Risk Options",
+          "hint": "misc: forced False if FormIsHO15",
+          "source": "SpecialComputerCoverageInput.Indicator",
+          "default": false
+        },
+        {
+          "key": "SpecialPersonalPropertyCoverageInput.Indicator",
+          "label": "Unit-Owners Special Coverage C",
+          "type": "boolean",
+          "required": false,
+          "group": "Risk Options",
+          "hint": "misc: forced False if FormIsDwelling",
+          "source": "SpecialPersonalPropertyCoverageInput.Indicator",
+          "default": false,
+          "showWhen": {
+            "key": "DwellingInput.Form",
+            "values": [
+              "HO6"
+            ]
+          }
+        },
+        {
+          "key": "CoverageELiabilityInput.Limit",
+          "label": "Personal Liability (E)",
+          "type": "text",
+          "required": false,
+          "readOnly": true,
+          "default": "300000",
+          "group": "Base coverages"
+        },
+        {
+          "key": "CoverageFMedicalInput.Limit",
+          "label": "Medical Payments (F)",
+          "type": "text",
+          "required": false,
+          "readOnly": true,
+          "default": "3000",
+          "group": "Base coverages"
+        }
+      ]
+    },
+    {
+      "id": "underwriting",
+      "title": "Underwriting",
+      "fields": [
+        {
+          "key": "Underwriting.animals",
+          "label": "Restricted dogs, exotic pets or guard dogs?",
+          "type": "boolean",
+          "required": true,
+          "group": "Underwriting declarations",
+          "hint": "Yes requires an underwriter to review; no automatic eligibility decision."
+        },
+        {
+          "key": "Underwriting.trampoline",
+          "label": "Trampoline on the premises?",
+          "type": "boolean",
+          "required": true,
+          "group": "Underwriting declarations",
+          "hint": "Yes requires an underwriter to review; no automatic eligibility decision."
+        },
+        {
+          "key": "Underwriting.disrepair",
+          "label": "Property for sale or in disrepair?",
+          "type": "boolean",
+          "required": true,
+          "group": "Underwriting declarations",
+          "hint": "Yes requires an underwriter to review; no automatic eligibility decision."
+        },
+        {
+          "key": "Underwriting.renovation",
+          "label": "Property under renovation?",
+          "type": "boolean",
+          "required": true,
+          "group": "Underwriting declarations",
+          "hint": "Yes requires an underwriter to review; no automatic eligibility decision."
+        },
+        {
+          "key": "Underwriting.business",
+          "label": "Business, day care or farming use?",
+          "type": "boolean",
+          "required": true,
+          "group": "Underwriting declarations",
+          "hint": "Yes requires an underwriter to review; no automatic eligibility decision."
+        },
+        {
+          "key": "Underwriting.financialHistory",
+          "label": "Foreclosure or bankruptcy history?",
+          "type": "boolean",
+          "required": true,
+          "group": "Underwriting declarations",
+          "hint": "Yes requires an underwriter to review; no automatic eligibility decision."
+        },
+        {
+          "key": "Underwriting.criminalHistory",
+          "label": "Criminal indictment history?",
+          "type": "boolean",
+          "required": true,
+          "group": "Underwriting declarations",
+          "hint": "Yes requires an underwriter to review; no automatic eligibility decision."
+        },
+        {
+          "key": "Underwriting.leadOrLandfill",
+          "label": "Known lead paint or landfill exposure?",
+          "type": "boolean",
+          "required": true,
+          "group": "Underwriting declarations",
+          "hint": "Yes requires an underwriter to review; no automatic eligibility decision."
+        },
+        {
+          "key": "Underwriting.declined",
+          "label": "Prior insurance declined or cancelled?",
+          "type": "boolean",
+          "required": true,
+          "group": "Underwriting declarations",
+          "hint": "Yes requires an underwriter to review; no automatic eligibility decision."
+        },
+        {
+          "key": "Underwriting.sinkhole",
+          "label": "Known sinkhole activity?",
+          "type": "boolean",
+          "required": true,
+          "group": "Underwriting declarations",
+          "hint": "Yes requires an underwriter to review; no automatic eligibility decision."
+        },
+        {
+          "key": "Underwriting.Notes",
+          "label": "Details for any Yes answers",
+          "type": "textarea",
+          "required": false,
+          "group": "Additional details"
+        }
+      ],
+      "notice": "These declarations capture the topics in the source document. Carrier underwriting rules and the full questionnaire still require integration."
+    },
+    {
+      "id": "insurancehistory",
+      "title": "Insurance history",
+      "fields": [
+        {
+          "key": "History.HasPrior",
+          "label": "Prior insurance to disclose?",
+          "type": "boolean",
+          "required": true
+        }
+      ],
+      "collection": {
+        "key": "priorInsurance",
+        "label": "Prior policies",
+        "fields": [
+          {
+            "key": "PriorInsurance.CarrierName",
+            "label": "Carrier Name",
+            "type": "text",
+            "required": true,
+            "group": "Insurance History",
+            "hint": "",
+            "source": "PriorInsurance.CarrierName"
+          },
+          {
+            "key": "PriorInsurance.EffectiveDate",
+            "label": "Effective Date",
+            "type": "date",
+            "required": true,
+            "group": "Insurance History",
+            "hint": "FormatMask: Date",
+            "source": "PriorInsurance.EffectiveDate"
+          },
+          {
+            "key": "PriorInsurance.ExpirationDate",
+            "label": "Expiration Date",
+            "type": "date",
+            "required": true,
+            "group": "Insurance History",
+            "hint": "FormatMask: Date",
+            "source": "PriorInsurance.ExpirationDate"
+          },
+          {
+            "key": "PriorInsurance.Limit",
+            "label": "Limit",
+            "type": "number",
+            "required": false,
+            "group": "Insurance History",
+            "hint": "FormatMask: $###,###.##",
+            "source": "PriorInsurance.Limit",
+            "min": 0
+          },
+          {
+            "key": "PriorInsurance.Deductible",
+            "label": "Deductible",
+            "type": "number",
+            "required": false,
+            "group": "Insurance History",
+            "hint": "FormatMask: $###,###.##",
+            "source": "PriorInsurance.Deductible",
+            "min": 0
+          }
+        ],
+        "when": {
+          "key": "History.HasPrior",
+          "values": [
+            true
+          ]
+        }
+      }
+    },
+    {
+      "id": "claimshistory",
+      "title": "Claims history",
+      "fields": [
+        {
+          "key": "Claims.HasLosses",
+          "label": "Prior losses to disclose?",
+          "type": "boolean",
+          "required": true
+        }
+      ],
+      "collection": {
+        "key": "losses",
+        "label": "Prior losses",
+        "fields": [
+          {
+            "key": "LossInput.LossType",
+            "label": "Loss Type",
+            "type": "text",
+            "required": true,
+            "group": "Loss History",
+            "hint": "MaxLength: 100; Required",
+            "source": "LossInput.LossType",
+            "maxLength": 100
+          },
+          {
+            "key": "LossInput.DateOfLoss",
+            "label": "Date Of Loss",
+            "type": "date",
+            "required": true,
+            "group": "Loss History",
+            "hint": "FormatMask: Date; Required",
+            "source": "LossInput.DateOfLoss"
+          },
+          {
+            "key": "LossInput.AmountPaid",
+            "label": "Amount Paid",
+            "type": "number",
+            "required": true,
+            "group": "Loss History",
+            "hint": "FormatMask: PremiumInput; Required",
+            "source": "LossInput.AmountPaid",
+            "min": 0
+          },
+          {
+            "key": "LossInput.Description",
+            "label": "Description",
+            "type": "text",
+            "required": true,
+            "group": "Loss History",
+            "hint": "MaxLength: Description",
+            "source": "LossInput.Description"
+          }
+        ],
+        "when": {
+          "key": "Claims.HasLosses",
+          "values": [
+            true
+          ]
+        }
+      },
+      "notice": "Enter known losses manually. CLUE and insurance-score reports are not ordered by this application."
+    },
+    {
+      "id": "summary",
+      "title": "Coverage summary",
+      "fields": [],
+      "notice": "Coverage selections are saved. Premium calculation and carrier eligibility require the rating integration; this is not a priced or bindable quote."
+    },
+    {
+      "id": "additionalinterests",
+      "title": "Additional interests",
+      "fields": [],
+      "collection": {
+        "key": "interests",
+        "label": "Additional interests",
+        "fields": [
+          {
+            "key": "type",
+            "label": "Interest type",
+            "type": "text",
+            "required": true,
+            "options": [
+              "Mortgagee",
+              "Additional Insured",
+              "Additional Interest",
+              "Premium Finance"
+            ]
+          },
+          {
+            "key": "name",
+            "label": "Name",
+            "type": "text",
+            "required": true
+          },
+          {
+            "key": "address",
+            "label": "Mailing address",
+            "type": "text",
+            "required": true
+          },
+          {
+            "key": "rank",
+            "label": "Mortgage rank",
+            "type": "integer",
+            "required": false,
+            "min": 1,
+            "max": 4
+          },
+          {
+            "key": "reference",
+            "label": "Loan / reference number",
+            "type": "text",
+            "required": false
+          }
+        ]
+      }
+    },
+    {
+      "id": "billing",
+      "title": "Billing instructions",
+      "fields": [
+        {
+          "key": "Billing.BillClass",
+          "label": "Bill class",
+          "type": "text",
+          "required": true,
+          "options": [
+            "Direct Bill",
+            "Mortgagee Escrow",
+            "Agency Bill"
+          ]
+        },
+        {
+          "key": "Billing.PaymentPlan",
+          "label": "Payment plan",
+          "type": "text",
+          "required": true,
+          "options": [
+            "Annual",
+            "Semi-Annual",
+            "Quarterly"
+          ]
+        },
+        {
+          "key": "Billing.Paperless",
+          "label": "Paperless invoices",
+          "type": "boolean",
+          "required": false,
+          "default": false
+        }
+      ],
+      "when": {
+        "key": "Quote.DCTBilling",
+        "values": [
+          true
+        ]
+      },
+      "notice": "Save billing preferences only. No payment is collected and no installment schedule is generated."
+    },
+    {
+      "id": "review",
+      "title": "Review application",
+      "fields": [],
+      "notice": "Review and submit the captured application for rating. Submission records a local workflow status; it does not bind insurance or send data to a carrier."
+    }
+  ]
+}

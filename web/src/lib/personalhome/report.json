@@ -1,0 +1,816 @@
+{
+  "source": "Manatee FL Select HO Rater Effective 12.1.25 - Schema Validation Report.html",
+  "sha256": "4d0073091911dd72cc9d7fe8686d4b0c874e14a325d9a23af5694d4f0b00cbcd",
+  "columns": [
+    {
+      "number": "1",
+      "column": "A",
+      "header": "Policy Number",
+      "status": "Confirmed - Exact/Normalized",
+      "confidence": "High",
+      "locations": "_view.policy.policy_number [VIEW]\n_view.policy_lifecycle.policy_number [VIEW]\n_view.policy_motor_us_commercial.policy_number [VIEW]\n_view.policy_motor_us_fleet.policy_number [VIEW]\n_view.policy_motor_us_personal.policy_number [VIEW]\n_view.policy_property_commercial.policy_number [VIEW]\n_view.policy_property_us_fl_personal_safepoint.policy_number [VIEW]\n_view.raw_xml_document.policy_number [VIEW]\n_view.raw_xml_document_property_us_personal.policy_number [VIEW]\ncore_all.policy.policy_number [TABLE]\ncore_all.policy_lifecycle.policy_number [TABLE]\njur_us_property_personal.raw_xml_document.policy_number [TABLE]",
+      "candidates": "",
+      "note": "Confirmed by schema column name."
+    },
+    {
+      "number": "2",
+      "column": "B",
+      "header": "Form",
+      "status": "Review - Possible Mapping",
+      "confidence": "Medium/Low",
+      "locations": "",
+      "candidates": "form_id (63%) -> _view.form.form_id [VIEW]; _view.form_property_us_personal.form_id [VIEW]; core_all.form.form_id [TABLE]; jur_us_property_personal.form.form_id [TABLE]; lob_property.form.form_id [TABLE]; lob_property_personal.form.form_id [TABLE]\nform_code (57%) -> _view.form.form_code [VIEW]; _view.form_property_us_personal.form_code [VIEW]; core_all.form.form_code [TABLE]\nform_name (57%) -> _view.form.form_name [VIEW]; _view.form_property_us_personal.form_name [VIEW]; core_all.form.form_name [TABLE]\nform_type (57%) -> _view.form.form_type [VIEW]; _view.form_property_us_personal.form_type [VIEW]; core_all.form.form_type [TABLE]\nlegal_form (55%) -> _view.organization.legal_form [VIEW]; core_all.organization.legal_form [TABLE]\nform_number (53%) -> _view.document_template.form_number [VIEW]; _view.form_pattern.form_number [VIEW]; _view.form_template.form_number [VIEW]; _view.policy_form.form_number [VIEW]; core_all.document_template.form_number [TABLE]; core_all.form_pattern.form_number [TABLE]; core_all.form_template.form_number [TABLE]; core_all.policy_form.form_number [TABLE]\nform_status (53%) -> _view.form.form_status [VIEW]; _view.form_property_us_personal.form_status [VIEW]; core_all.form.form_status [TABLE]\nbenefit_form (51%) -> _view.benefit.benefit_form [VIEW]; core_all.benefit.benefit_form [TABLE]",
+      "note": "Candidate only; do not treat as confirmed without data-model review."
+    },
+    {
+      "number": "3",
+      "column": "C",
+      "header": "County",
+      "status": "Confirmed - Exact/Normalized",
+      "confidence": "High",
+      "locations": "_view.account_location.county [VIEW]\n_view.account_search_request.county [VIEW]\n_view.contact_address_wrapper.county [VIEW]\n_view.location_address.county [VIEW]\n_view.location_address_property_us_personal.county [VIEW]\n_view.policy_address.county [VIEW]\n_view.tax_location.county [VIEW]\ncore_all.account_location.county [TABLE]\ncore_all.account_search_request.county [TABLE]\ncore_all.contact_address_wrapper.county [TABLE]\ncore_all.policy_address.county [TABLE]\ncore_all.tax_location.county [TABLE]\njur_us_property_personal.location_address.county [TABLE]",
+      "candidates": "",
+      "note": "Confirmed by schema column name."
+    },
+    {
+      "number": "4",
+      "column": "D",
+      "header": "Risk Term",
+      "status": "Review - Possible Mapping",
+      "confidence": "Medium/Low",
+      "locations": "",
+      "candidates": "risk_tier (66%) -> _view.agency_bill_plan_summary.risk_tier [VIEW]; _view.bulk_policy_archive_retrieval.risk_tier [VIEW]; _view.coinsurance_policy_section.risk_tier [VIEW]; _view.composite_sub_response.risk_tier [VIEW]; _view.coverage_issue.risk_tier [VIEW]; _view.customer_risk_rating.risk_tier [VIEW]; _view.generic_relation.risk_tier [VIEW]; _view.issuance.risk_tier [VIEW]; _view.job_diffs.risk_tier [VIEW]; _view.job_group.risk_tier [VIEW]; _view.job_policy_section.risk_tier [VIEW]; _view.job_roles.risk_tier [VIEW]\nrisk_transfer (58%) -> _view.coverage_portfolio.risk_transfer [VIEW]; core_all.coverage_portfolio.risk_transfer [TABLE]\nrisk_number (57%) -> _view.reinsurable.risk_number [VIEW]; core_all.reinsurable.risk_number [TABLE]\nrisk_factors (56%) -> _view.privacy_notification_assessment.risk_factors [VIEW]; _view.privacy_notification_assessment_cyber.risk_factors [VIEW]; lob_cyber.privacy_notification_assessment.risk_factors [TABLE]\npolicy_term (55%) -> _view.audit.policy_term [VIEW]; _view.billing_rewrite.policy_term [VIEW]; _view.delinquency_process.policy_term [VIEW]; _view.direct_bill_payment_received.policy_term [VIEW]; _view.issuance.policy_term [VIEW]; _view.policy_commission.policy_term [VIEW]; _view.policy_term_general.policy_term [VIEW]; core_all.audit.policy_term [TABLE]; core_all.billing_rewrite.policy_term [TABLE]; core_all.delinquency_process.policy_term [TABLE]; core_all.direct_bill_payment_received.policy_term [TABLE]; core_all.issuance.policy_term [TABLE]\nrisk_score (54%) -> _view.transaction_monitoring_alert.risk_score [VIEW]; _view.underwriting_case.risk_score [VIEW]; core_all.transaction_monitoring_alert.risk_score [TABLE]; core_all.underwriting_case.risk_score [TABLE]\nrisk_indicators (52%) -> _view.account_contact_individual.risk_indicators [VIEW]; _view.account_contact_location.risk_indicators [VIEW]; _view.account_contact_organization.risk_indicators [VIEW]; _view.account_general.risk_indicators [VIEW]; _view.account_invoice.risk_indicators [VIEW]; _view.account_invoice_stream_invoice_days.risk_indicators [VIEW]; _view.account_location.risk_indicators [VIEW]; _view.account_roles.risk_indicators [VIEW]; _view.account_search.risk_indicators [VIEW]; _view.account_search_request.risk_indicators [VIEW]; _view.activity.risk_indicators [VIEW]; _view.activity_document.risk_indicators [VIEW]\nrisk_present (51%) -> _view.line.risk_present [VIEW]; _view.line_property_us_personal.risk_present [VIEW]; jur_us_property_personal.line.risk_present [TABLE]",
+      "note": "Candidate only; do not treat as confirmed without data-model review."
+    },
+    {
+      "number": "5",
+      "column": "E",
+      "header": "Territory",
+      "status": "Confirmed - Exact/Normalized",
+      "confidence": "High",
+      "locations": "_view.loss_ratio_analysis.territory [VIEW]\ncore_all.loss_ratio_analysis.territory [TABLE]",
+      "candidates": "",
+      "note": "Confirmed by schema column name."
+    },
+    {
+      "number": "6",
+      "column": "F",
+      "header": "Effective Date",
+      "status": "Confirmed - Exact/Normalized",
+      "confidence": "High",
+      "locations": "_view.address.effective_date [VIEW]\n_view.adverse_development_cover.effective_date [VIEW]\n_view.beneficial_ownership_record.effective_date [VIEW]\n_view.benefit.effective_date [VIEW]\n_view.binder.effective_date [VIEW]\n_view.binding_authority.effective_date [VIEW]\n_view.book_roll.effective_date [VIEW]\n_view.broker_of_record_letter.effective_date [VIEW]\n_view.certificate.effective_date [VIEW]\n_view.cession.effective_date [VIEW]\n_view.code_list.effective_date [VIEW]\n_view.commission_agreement.effective_date [VIEW]\n_view.commission_chargeback.effective_date [VIEW]\n_view.communication_preference.effective_date [VIEW]\n_view.contact_point.effective_date [VIEW]\n_view.contract_wording.effective_date [VIEW]\n_view.cost_catalog.effective_date [VIEW]\n_view.cost_catalog_motor.effective_date [VIEW]\n_view.counterparty_security_approval.effective_date [VIEW]\n_view.coverage.effective_date [VIEW]\n_view.coverage_motor_us_commercial.effective_date [VIEW]\n_view.coverage_motor_us_fleet.effective_date [VIEW]\n_view.coverage_motor_us_personal.effective_date [VIEW]\n_view.coverage_property_commercial.effective_date [VIEW]\n_view.coverage_property_us_personal.effective_date [VIEW]\n_view.domain_role_type.effective_date [VIEW]\n_view.endorsement.effective_date [VIEW]\n_view.facultative_certificate.effective_date [VIEW]\n_view.fee_schedule.effective_date [VIEW]\n_view.fronting_arrangement.effective_date [VIEW]\n_view.geographic_zone.effective_date [VIEW]\n_view.glossary_term.effective_date [VIEW]\n_view.group_master_policy.effective_date [VIEW]\n_view.grouping.effective_date [VIEW]\n_view.iam_role.effective_date [VIEW]\n_view.index.effective_date [VIEW]\n_view.insured_object.effective_date [VIEW]\n_view.insured_object_flood_us_commercial_safepoint.effective_date [VIEW]\n_view.insured_object_flood_us_personal_safepoint.effective_date [VIEW]\n_view.insured_object_property_us_personal_safepoint.effective_date [VIEW]\n_view.kpi.effective_date [VIEW]\n_view.kpi_taxonomy.effective_date [VIEW]\n_view.location.effective_date [VIEW]\n_view.location_property_us_personal.effective_date [VIEW]\n_view.loss_portfolio_transfer.effective_date [VIEW]\n_view.member_resolution.effective_date [VIEW]\n_view.membership.effective_date [VIEW]\n_view.network.effective_date [VIEW]\n_view.network_agreement.effective_date [VIEW]\n_view.nomination.effective_date [VIEW]\n_view.non_renewal.effective_date [VIEW]\n_view.novation.effective_date [VIEW]\n_view.parameter_set.effective_date [VIEW]\n_view.party_life_event.effective_date [VIEW]\n_view.peril.effective_date [VIEW]\n_view.plan_design.effective_date [VIEW]\n_view.policy.effective_date [VIEW]\n_view.policy_property_us_fl_personal_safepoint.effective_date [VIEW]\n_view.policy_restructure.effective_date [VIEW]\n_view.policy_schedule.effective_date [VIEW]\n_view.portfolio_conversion.effective_date [VIEW]\n_view.portfolio_transfer.effective_date [VIEW]\n_view.prior_insurance.effective_date [VIEW]\n_view.prior_insurance_property_us_personal.effective_date [VIEW]\n_view.producer_agreement.effective_date [VIEW]\n_view.producer_appointment.effective_date [VIEW]\n_view.product.effective_date [VIEW]\n_view.product_version.effective_date [VIEW]\n_view.rating_plan.effective_date [VIEW]\n_view.regulatory_action.effective_date [VIEW]\n_view.reinsurance_collateral.effective_date [VIEW]\n_view.relationship.effective_date [VIEW]\n_view.renewal_rights_transfer.effective_date [VIEW]\n_view.requirement_checklist.effective_date [VIEW]\n_view.rider.effective_date [VIEW]\n_view.role_assignment.effective_date [VIEW]\n_view.scheduled_item.effective_date [VIEW]\n_view.servicing_transaction.effective_date [VIEW]\n_view.treaty_participation.effective_date [VIEW]\n_view.trigger.effective_date [VIEW]\n_view.underwriting_guideline.effective_date [VIEW]\n_view.user_role.effective_date [VIEW]\n_view.workflow_definition.effective_date [VIEW]\n_view.workflow_taxonomy.effective_date [VIEW]\ncore_all.address.effective_date [TABLE]\ncore_all.adverse_development_cover.effective_date [TABLE]\ncore_all.beneficial_ownership_record.effective_date [TABLE]\ncore_all.benefit.effective_date [TABLE]\ncore_all.binder.effective_date [TABLE]\ncore_all.binding_authority.effective_date [TABLE]\ncore_all.book_roll.effective_date [TABLE]\ncore_all.broker_of_record_letter.effective_date [TABLE]\ncore_all.certificate.effective_date [TABLE]\ncore_all.cession.effective_date [TABLE]\ncore_all.code_list.effective_date [TABLE]\ncore_all.commission_agreement.effective_date [TABLE]\ncore_all.commission_chargeback.effective_date [TABLE]\ncore_all.communication_preference.effective_date [TABLE]\ncore_all.contact_point.effective_date [TABLE]\ncore_all.contract_wording.effective_date [TABLE]\ncore_all.counterparty_security_approval.effective_date [TABLE]\ncore_all.coverage.effective_date [TABLE]\ncore_all.domain_role_type.effective_date [TABLE]\ncore_all.endorsement.effective_date [TABLE]\ncore_all.facultative_certificate.effective_date [TABLE]\ncore_all.fee_schedule.effective_date [TABLE]\ncore_all.fronting_arrangement.effective_date [TABLE]\ncore_all.geographic_zone.effective_date [TABLE]\ncore_all.glossary_term.effective_date [TABLE]\ncore_all.group_master_policy.effective_date [TABLE]\ncore_all.grouping.effective_date [TABLE]\ncore_all.index.effective_date [TABLE]\ncore_all.insured_object.effective_date [TABLE]\ncore_all.location.effective_date [TABLE]\ncore_all.loss_portfolio_transfer.effective_date [TABLE]\ncore_all.member_resolution.effective_date [TABLE]\ncore_all.membership.effective_date [TABLE]\ncore_all.network.effective_date [TABLE]\ncore_all.network_agreement.effective_date [TABLE]\ncore_all.nomination.effective_date [TABLE]\ncore_all.non_renewal.effective_date [TABLE]\ncore_all.novation.effective_date [TABLE]\ncore_all.parameter_set.effective_date [TABLE]\ncore_all.party_life_event.effective_date [TABLE]\ncore_all.peril.effective_date [TABLE]\ncore_all.plan_design.effective_date [TABLE]\ncore_all.policy_restructure.effective_date [TABLE]\ncore_all.policy_schedule.effective_date [TABLE]\ncore_all.portfolio_conversion.effective_date [TABLE]\ncore_all.portfolio_transfer.effective_date [TABLE]\ncore_all.producer_agreement.effective_date [TABLE]\ncore_all.producer_appointment.effective_date [TABLE]\ncore_all.product.effective_date [TABLE]\ncore_all.product_version.effective_date [TABLE]\ncore_all.rating_plan.effective_date [TABLE]\ncore_all.regulatory_action.effective_date [TABLE]\ncore_all.reinsurance_collateral.effective_date [TABLE]\ncore_all.relationship.effective_date [TABLE]\ncore_all.renewal_rights_transfer.effective_date [TABLE]\ncore_all.requirement_checklist.effective_date [TABLE]\ncore_all.rider.effective_date [TABLE]\ncore_all.role_assignment.effective_date [TABLE]\ncore_all.scheduled_item.effective_date [TABLE]\ncore_all.servicing_transaction.effective_date [TABLE]\ncore_all.treaty_participation.effective_date [TABLE]\ncore_all.trigger.effective_date [TABLE]\ncore_all.underwriting_guideline.effective_date [TABLE]\njur_us_property_personal.policy.effective_date [TABLE]\njur_us_property_personal.prior_insurance.effective_date [TABLE]\nlob_motor.cost_catalog.effective_date [TABLE]\nmycel_iam.iam_role.effective_date [TABLE]\nmycel_iam.user_role.effective_date [TABLE]\nmycel_kpi.kpi.effective_date [TABLE]\nmycel_kpi.kpi_taxonomy.effective_date [TABLE]\nmycel_workflow.workflow_definition.effective_date [TABLE]\nmycel_workflow.workflow_taxonomy.effective_date [TABLE]",
+      "candidates": "",
+      "note": "Confirmed by schema column name."
+    },
+    {
+      "number": "7",
+      "column": "G",
+      "header": "Risk Origin",
+      "status": "Review - Possible Mapping",
+      "confidence": "Medium/Low",
+      "locations": "",
+      "candidates": "origin (60%) -> _view.fraud_investigation_case.origin [VIEW]; _view.insured_trip.origin [VIEW]; _view.insured_trip_travel.origin [VIEW]; _view.marine_voyage.origin [VIEW]; _view.marine_voyage_marine.origin [VIEW]; core_all.fraud_investigation_case.origin [TABLE]; lob_marine.marine_voyage.origin [TABLE]; lob_travel.insured_trip.origin [TABLE]\ncarrier (47%) -> _engine.variant.carrier [TABLE]; _view.access_decision.carrier [VIEW]; _view.access_grant.carrier [VIEW]; _view.access_recertification_campaign.carrier [VIEW]; _view.account.carrier [VIEW]; _view.account_address.carrier [VIEW]; _view.account_address_property_us_personal.carrier [VIEW]; _view.account_contact_company.carrier [VIEW]; _view.account_contact_company_accountcontactroles.carrier [VIEW]; _view.account_contact_individual.carrier [VIEW]; _view.account_contact_location.carrier [VIEW]; _view.account_contact_organization.carrier [VIEW]",
+      "note": "Candidate only; do not treat as confirmed without data-model review."
+    },
+    {
+      "number": "8",
+      "column": "H",
+      "header": "Occupancy",
+      "status": "Review - Possible Mapping",
+      "confidence": "Medium/Low",
+      "locations": "",
+      "candidates": "occupancy_type (95%) -> _view.dwelling.occupancy_type [VIEW]; _view.dwelling_incident.occupancy_type [VIEW]; _view.dwelling_property_us_personal.occupancy_type [VIEW]; _view.fixed_property_incident.occupancy_type [VIEW]; _view.geo_code_address_result.occupancy_type [VIEW]; _view.geo_code_address_result_property_us_personal.occupancy_type [VIEW]; _view.location.occupancy_type [VIEW]; _view.location_property_us_personal.occupancy_type [VIEW]; core_all.dwelling_incident.occupancy_type [TABLE]; core_all.fixed_property_incident.occupancy_type [TABLE]; core_all.location.occupancy_type [TABLE]; jur_us_property_personal.dwelling.occupancy_type [TABLE]\nresidence_occupancy (89%) -> _view.policy.residence_occupancy [VIEW]; _view.policy_property_us_fl_personal_safepoint.residence_occupancy [VIEW]; lob_property_personal.policy.residence_occupancy [TABLE]\noccupancy_status (60%) -> _view.occupancy_profile.occupancy_status [VIEW]; _view.occupancy_profile_property.occupancy_status [VIEW]; lob_property.occupancy_profile.occupancy_status [TABLE]\nincidental_occupancy (56%) -> _view.risk_coverage.incidental_occupancy [VIEW]; _view.risk_coverage_property_us_personal.incidental_occupancy [VIEW]; jur_us_property_personal.risk_coverage.incidental_occupancy [TABLE]\noccupancy_class_code (47%) -> _view.policy.occupancy_class_code [VIEW]; _view.policy_property_commercial.occupancy_class_code [VIEW]; lob_property_commercial.policy.occupancy_class_code [TABLE]\noccupancy_profile_id (47%) -> _view.occupancy_profile.occupancy_profile_id [VIEW]; _view.occupancy_profile_property.occupancy_profile_id [VIEW]; core_all.occupancy_profile.occupancy_profile_id [TABLE]; lob_property.occupancy_profile.occupancy_profile_id [TABLE]",
+      "note": "Candidate only; do not treat as confirmed without data-model review."
+    },
+    {
+      "number": "9",
+      "column": "I",
+      "header": "Occupied By",
+      "status": "Review - Possible Mapping",
+      "confidence": "Medium/Low",
+      "locations": "",
+      "candidates": "calculated_by (46%) -> _view.kpi_value.calculated_by [VIEW]; mycel_kpi.kpi_value.calculated_by [TABLE]",
+      "note": "Candidate only; do not treat as confirmed without data-model review."
+    },
+    {
+      "number": "10",
+      "column": "J",
+      "header": "Year Built",
+      "status": "Confirmed - Exact/Normalized",
+      "confidence": "High",
+      "locations": "_view.dwelling.year_built [VIEW]\n_view.dwelling_incident.year_built [VIEW]\n_view.dwelling_property_us_personal.year_built [VIEW]\ncore_all.dwelling_incident.year_built [TABLE]\njur_us_property_personal.dwelling.year_built [TABLE]",
+      "candidates": "",
+      "note": "Confirmed by schema column name."
+    },
+    {
+      "number": "11",
+      "column": "K",
+      "header": "Construction",
+      "status": "Confirmed - Exact/Normalized",
+      "confidence": "High",
+      "locations": "_view.dwelling.construction [VIEW]\n_view.dwelling_property_us_personal.construction [VIEW]\njur_us_property_personal.dwelling.construction [TABLE]",
+      "candidates": "",
+      "note": "Confirmed by schema column name."
+    },
+    {
+      "number": "12",
+      "column": "L",
+      "header": "Protection Class",
+      "status": "Confirmed - Exact/Normalized",
+      "confidence": "High",
+      "locations": "_view.dwelling_asset.protection_class [VIEW]\n_view.dwelling_asset_property_personal.protection_class [VIEW]\nlob_property_personal.dwelling_asset.protection_class [TABLE]",
+      "candidates": "",
+      "note": "Confirmed by schema column name."
+    },
+    {
+      "number": "13",
+      "column": "M",
+      "header": "Number of Stories",
+      "status": "Confirmed - Exact/Normalized",
+      "confidence": "High",
+      "locations": "_view.dwelling.number_of_stories [VIEW]\n_view.dwelling_property_us_personal.number_of_stories [VIEW]\n_view.geo_code_address_result.number_of_stories [VIEW]\n_view.geo_code_address_result_property_us_personal.number_of_stories [VIEW]\njur_us_property_personal.dwelling.number_of_stories [TABLE]\njur_us_property_personal.geo_code_address_result.number_of_stories [TABLE]",
+      "candidates": "",
+      "note": "Confirmed by schema column name."
+    },
+    {
+      "number": "14",
+      "column": "N",
+      "header": "Number of Units",
+      "status": "Confirmed - Exact/Normalized",
+      "confidence": "High",
+      "locations": "_view.dwelling.number_of_units [VIEW]\n_view.dwelling_asset.number_of_units [VIEW]\n_view.dwelling_asset_property_personal.number_of_units [VIEW]\n_view.dwelling_property_us_personal.number_of_units [VIEW]\njur_us_property_personal.dwelling.number_of_units [TABLE]\nlob_property_personal.dwelling_asset.number_of_units [TABLE]",
+      "candidates": "",
+      "note": "Confirmed by schema column name."
+    },
+    {
+      "number": "15",
+      "column": "O",
+      "header": "Total Number of Units Within the Fire Division",
+      "status": "Review - Possible Mapping",
+      "confidence": "Medium/Low",
+      "locations": "",
+      "candidates": "number_of_units (72%) -> _view.dwelling.number_of_units [VIEW]; _view.dwelling_asset.number_of_units [VIEW]; _view.dwelling_asset_property_personal.number_of_units [VIEW]; _view.dwelling_property_us_personal.number_of_units [VIEW]; jur_us_property_personal.dwelling.number_of_units [TABLE]; lob_property_personal.dwelling_asset.number_of_units [TABLE]",
+      "note": "Candidate only; do not treat as confirmed without data-model review."
+    },
+    {
+      "number": "16",
+      "column": "P",
+      "header": "Burglar Alarm",
+      "status": "Confirmed - Exact/Normalized",
+      "confidence": "High",
+      "locations": "_view.dwelling.burglar_alarm [VIEW]\n_view.dwelling_property_us_personal.burglar_alarm [VIEW]\njur_us_property_personal.dwelling.burglar_alarm [TABLE]",
+      "candidates": "",
+      "note": "Confirmed by schema column name."
+    },
+    {
+      "number": "17",
+      "column": "Q",
+      "header": "Fire Protection Device",
+      "status": "Review - Possible Mapping",
+      "confidence": "Medium/Low",
+      "locations": "",
+      "candidates": "is_fire_protection_available (57%) -> _view.dwelling_incident.is_fire_protection_available [VIEW]; core_all.dwelling_incident.is_fire_protection_available [TABLE]",
+      "note": "Candidate only; do not treat as confirmed without data-model review."
+    },
+    {
+      "number": "18",
+      "column": "R",
+      "header": "Sprinkler System",
+      "status": "Review - Possible Mapping",
+      "confidence": "Medium/Low",
+      "locations": "",
+      "candidates": "sprinkler (60%) -> _view.dwelling.sprinkler [VIEW]; _view.dwelling_property_us_personal.sprinkler [VIEW]; jur_us_property_personal.dwelling.sprinkler [TABLE]\nis_system (55%) -> _view.permission.is_system [VIEW]; mycel_iam.permission.is_system [TABLE]\nsource_system (47%) -> _view.raw_xml_document.source_system [VIEW]; _view.raw_xml_document_property_us_personal.source_system [VIEW]; jur_us_property_personal.raw_xml_document.source_system [TABLE]",
+      "note": "Candidate only; do not treat as confirmed without data-model review."
+    },
+    {
+      "number": "19",
+      "column": "S",
+      "header": "Building Code Effectiveness Grading",
+      "status": "Confirmed - Exact/Normalized",
+      "confidence": "High",
+      "locations": "_view.dwelling.building_code_effectiveness_grading [VIEW]\n_view.dwelling_property_us_personal.building_code_effectiveness_grading [VIEW]\njur_us_property_personal.dwelling.building_code_effectiveness_grading [TABLE]",
+      "candidates": "",
+      "note": "Confirmed by schema column name."
+    },
+    {
+      "number": "20",
+      "column": "T",
+      "header": "Roof Covering",
+      "status": "Review - Possible Mapping",
+      "confidence": "Medium/Low",
+      "locations": "",
+      "candidates": "roof_cover (87%) -> _view.dwelling.roof_cover [VIEW]; _view.dwelling_property_us_personal.roof_cover [VIEW]; jur_us_property_personal.dwelling.roof_cover [TABLE]\npredominant_roof_covering (67%) -> _view.dwelling.predominant_roof_covering [VIEW]; _view.dwelling_property_us_personal.predominant_roof_covering [VIEW]; _view.geo_code_address_result.predominant_roof_covering [VIEW]; _view.geo_code_address_result_property_us_personal.predominant_roof_covering [VIEW]; jur_us_property_personal.dwelling.predominant_roof_covering [TABLE]; jur_us_property_personal.geo_code_address_result.predominant_roof_covering [TABLE]\nroof_covering_code_compliance (56%) -> _view.wind_mitigation_verification.roof_covering_code_compliance [VIEW]; _view.wind_mitigation_verification_property_us_fl_personal_safepoint.roof_covering_code_compliance [VIEW]; ext_safepoint_us_fl_property_personal.wind_mitigation_verification.roof_covering_code_compliance [TABLE]\nroof_cover_prior (47%) -> _view.dwelling.roof_cover_prior [VIEW]; _view.dwelling_property_us_personal.roof_cover_prior [VIEW]; jur_us_property_personal.dwelling.roof_cover_prior [TABLE]\nroof_condition (46%) -> _view.dwelling_asset.roof_condition [VIEW]; _view.dwelling_asset_property_personal.roof_condition [VIEW]; lob_property_personal.dwelling_asset.roof_condition [TABLE]",
+      "note": "Candidate only; do not treat as confirmed without data-model review."
+    },
+    {
+      "number": "21",
+      "column": "U",
+      "header": "Roof Wall Connection",
+      "status": "Review - Possible Mapping",
+      "confidence": "Medium/Low",
+      "locations": "",
+      "candidates": "roof_to_wall_connection (98%) -> _view.wind_mitigation_verification.roof_to_wall_connection [VIEW]; _view.wind_mitigation_verification_property_us_fl_personal_safepoint.roof_to_wall_connection [VIEW]; _view.wind_mitigation_verification_property_us_tx_personal_safepoint.roof_to_wall_connection [VIEW]; jur_us_property_personal.wind_mitigation_verification.roof_to_wall_connection [TABLE]\nroof_to_wall_attachment (53%) -> _view.dwelling.roof_to_wall_attachment [VIEW]; _view.dwelling_property_us_personal.roof_to_wall_attachment [VIEW]; jur_us_property_personal.dwelling.roof_to_wall_attachment [TABLE]\nroof_to_wall_attachment_prior (49%) -> _view.dwelling.roof_to_wall_attachment_prior [VIEW]; _view.dwelling_property_us_personal.roof_to_wall_attachment_prior [VIEW]; jur_us_property_personal.dwelling.roof_to_wall_attachment_prior [TABLE]",
+      "note": "Candidate only; do not treat as confirmed without data-model review."
+    },
+    {
+      "number": "22",
+      "column": "V",
+      "header": "Roof Deck Attachment",
+      "status": "Confirmed - Exact/Normalized",
+      "confidence": "High",
+      "locations": "_view.dwelling.roof_deck_attachment [VIEW]\n_view.dwelling_property_us_personal.roof_deck_attachment [VIEW]\njur_us_property_personal.dwelling.roof_deck_attachment [TABLE]",
+      "candidates": "",
+      "note": "Confirmed by schema column name."
+    },
+    {
+      "number": "23",
+      "column": "W",
+      "header": "Roof Shape",
+      "status": "Confirmed - Exact/Normalized",
+      "confidence": "High",
+      "locations": "_view.wind_mitigation_verification.roof_shape [VIEW]\n_view.wind_mitigation_verification_property_us_fl_personal_safepoint.roof_shape [VIEW]\n_view.wind_mitigation_verification_property_us_tx_personal_safepoint.roof_shape [VIEW]\njur_us_property_personal.wind_mitigation_verification.roof_shape [TABLE]",
+      "candidates": "",
+      "note": "Confirmed by schema column name."
+    },
+    {
+      "number": "24",
+      "column": "X",
+      "header": "Terrain Exposure",
+      "status": "Review - Possible Mapping",
+      "confidence": "Medium/Low",
+      "locations": "",
+      "candidates": "exposure (58%) -> _view.cost.exposure [VIEW]; _view.financial_calculation.exposure [VIEW]; _view.occupational_injury_report.exposure [VIEW]; _view.occupational_injury_report_workers_comp.exposure [VIEW]; _view.subrogation.exposure [VIEW]; core_all.cost.exposure [TABLE]; core_all.financial_calculation.exposure [TABLE]; core_all.subrogation.exposure [TABLE]; lob_workers_comp.occupational_injury_report.exposure [TABLE]\nterrain (56%) -> _view.dwelling.terrain [VIEW]; _view.dwelling_property_us_personal.terrain [VIEW]; jur_us_property_personal.dwelling.terrain [TABLE]\nterrain_prior (50%) -> _view.dwelling.terrain_prior [VIEW]; _view.dwelling_property_us_personal.terrain_prior [VIEW]; jur_us_property_personal.dwelling.terrain_prior [TABLE]\ngross_exposure (46%) -> _view.reinsurance_bad_debt.gross_exposure [VIEW]; core_all.reinsurance_bad_debt.gross_exposure [TABLE]\nexposure_id (46%) -> _view.exposure.exposure_id [VIEW]; core_all.exposure.exposure_id [TABLE]",
+      "note": "Candidate only; do not treat as confirmed without data-model review."
+    },
+    {
+      "number": "25",
+      "column": "Y",
+      "header": "Secondary Water Resistance",
+      "status": "Confirmed - Exact/Normalized",
+      "confidence": "High",
+      "locations": "_view.dwelling.secondary_water_resistance [VIEW]\n_view.dwelling_property_us_personal.secondary_water_resistance [VIEW]\njur_us_property_personal.dwelling.secondary_water_resistance [TABLE]",
+      "candidates": "",
+      "note": "Confirmed by schema column name."
+    },
+    {
+      "number": "26",
+      "column": "Z",
+      "header": "Opening Protection",
+      "status": "Confirmed - Exact/Normalized",
+      "confidence": "High",
+      "locations": "_view.dwelling.opening_protection [VIEW]\n_view.dwelling_property_us_personal.opening_protection [VIEW]\n_view.wind_mitigation_verification.opening_protection [VIEW]\n_view.wind_mitigation_verification_property_us_fl_personal_safepoint.opening_protection [VIEW]\n_view.wind_mitigation_verification_property_us_tx_personal_safepoint.opening_protection [VIEW]\njur_us_property_personal.dwelling.opening_protection [TABLE]\njur_us_property_personal.wind_mitigation_verification.opening_protection [TABLE]",
+      "candidates": "",
+      "note": "Confirmed by schema column name."
+    },
+    {
+      "number": "27",
+      "column": "AA",
+      "header": "Wind Speed Design",
+      "status": "Confirmed - Exact/Normalized",
+      "confidence": "High",
+      "locations": "_view.dwelling.wind_speed_design [VIEW]\n_view.dwelling_property_us_personal.wind_speed_design [VIEW]\njur_us_property_personal.dwelling.wind_speed_design [TABLE]",
+      "candidates": "",
+      "note": "Confirmed by schema column name."
+    },
+    {
+      "number": "28",
+      "column": "AB",
+      "header": "Wind Speed Location",
+      "status": "Confirmed - Exact/Normalized",
+      "confidence": "High",
+      "locations": "_view.dwelling.wind_speed_location [VIEW]\n_view.dwelling_property_us_personal.wind_speed_location [VIEW]\njur_us_property_personal.dwelling.wind_speed_location [TABLE]",
+      "candidates": "",
+      "note": "Confirmed by schema column name."
+    },
+    {
+      "number": "29",
+      "column": "AC",
+      "header": "Coverage A",
+      "status": "Review - Possible Mapping",
+      "confidence": "Medium/Low",
+      "locations": "",
+      "candidates": "coverage (69%) -> _view.cost.coverage [VIEW]; _view.exposure.coverage [VIEW]; core_all.cost.coverage [TABLE]; core_all.exposure.coverage [TABLE]\ncoverage_to (64%) -> _view.charge.coverage_to [VIEW]; _view.premium_earning_schedule.coverage_to [VIEW]; core_all.charge.coverage_to [TABLE]; core_all.premium_earning_schedule.coverage_to [TABLE]\ncoverage_name (55%) -> _view.coverage.coverage_name [VIEW]; _view.coverage_motor_us_commercial.coverage_name [VIEW]; _view.coverage_motor_us_fleet.coverage_name [VIEW]; _view.coverage_motor_us_personal.coverage_name [VIEW]; _view.coverage_property_commercial.coverage_name [VIEW]; _view.coverage_property_us_personal.coverage_name [VIEW]; core_all.coverage.coverage_name [TABLE]\ncoverage_id (55%) -> _view.coverage.coverage_id [VIEW]; _view.coverage_motor_us_commercial.coverage_id [VIEW]; _view.coverage_motor_us_fleet.coverage_id [VIEW]; _view.coverage_motor_us_personal.coverage_id [VIEW]; _view.coverage_property_commercial.coverage_id [VIEW]; _view.coverage_property_us_personal.coverage_id [VIEW]; core_all.coverage.coverage_id [TABLE]; jur_us_motor_commercial.coverage.coverage_id [TABLE]; jur_us_motor_fleet.coverage.coverage_id [TABLE]; jur_us_motor_personal.coverage.coverage_id [TABLE]; jur_us_property_personal.coverage.coverage_id [TABLE]; lob_motor.coverage.coverage_id [TABLE]\ncoverage_status (52%) -> _view.coverage.coverage_status [VIEW]; _view.coverage_instance.coverage_status [VIEW]; _view.coverage_instance_motor_us_commercial.coverage_status [VIEW]; _view.coverage_instance_motor_us_fleet.coverage_status [VIEW]; _view.coverage_instance_motor_us_personal.coverage_status [VIEW]; _view.coverage_instance_property_commercial.coverage_status [VIEW]; _view.coverage_instance_property_us_personal.coverage_status [VIEW]; _view.coverage_motor_us_commercial.coverage_status [VIEW]; _view.coverage_motor_us_fleet.coverage_status [VIEW]; _view.coverage_motor_us_personal.coverage_status [VIEW]; _view.coverage_property_commercial.coverage_status [VIEW]; _view.coverage_property_us_personal.coverage_status [VIEW]\ncoverage_code (51%) -> _view.coverage.coverage_code [VIEW]; _view.coverage_motor_us_commercial.coverage_code [VIEW]; _view.coverage_motor_us_fleet.coverage_code [VIEW]; _view.coverage_motor_us_personal.coverage_code [VIEW]; _view.coverage_property_commercial.coverage_code [VIEW]; _view.coverage_property_us_personal.coverage_code [VIEW]; _view.coverage_template.coverage_code [VIEW]; core_all.coverage.coverage_code [TABLE]; core_all.coverage_template.coverage_code [TABLE]\ncoverage_from (51%) -> _view.charge.coverage_from [VIEW]; _view.premium_earning_schedule.coverage_from [VIEW]; core_all.charge.coverage_from [TABLE]; core_all.premium_earning_schedule.coverage_from [TABLE]\ncoverage_type (51%) -> _view.authority_limit.coverage_type [VIEW]; _view.coverage.coverage_type [VIEW]; _view.coverage_motor_us_commercial.coverage_type [VIEW]; _view.coverage_motor_us_fleet.coverage_type [VIEW]; _view.coverage_motor_us_personal.coverage_type [VIEW]; _view.coverage_property_commercial.coverage_type [VIEW]; _view.coverage_property_us_personal.coverage_type [VIEW]; _view.policy_core.coverage_type [VIEW]; core_all.authority_limit.coverage_type [TABLE]; core_all.coverage.coverage_type [TABLE]; core_all.policy_core.coverage_type [TABLE]",
+      "note": "Candidate only; do not treat as confirmed without data-model review."
+    },
+    {
+      "number": "30",
+      "column": "AD",
+      "header": "Coverage B",
+      "status": "Review - Possible Mapping",
+      "confidence": "Medium/Low",
+      "locations": "",
+      "candidates": "coverage (69%) -> _view.cost.coverage [VIEW]; _view.exposure.coverage [VIEW]; core_all.cost.coverage [TABLE]; core_all.exposure.coverage [TABLE]\ncoverage_to (64%) -> _view.charge.coverage_to [VIEW]; _view.premium_earning_schedule.coverage_to [VIEW]; core_all.charge.coverage_to [TABLE]; core_all.premium_earning_schedule.coverage_to [TABLE]\ncoverage_id (55%) -> _view.coverage.coverage_id [VIEW]; _view.coverage_motor_us_commercial.coverage_id [VIEW]; _view.coverage_motor_us_fleet.coverage_id [VIEW]; _view.coverage_motor_us_personal.coverage_id [VIEW]; _view.coverage_property_commercial.coverage_id [VIEW]; _view.coverage_property_us_personal.coverage_id [VIEW]; core_all.coverage.coverage_id [TABLE]; jur_us_motor_commercial.coverage.coverage_id [TABLE]; jur_us_motor_fleet.coverage.coverage_id [TABLE]; jur_us_motor_personal.coverage.coverage_id [TABLE]; jur_us_property_personal.coverage.coverage_id [TABLE]; lob_motor.coverage.coverage_id [TABLE]\ncoverage_code (51%) -> _view.coverage.coverage_code [VIEW]; _view.coverage_motor_us_commercial.coverage_code [VIEW]; _view.coverage_motor_us_fleet.coverage_code [VIEW]; _view.coverage_motor_us_personal.coverage_code [VIEW]; _view.coverage_property_commercial.coverage_code [VIEW]; _view.coverage_property_us_personal.coverage_code [VIEW]; _view.coverage_template.coverage_code [VIEW]; core_all.coverage.coverage_code [TABLE]; core_all.coverage_template.coverage_code [TABLE]\ncoverage_from (51%) -> _view.charge.coverage_from [VIEW]; _view.premium_earning_schedule.coverage_from [VIEW]; core_all.charge.coverage_from [TABLE]; core_all.premium_earning_schedule.coverage_from [TABLE]\ncoverage_name (51%) -> _view.coverage.coverage_name [VIEW]; _view.coverage_motor_us_commercial.coverage_name [VIEW]; _view.coverage_motor_us_fleet.coverage_name [VIEW]; _view.coverage_motor_us_personal.coverage_name [VIEW]; _view.coverage_property_commercial.coverage_name [VIEW]; _view.coverage_property_us_personal.coverage_name [VIEW]; core_all.coverage.coverage_name [TABLE]\ncoverage_type (51%) -> _view.authority_limit.coverage_type [VIEW]; _view.coverage.coverage_type [VIEW]; _view.coverage_motor_us_commercial.coverage_type [VIEW]; _view.coverage_motor_us_fleet.coverage_type [VIEW]; _view.coverage_motor_us_personal.coverage_type [VIEW]; _view.coverage_property_commercial.coverage_type [VIEW]; _view.coverage_property_us_personal.coverage_type [VIEW]; _view.policy_core.coverage_type [VIEW]; core_all.authority_limit.coverage_type [TABLE]; core_all.coverage.coverage_type [TABLE]; core_all.policy_core.coverage_type [TABLE]\ncoverage_subtype (51%) -> _view.coverage_issue.coverage_subtype [VIEW]; _view.exposure.coverage_subtype [VIEW]; core_all.coverage_issue.coverage_subtype [TABLE]; core_all.exposure.coverage_subtype [TABLE]",
+      "note": "Candidate only; do not treat as confirmed without data-model review."
+    },
+    {
+      "number": "31",
+      "column": "AE",
+      "header": "Coverage C",
+      "status": "Review - Possible Mapping",
+      "confidence": "Medium/Low",
+      "locations": "",
+      "candidates": "coverage (69%) -> _view.cost.coverage [VIEW]; _view.exposure.coverage [VIEW]; core_all.cost.coverage [TABLE]; core_all.exposure.coverage [TABLE]\ncoverage_to (64%) -> _view.charge.coverage_to [VIEW]; _view.premium_earning_schedule.coverage_to [VIEW]; core_all.charge.coverage_to [TABLE]; core_all.premium_earning_schedule.coverage_to [TABLE]\ncoverage_code (55%) -> _view.coverage.coverage_code [VIEW]; _view.coverage_motor_us_commercial.coverage_code [VIEW]; _view.coverage_motor_us_fleet.coverage_code [VIEW]; _view.coverage_motor_us_personal.coverage_code [VIEW]; _view.coverage_property_commercial.coverage_code [VIEW]; _view.coverage_property_us_personal.coverage_code [VIEW]; _view.coverage_template.coverage_code [VIEW]; core_all.coverage.coverage_code [TABLE]; core_all.coverage_template.coverage_code [TABLE]\ncoverage_id (55%) -> _view.coverage.coverage_id [VIEW]; _view.coverage_motor_us_commercial.coverage_id [VIEW]; _view.coverage_motor_us_fleet.coverage_id [VIEW]; _view.coverage_motor_us_personal.coverage_id [VIEW]; _view.coverage_property_commercial.coverage_id [VIEW]; _view.coverage_property_us_personal.coverage_id [VIEW]; core_all.coverage.coverage_id [TABLE]; jur_us_motor_commercial.coverage.coverage_id [TABLE]; jur_us_motor_fleet.coverage.coverage_id [TABLE]; jur_us_motor_personal.coverage.coverage_id [TABLE]; jur_us_property_personal.coverage.coverage_id [TABLE]; lob_motor.coverage.coverage_id [TABLE]\ncoverage_from (51%) -> _view.charge.coverage_from [VIEW]; _view.premium_earning_schedule.coverage_from [VIEW]; core_all.charge.coverage_from [TABLE]; core_all.premium_earning_schedule.coverage_from [TABLE]\ncoverage_name (51%) -> _view.coverage.coverage_name [VIEW]; _view.coverage_motor_us_commercial.coverage_name [VIEW]; _view.coverage_motor_us_fleet.coverage_name [VIEW]; _view.coverage_motor_us_personal.coverage_name [VIEW]; _view.coverage_property_commercial.coverage_name [VIEW]; _view.coverage_property_us_personal.coverage_name [VIEW]; core_all.coverage.coverage_name [TABLE]\ncoverage_type (51%) -> _view.authority_limit.coverage_type [VIEW]; _view.coverage.coverage_type [VIEW]; _view.coverage_motor_us_commercial.coverage_type [VIEW]; _view.coverage_motor_us_fleet.coverage_type [VIEW]; _view.coverage_motor_us_personal.coverage_type [VIEW]; _view.coverage_property_commercial.coverage_type [VIEW]; _view.coverage_property_us_personal.coverage_type [VIEW]; _view.policy_core.coverage_type [VIEW]; core_all.authority_limit.coverage_type [TABLE]; core_all.coverage.coverage_type [TABLE]; core_all.policy_core.coverage_type [TABLE]\ncoverage_terms (50%) -> _view.document_template.coverage_terms [VIEW]; core_all.document_template.coverage_terms [TABLE]",
+      "note": "Candidate only; do not treat as confirmed without data-model review."
+    },
+    {
+      "number": "32",
+      "column": "AF",
+      "header": "Coverage E",
+      "status": "Review - Possible Mapping",
+      "confidence": "Medium/Low",
+      "locations": "",
+      "candidates": "coverage (69%) -> _view.cost.coverage [VIEW]; _view.exposure.coverage [VIEW]; core_all.cost.coverage [TABLE]; core_all.exposure.coverage [TABLE]\ncoverage_to (64%) -> _view.charge.coverage_to [VIEW]; _view.premium_earning_schedule.coverage_to [VIEW]; core_all.charge.coverage_to [TABLE]; core_all.premium_earning_schedule.coverage_to [TABLE]\ncoverage_code (55%) -> _view.coverage.coverage_code [VIEW]; _view.coverage_motor_us_commercial.coverage_code [VIEW]; _view.coverage_motor_us_fleet.coverage_code [VIEW]; _view.coverage_motor_us_personal.coverage_code [VIEW]; _view.coverage_property_commercial.coverage_code [VIEW]; _view.coverage_property_us_personal.coverage_code [VIEW]; _view.coverage_template.coverage_code [VIEW]; core_all.coverage.coverage_code [TABLE]; core_all.coverage_template.coverage_code [TABLE]\ncoverage_name (55%) -> _view.coverage.coverage_name [VIEW]; _view.coverage_motor_us_commercial.coverage_name [VIEW]; _view.coverage_motor_us_fleet.coverage_name [VIEW]; _view.coverage_motor_us_personal.coverage_name [VIEW]; _view.coverage_property_commercial.coverage_name [VIEW]; _view.coverage_property_us_personal.coverage_name [VIEW]; core_all.coverage.coverage_name [TABLE]\ncoverage_type (55%) -> _view.authority_limit.coverage_type [VIEW]; _view.coverage.coverage_type [VIEW]; _view.coverage_motor_us_commercial.coverage_type [VIEW]; _view.coverage_motor_us_fleet.coverage_type [VIEW]; _view.coverage_motor_us_personal.coverage_type [VIEW]; _view.coverage_property_commercial.coverage_type [VIEW]; _view.coverage_property_us_personal.coverage_type [VIEW]; _view.policy_core.coverage_type [VIEW]; core_all.authority_limit.coverage_type [TABLE]; core_all.coverage.coverage_type [TABLE]; core_all.policy_core.coverage_type [TABLE]\ncoverage_id (55%) -> _view.coverage.coverage_id [VIEW]; _view.coverage_motor_us_commercial.coverage_id [VIEW]; _view.coverage_motor_us_fleet.coverage_id [VIEW]; _view.coverage_motor_us_personal.coverage_id [VIEW]; _view.coverage_property_commercial.coverage_id [VIEW]; _view.coverage_property_us_personal.coverage_id [VIEW]; core_all.coverage.coverage_id [TABLE]; jur_us_motor_commercial.coverage.coverage_id [TABLE]; jur_us_motor_fleet.coverage.coverage_id [TABLE]; jur_us_motor_personal.coverage.coverage_id [TABLE]; jur_us_property_personal.coverage.coverage_id [TABLE]; lob_motor.coverage.coverage_id [TABLE]\ncoverage_terms (54%) -> _view.document_template.coverage_terms [VIEW]; core_all.document_template.coverage_terms [TABLE]\ncoverage_term_id (52%) -> _view.coverage_term.coverage_term_id [VIEW]; _view.coverage_term_property_us_personal.coverage_term_id [VIEW]; core_all.coverage_term.coverage_term_id [TABLE]; jur_us_property_personal.coverage_term.coverage_term_id [TABLE]; lob_property.coverage_term.coverage_term_id [TABLE]; lob_property_personal.coverage_term.coverage_term_id [TABLE]",
+      "note": "Candidate only; do not treat as confirmed without data-model review."
+    },
+    {
+      "number": "33",
+      "column": "AG",
+      "header": "All Peril Deductible",
+      "status": "Review - Possible Mapping",
+      "confidence": "Medium/Low",
+      "locations": "",
+      "candidates": "deductible (81%) -> _view.exposure.deductible [VIEW]; _view.prior_insurance.deductible [VIEW]; _view.prior_insurance_property_us_personal.deductible [VIEW]; _view.section_icoverages_coverage.deductible [VIEW]; _view.section_icoverages_coverage_property_us_personal.deductible [VIEW]; _view.section_iicoverages_coverage.deductible [VIEW]; _view.section_iicoverages_coverage_property_us_personal.deductible [VIEW]; core_all.exposure.deductible [TABLE]; jur_us_property_personal.prior_insurance.deductible [TABLE]; jur_us_property_personal.section_icoverages_coverage.deductible [TABLE]; jur_us_property_personal.section_iicoverages_coverage.deductible [TABLE]\nperil_coverage_deductible_id (53%) -> _view.peril_coverage_deductible.peril_coverage_deductible_id [VIEW]; _view.peril_coverage_deductible_property_us_personal.peril_coverage_deductible_id [VIEW]; core_all.peril_coverage_deductible.peril_coverage_deductible_id [TABLE]; jur_us_property_personal.peril_coverage_deductible.peril_coverage_deductible_id [TABLE]; lob_property.peril_coverage_deductible.peril_coverage_deductible_id [TABLE]; lob_property_personal.peril_coverage_deductible.peril_coverage_deductible_id [TABLE]",
+      "note": "Candidate only; do not treat as confirmed without data-model review."
+    },
+    {
+      "number": "34",
+      "column": "AH",
+      "header": "Hurricane Deductible",
+      "status": "Review - Possible Mapping",
+      "confidence": "Medium/Low",
+      "locations": "",
+      "candidates": "flood_hurricane_deductible (76%) -> _view.section_icoverages_coverage.flood_hurricane_deductible [VIEW]; _view.section_icoverages_coverage_property_us_personal.flood_hurricane_deductible [VIEW]; jur_us_property_personal.section_icoverages_coverage.flood_hurricane_deductible [TABLE]\nprior_hurricane_deductible (76%) -> _view.dwelling.prior_hurricane_deductible [VIEW]; _view.dwelling_property_us_personal.prior_hurricane_deductible [VIEW]; jur_us_property_personal.dwelling.prior_hurricane_deductible [TABLE]\nhurricane_deductible_lnlimit (74%) -> _view.dwelling.hurricane_deductible_lnlimit [VIEW]; _view.dwelling_property_us_personal.hurricane_deductible_lnlimit [VIEW]; jur_us_property_personal.dwelling.hurricane_deductible_lnlimit [TABLE]\nflorida_hurricane_deductible_option (60%) -> _view.coverage_deductible.florida_hurricane_deductible_option [VIEW]; _view.coverage_deductible_property_us_fl_personal_safepoint.florida_hurricane_deductible_option [VIEW]; ext_safepoint_us_fl_property_personal.coverage_deductible.florida_hurricane_deductible_option [TABLE]\ndeductible (58%) -> _view.exposure.deductible [VIEW]; _view.prior_insurance.deductible [VIEW]; _view.prior_insurance_property_us_personal.deductible [VIEW]; _view.section_icoverages_coverage.deductible [VIEW]; _view.section_icoverages_coverage_property_us_personal.deductible [VIEW]; _view.section_iicoverages_coverage.deductible [VIEW]; _view.section_iicoverages_coverage_property_us_personal.deductible [VIEW]; core_all.exposure.deductible [TABLE]; jur_us_property_personal.prior_insurance.deductible [TABLE]; jur_us_property_personal.section_icoverages_coverage.deductible [TABLE]; jur_us_property_personal.section_iicoverages_coverage.deductible [TABLE]\ncalendar_year_hurricane_deductible_remaining (50%) -> _view.coverage_deductible.calendar_year_hurricane_deductible_remaining [VIEW]; _view.coverage_deductible_property_us_fl_personal_safepoint.calendar_year_hurricane_deductible_remaining [VIEW]; ext_safepoint_us_fl_property_personal.coverage_deductible.calendar_year_hurricane_deductible_remaining [TABLE]\napplicable_deductible (49%) -> _view.coverage_position.applicable_deductible [VIEW]; core_all.coverage_position.applicable_deductible [TABLE]\ntornado_deductible (47%) -> _view.dwelling_deductible.tornado_deductible [VIEW]; _view.dwelling_deductible_property_us_personal.tornado_deductible [VIEW]; jur_us_property_personal.dwelling_deductible.tornado_deductible [TABLE]",
+      "note": "Candidate only; do not treat as confirmed without data-model review."
+    },
+    {
+      "number": "35",
+      "column": "AI",
+      "header": "Permitted Incidental Occupancy (Business Use)",
+      "status": "Review - Possible Mapping",
+      "confidence": "Medium/Low",
+      "locations": "",
+      "candidates": "residence_occupancy (62%) -> _view.policy.residence_occupancy [VIEW]; _view.policy_property_us_fl_personal_safepoint.residence_occupancy [VIEW]; lob_property_personal.policy.residence_occupancy [TABLE]\nrisk_permitted_incidental_occupancy (62%) -> _view.line.risk_permitted_incidental_occupancy [VIEW]; _view.line_property_us_personal.risk_permitted_incidental_occupancy [VIEW]; jur_us_property_personal.line.risk_permitted_incidental_occupancy [TABLE]\noccupancy_type (58%) -> _view.dwelling.occupancy_type [VIEW]; _view.dwelling_incident.occupancy_type [VIEW]; _view.dwelling_property_us_personal.occupancy_type [VIEW]; _view.fixed_property_incident.occupancy_type [VIEW]; _view.geo_code_address_result.occupancy_type [VIEW]; _view.geo_code_address_result_property_us_personal.occupancy_type [VIEW]; _view.location.occupancy_type [VIEW]; _view.location_property_us_personal.occupancy_type [VIEW]; core_all.dwelling_incident.occupancy_type [TABLE]; core_all.fixed_property_incident.occupancy_type [TABLE]; core_all.location.occupancy_type [TABLE]; jur_us_property_personal.dwelling.occupancy_type [TABLE]\nincidental_occupancy (51%) -> _view.risk_coverage.incidental_occupancy [VIEW]; _view.risk_coverage_property_us_personal.incidental_occupancy [VIEW]; jur_us_property_personal.risk_coverage.incidental_occupancy [TABLE]\nattr_incidental_occupancy (48%) -> _view.sos.attr_incidental_occupancy [VIEW]; _view.sos_property_us_personal.attr_incidental_occupancy [VIEW]; jur_us_property_personal.sos.attr_incidental_occupancy [TABLE]",
+      "note": "Candidate only; do not treat as confirmed without data-model review."
+    },
+    {
+      "number": "36",
+      "column": "AJ",
+      "header": "Specific Other Structures Coverage - Rented to Others Residence",
+      "status": "Not Found",
+      "confidence": "High (for name-based absence)",
+      "locations": "",
+      "candidates": "",
+      "note": "Column is not present by exact/normalized name in the supplied DDL."
+    },
+    {
+      "number": "37",
+      "column": "AK",
+      "header": "Ordinance or Law Coverage",
+      "status": "Not Found",
+      "confidence": "High (for name-based absence)",
+      "locations": "",
+      "candidates": "",
+      "note": "Column is not present by exact/normalized name in the supplied DDL."
+    },
+    {
+      "number": "38",
+      "column": "AL",
+      "header": "Loss Assessment Coverage",
+      "status": "Not Found",
+      "confidence": "High (for name-based absence)",
+      "locations": "",
+      "candidates": "",
+      "note": "Column is not present by exact/normalized name in the supplied DDL."
+    },
+    {
+      "number": "39",
+      "column": "AM",
+      "header": "Screened Enclosure",
+      "status": "Not Found",
+      "confidence": "High (for name-based absence)",
+      "locations": "",
+      "candidates": "",
+      "note": "Column is not present by exact/normalized name in the supplied DDL."
+    },
+    {
+      "number": "40",
+      "column": "AN",
+      "header": "Replacement Cost on Contents",
+      "status": "Review - Possible Mapping",
+      "confidence": "Medium/Low",
+      "locations": "",
+      "candidates": "replacement_cost_amount (56%) -> _view.contents_loss_item.replacement_cost_amount [VIEW]; _view.contents_loss_item_property.replacement_cost_amount [VIEW]; lob_property.contents_loss_item.replacement_cost_amount [TABLE]\nextended_replacement_cost_percentage (47%) -> _view.coverage_instance.extended_replacement_cost_percentage [VIEW]; _view.coverage_instance_property_us_personal.extended_replacement_cost_percentage [VIEW]; lob_property_personal.coverage_instance.extended_replacement_cost_percentage [TABLE]",
+      "note": "Candidate only; do not treat as confirmed without data-model review."
+    },
+    {
+      "number": "41",
+      "column": "AO",
+      "header": "Water Back Up",
+      "status": "Review - Possible Mapping",
+      "confidence": "Medium/Low",
+      "locations": "",
+      "candidates": "water_back_up_expire_date (64%) -> _view.section_icoverages_coverage.water_back_up_expire_date [VIEW]; _view.section_icoverages_coverage_property_us_personal.water_back_up_expire_date [VIEW]; jur_us_property_personal.section_icoverages_coverage.water_back_up_expire_date [TABLE]",
+      "note": "Candidate only; do not treat as confirmed without data-model review."
+    },
+    {
+      "number": "42",
+      "column": "AP",
+      "header": "Sinkhole Coverage",
+      "status": "Review - Possible Mapping",
+      "confidence": "Medium/Low",
+      "locations": "",
+      "candidates": "sinkhole_coverage_option (74%) -> _view.policy.sinkhole_coverage_option [VIEW]; _view.policy_property_us_fl_personal_safepoint.sinkhole_coverage_option [VIEW]; ext_safepoint_us_fl_property_personal.policy.sinkhole_coverage_option [TABLE]\ncoverage (57%) -> _view.cost.coverage [VIEW]; _view.exposure.coverage [VIEW]; core_all.cost.coverage [TABLE]; core_all.exposure.coverage [TABLE]\ncoverage_to (55%) -> _view.charge.coverage_to [VIEW]; _view.premium_earning_schedule.coverage_to [VIEW]; core_all.charge.coverage_to [TABLE]; core_all.premium_earning_schedule.coverage_to [TABLE]\nis_foreign_coverage (47%) -> _view.policy_status.is_foreign_coverage [VIEW]; core_all.policy_status.is_foreign_coverage [TABLE]",
+      "note": "Candidate only; do not treat as confirmed without data-model review."
+    },
+    {
+      "number": "43",
+      "column": "AQ",
+      "header": "Limited Fungi, Wet or Dry Rot, Yeast or Bacteria - Sect. 1",
+      "status": "Not Found",
+      "confidence": "High (for name-based absence)",
+      "locations": "",
+      "candidates": "",
+      "note": "Column is not present by exact/normalized name in the supplied DDL."
+    },
+    {
+      "number": "44",
+      "column": "AR",
+      "header": "Limited Fungi, Wet or Dry Rot, Yeast or Bacteria - Sect. 2 $6 for liability increase to $100,000",
+      "status": "Not Found",
+      "confidence": "High (for name-based absence)",
+      "locations": "",
+      "candidates": "",
+      "note": "Column is not present by exact/normalized name in the supplied DDL."
+    },
+    {
+      "number": "45",
+      "column": "AS",
+      "header": "Equipment Breakdown",
+      "status": "Confirmed - Exact/Normalized",
+      "confidence": "High",
+      "locations": "_view.section_icoverages.equipment_breakdown [VIEW]\n_view.section_icoverages_property_us_personal.equipment_breakdown [VIEW]\njur_us_property_personal.section_icoverages.equipment_breakdown [TABLE]",
+      "candidates": "",
+      "note": "Confirmed by schema column name."
+    },
+    {
+      "number": "46",
+      "column": "AT",
+      "header": "HO6 Units Regularly Rented to Others",
+      "status": "Not Found",
+      "confidence": "High (for name-based absence)",
+      "locations": "",
+      "candidates": "",
+      "note": "Column is not present by exact/normalized name in the supplied DDL."
+    },
+    {
+      "number": "47",
+      "column": "AU",
+      "header": "HO6 Special Coverage A",
+      "status": "Not Found",
+      "confidence": "High (for name-based absence)",
+      "locations": "",
+      "candidates": "",
+      "note": "Column is not present by exact/normalized name in the supplied DDL."
+    },
+    {
+      "number": "48",
+      "column": "AV",
+      "header": "Other Structures - Increased Limits - Not Rented",
+      "status": "Not Found",
+      "confidence": "High (for name-based absence)",
+      "locations": "",
+      "candidates": "",
+      "note": "Column is not present by exact/normalized name in the supplied DDL."
+    },
+    {
+      "number": "49",
+      "column": "AW",
+      "header": "Prior Claims",
+      "status": "Review - Possible Mapping",
+      "confidence": "Medium/Low",
+      "locations": "",
+      "candidates": "prior (55%) -> _view.risk_coverage.prior [VIEW]; _view.risk_coverage_property_us_personal.prior [VIEW]; jur_us_property_personal.risk_coverage.prior [TABLE]\nprior_term (54%) -> _view.risk_coverage.prior_term [VIEW]; _view.risk_coverage_property_us_personal.prior_term [VIEW]; jur_us_property_personal.risk_coverage.prior_term [TABLE]\nclaim_count (52%) -> _view.claims_frequency_report.claim_count [VIEW]; _view.loss_run.claim_count [VIEW]; core_all.claims_frequency_report.claim_count [TABLE]; core_all.loss_run.claim_count [TABLE]\nprior_comparison (48%) -> _view.actuarial_certification.prior_comparison [VIEW]; core_all.actuarial_certification.prior_comparison [TABLE]",
+      "note": "Candidate only; do not treat as confirmed without data-model review."
+    },
+    {
+      "number": "50",
+      "column": "AX",
+      "header": "Consent to Rate",
+      "status": "Confirmed - Exact/Normalized",
+      "confidence": "High",
+      "locations": "_view.line.consent_to_rate [VIEW]\n_view.line_property_us_personal.consent_to_rate [VIEW]\njur_us_property_personal.line.consent_to_rate [TABLE]",
+      "candidates": "",
+      "note": "Confirmed by schema column name."
+    },
+    {
+      "number": "51",
+      "column": "AY",
+      "header": "FL CPIC Expiring Premium Non-Sinkhole Non Guaranty Fees (For Term 1)",
+      "status": "Not Found",
+      "confidence": "High (for name-based absence)",
+      "locations": "",
+      "candidates": "",
+      "note": "Column is not present by exact/normalized name in the supplied DDL."
+    },
+    {
+      "number": "52",
+      "column": "AZ",
+      "header": "Manatee Uncapped Initial Non-Sinkhole Non-Guaranty Fees (For Term 1)",
+      "status": "Not Found",
+      "confidence": "High (for name-based absence)",
+      "locations": "",
+      "candidates": "",
+      "note": "Column is not present by exact/normalized name in the supplied DDL."
+    },
+    {
+      "number": "53",
+      "column": "BA",
+      "header": "Was the Prior Term Capped?",
+      "status": "Review - Possible Mapping",
+      "confidence": "Medium/Low",
+      "locations": "",
+      "candidates": "prior_term (54%) -> _view.risk_coverage.prior_term [VIEW]; _view.risk_coverage_property_us_personal.prior_term [VIEW]; jur_us_property_personal.risk_coverage.prior_term [TABLE]",
+      "note": "Candidate only; do not treat as confirmed without data-model review."
+    },
+    {
+      "number": "54",
+      "column": "BB",
+      "header": "Expiring Term Manatee Capped Premium Non-Sinkhole Non Guaranty (For Term 2/3)",
+      "status": "Not Found",
+      "confidence": "High (for name-based absence)",
+      "locations": "",
+      "candidates": "",
+      "note": "Column is not present by exact/normalized name in the supplied DDL."
+    },
+    {
+      "number": "55",
+      "column": "BC",
+      "header": "Expiring Term Manatee Uncapped Premium Non-Sinkhole Non Guaranty (For Term 2/3)",
+      "status": "Not Found",
+      "confidence": "High (for name-based absence)",
+      "locations": "",
+      "candidates": "",
+      "note": "Column is not present by exact/normalized name in the supplied DDL."
+    },
+    {
+      "number": "56",
+      "column": "BD",
+      "header": "Is Policy Capped?",
+      "status": "Review - Possible Mapping",
+      "confidence": "Medium/Low",
+      "locations": "",
+      "candidates": "policy (54%) -> _view.beneficiary_designation.policy [VIEW]; _view.beneficiary_designation_life.policy [VIEW]; _view.billing_rewrite.policy [VIEW]; _view.invoice_stream.policy [VIEW]; _view.issuance.policy [VIEW]; _view.job.policy [VIEW]; _view.life_benefit_assessment.policy [VIEW]; _view.life_benefit_assessment_life.policy [VIEW]; _view.life_cash_value.policy [VIEW]; _view.life_cash_value_life.policy [VIEW]; _view.life_policy_election.policy [VIEW]; _view.life_policy_election_life.policy [VIEW]\npolicy_term (53%) -> _view.audit.policy_term [VIEW]; _view.billing_rewrite.policy_term [VIEW]; _view.delinquency_process.policy_term [VIEW]; _view.direct_bill_payment_received.policy_term [VIEW]; _view.issuance.policy_term [VIEW]; _view.policy_commission.policy_term [VIEW]; _view.policy_term_general.policy_term [VIEW]; core_all.audit.policy_term [TABLE]; core_all.billing_rewrite.policy_term [TABLE]; core_all.delinquency_process.policy_term [TABLE]; core_all.direct_bill_payment_received.policy_term [TABLE]; core_all.issuance.policy_term [TABLE]\npolicy_period (48%) -> _view.policy_period_general.policy_period [VIEW]; core_all.policy_period_general.policy_period [TABLE]\npolicy_audit (46%) -> _view.job.policy_audit [VIEW]; core_all.job.policy_audit [TABLE]\npolicy_label (46%) -> _view.policy_object_reference.policy_label [VIEW]; _view.vehicle.policy_label [VIEW]; core_all.policy_object_reference.policy_label [TABLE]; core_all.vehicle.policy_label [TABLE]\npolicy_id (46%) -> _view.policy.policy_id [VIEW]; _view.policy_motor_us_commercial.policy_id [VIEW]; _view.policy_motor_us_fleet.policy_id [VIEW]; _view.policy_motor_us_personal.policy_id [VIEW]; _view.policy_property_commercial.policy_id [VIEW]; _view.policy_property_us_fl_personal_safepoint.policy_id [VIEW]; _view.policy_search_result.policy_id [VIEW]; core_all.policy.policy_id [TABLE]; core_all.policy_search_result.policy_id [TABLE]; ext_safepoint_us_fl_property_personal.policy.policy_id [TABLE]; ext_safepoint_us_property_personal.policy.policy_id [TABLE]; jur_us_motor_commercial.policy.policy_id [TABLE]",
+      "note": "Candidate only; do not treat as confirmed without data-model review."
+    },
+    {
+      "number": "57",
+      "column": "BE",
+      "header": "Rater Uncapped Subtotal Premium",
+      "status": "Not Found",
+      "confidence": "High (for name-based absence)",
+      "locations": "",
+      "candidates": "",
+      "note": "Column is not present by exact/normalized name in the supplied DDL."
+    },
+    {
+      "number": "58",
+      "column": "BF",
+      "header": "Rater Uncapped Total Premium",
+      "status": "Review - Possible Mapping",
+      "confidence": "Medium/Low",
+      "locations": "",
+      "candidates": "has_total_premium (56%) -> _view.audit.has_total_premium [VIEW]; core_all.audit.has_total_premium [TABLE]",
+      "note": "Candidate only; do not treat as confirmed without data-model review."
+    },
+    {
+      "number": "59",
+      "column": "BG",
+      "header": "Rater Capped Subtotal Premium",
+      "status": "Not Found",
+      "confidence": "High (for name-based absence)",
+      "locations": "",
+      "candidates": "",
+      "note": "Column is not present by exact/normalized name in the supplied DDL."
+    },
+    {
+      "number": "60",
+      "column": "BH",
+      "header": "Rater Capped Total Premium",
+      "status": "Review - Possible Mapping",
+      "confidence": "Medium/Low",
+      "locations": "",
+      "candidates": "has_total_premium (58%) -> _view.audit.has_total_premium [VIEW]; core_all.audit.has_total_premium [TABLE]",
+      "note": "Candidate only; do not treat as confirmed without data-model review."
+    },
+    {
+      "number": "61",
+      "column": "BI",
+      "header": "Capped Percentage",
+      "status": "Review - Possible Mapping",
+      "confidence": "Medium/Low",
+      "locations": "",
+      "candidates": "percentage (61%) -> _view.risk_coverage.percentage [VIEW]; _view.risk_coverage_property_us_personal.percentage [VIEW]; jur_us_property_personal.risk_coverage.percentage [TABLE]\nretained_percentage (51%) -> _view.fronting_arrangement.retained_percentage [VIEW]; core_all.fronting_arrangement.retained_percentage [TABLE]\ncession_percentage (50%) -> _view.fronting_arrangement.cession_percentage [VIEW]; core_all.fronting_arrangement.cession_percentage [TABLE]\ndeductible_percentage (47%) -> _view.coverage_deductible.deductible_percentage [VIEW]; _view.coverage_deductible_property_us_fl_personal_safepoint.deductible_percentage [VIEW]; lob_property.coverage_deductible.deductible_percentage [TABLE]\nimpairment_percentage (47%) -> _view.injury_body_part.impairment_percentage [VIEW]; core_all.injury_body_part.impairment_percentage [TABLE]\npercentage_unit (47%) -> _view.liability_responsibility_assessment.percentage_unit [VIEW]; _view.liability_responsibility_assessment_liability.percentage_unit [VIEW]; lob_liability.liability_responsibility_assessment.percentage_unit [TABLE]\nbonus_percentage (46%) -> _view.incentive.bonus_percentage [VIEW]; core_all.incentive.bonus_percentage [TABLE]",
+      "note": "Candidate only; do not treat as confirmed without data-model review."
+    },
+    {
+      "number": "62",
+      "column": "BJ",
+      "header": "Sinkhole Premium",
+      "status": "Review - Possible Mapping",
+      "confidence": "Medium/Low",
+      "locations": "",
+      "candidates": "premium (56%) -> _view.facultative_certificate.premium [VIEW]; _view.risk_coverage.premium [VIEW]; _view.risk_coverage_property_us_personal.premium [VIEW]; core_all.facultative_certificate.premium [TABLE]; jur_us_property_personal.risk_coverage.premium [TABLE]\ninstallment_premium (47%) -> _view.payment_plan.installment_premium [VIEW]; core_all.payment_plan.installment_premium [TABLE]\nannual_premium (46%) -> _view.prior_policy.annual_premium [VIEW]; core_all.prior_policy.annual_premium [TABLE]\nquoted_premium (46%) -> _view.quote.quoted_premium [VIEW]; core_all.quote.quoted_premium [TABLE]",
+      "note": "Candidate only; do not treat as confirmed without data-model review."
+    },
+    {
+      "number": "63",
+      "column": "BK",
+      "header": "FIGA",
+      "status": "Not Found",
+      "confidence": "High (for name-based absence)",
+      "locations": "",
+      "candidates": "",
+      "note": "Column is not present by exact/normalized name in the supplied DDL."
+    },
+    {
+      "number": "64",
+      "column": "BL",
+      "header": "SubtB",
+      "status": "Not Found",
+      "confidence": "High (for name-based absence)",
+      "locations": "",
+      "candidates": "",
+      "note": "Column is not present by exact/normalized name in the supplied DDL."
+    },
+    {
+      "number": "65",
+      "column": "BM",
+      "header": "Fire",
+      "status": "Review - Possible Mapping",
+      "confidence": "Medium/Low",
+      "locations": "",
+      "candidates": "fire_alarm (55%) -> _view.dwelling.fire_alarm [VIEW]; _view.dwelling_property_us_personal.fire_alarm [VIEW]; jur_us_property_personal.dwelling.fire_alarm [TABLE]",
+      "note": "Candidate only; do not treat as confirmed without data-model review."
+    },
+    {
+      "number": "66",
+      "column": "BN",
+      "header": "Water",
+      "status": "Not Found",
+      "confidence": "High (for name-based absence)",
+      "locations": "",
+      "candidates": "",
+      "note": "Column is not present by exact/normalized name in the supplied DDL."
+    },
+    {
+      "number": "67",
+      "column": "BO",
+      "header": "Theft",
+      "status": "Review - Possible Mapping",
+      "confidence": "Medium/Low",
+      "locations": "",
+      "candidates": "can_theft (61%) -> _view.vehicle_incident.can_theft [VIEW]; _view.vehicle_incident_status.can_theft [VIEW]; core_all.vehicle_incident.can_theft [TABLE]; core_all.vehicle_incident_status.can_theft [TABLE]",
+      "note": "Candidate only; do not treat as confirmed without data-model review."
+    },
+    {
+      "number": "68",
+      "column": "BP",
+      "header": "AOP",
+      "status": "Not Found",
+      "confidence": "High (for name-based absence)",
+      "locations": "",
+      "candidates": "",
+      "note": "Column is not present by exact/normalized name in the supplied DDL."
+    },
+    {
+      "number": "69",
+      "column": "BQ",
+      "header": "Liability",
+      "status": "Review - Possible Mapping",
+      "confidence": "Medium/Low",
+      "locations": "",
+      "candidates": "dog_liability (65%) -> _view.section_icoverages.dog_liability [VIEW]; _view.section_icoverages_property_us_personal.dog_liability [VIEW]; jur_us_property_personal.section_icoverages.dog_liability [TABLE]\nliability_cap (65%) -> _view.member_call.liability_cap [VIEW]; core_all.member_call.liability_cap [TABLE]\nliability_position (58%) -> _view.involved_party.liability_position [VIEW]; core_all.involved_party.liability_position [TABLE]\nliability_demand_id (48%) -> _view.liability_demand.liability_demand_id [VIEW]; _view.liability_demand_liability.liability_demand_id [VIEW]; core_all.liability_demand.liability_demand_id [TABLE]; lob_liability.liability_demand.liability_demand_id [TABLE]\nliability_matter_id (48%) -> _view.liability_matter.liability_matter_id [VIEW]; _view.liability_matter_liability.liability_matter_id [VIEW]; core_all.liability_matter.liability_matter_id [TABLE]; lob_liability.liability_matter.liability_matter_id [TABLE]",
+      "note": "Candidate only; do not treat as confirmed without data-model review."
+    },
+    {
+      "number": "70",
+      "column": "BR",
+      "header": "Hurricane",
+      "status": "Review - Possible Mapping",
+      "confidence": "Medium/Low",
+      "locations": "",
+      "candidates": "factor_hurricane (60%) -> _view.risk_coverage.factor_hurricane [VIEW]; _view.risk_coverage_property_us_personal.factor_hurricane [VIEW]; jur_us_property_personal.risk_coverage.factor_hurricane [TABLE]",
+      "note": "Candidate only; do not treat as confirmed without data-model review."
+    },
+    {
+      "number": "71",
+      "column": "BS",
+      "header": "Other Wind",
+      "status": "Not Found",
+      "confidence": "High (for name-based absence)",
+      "locations": "",
+      "candidates": "",
+      "note": "Column is not present by exact/normalized name in the supplied DDL."
+    },
+    {
+      "number": "72",
+      "column": "BT",
+      "header": "Surplus Contribution",
+      "status": "Review - Possible Mapping",
+      "confidence": "Medium/Low",
+      "locations": "",
+      "candidates": "total_contribution (50%) -> _view.cost_override_response.total_contribution [VIEW]; _view.job.total_contribution [VIEW]; _view.job_to_compare.total_contribution [VIEW]; _view.policy_financial.total_contribution [VIEW]; _view.prior_policy.total_contribution [VIEW]; core_all.cost_override_response.total_contribution [TABLE]; core_all.job.total_contribution [TABLE]; core_all.job_to_compare.total_contribution [TABLE]; core_all.policy_financial.total_contribution [TABLE]; core_all.prior_policy.total_contribution [TABLE]\nearned_contribution (49%) -> _view.loss_ratio_analysis.earned_contribution [VIEW]; core_all.loss_ratio_analysis.earned_contribution [TABLE]\ncontribution_rate (48%) -> _view.general_average_contribution_assessment.contribution_rate [VIEW]; _view.general_average_contribution_assessment_marine.contribution_rate [VIEW]; lob_marine.general_average_contribution_assessment.contribution_rate [TABLE]\nsurplus_distribution_id (48%) -> _view.surplus_distribution.surplus_distribution_id [VIEW]; core_all.surplus_distribution.surplus_distribution_id [TABLE]\ncontribution_margin (47%) -> _view.profitability_dashboard.contribution_margin [VIEW]; core_all.profitability_dashboard.contribution_margin [TABLE]",
+      "note": "Candidate only; do not treat as confirmed without data-model review."
+    },
+    {
+      "number": "73",
+      "column": "BU",
+      "header": "Policy Number",
+      "status": "Confirmed - Exact/Normalized",
+      "confidence": "High",
+      "locations": "_view.policy.policy_number [VIEW]\n_view.policy_lifecycle.policy_number [VIEW]\n_view.policy_motor_us_commercial.policy_number [VIEW]\n_view.policy_motor_us_fleet.policy_number [VIEW]\n_view.policy_motor_us_personal.policy_number [VIEW]\n_view.policy_property_commercial.policy_number [VIEW]\n_view.policy_property_us_fl_personal_safepoint.policy_number [VIEW]\n_view.raw_xml_document.policy_number [VIEW]\n_view.raw_xml_document_property_us_personal.policy_number [VIEW]\ncore_all.policy.policy_number [TABLE]\ncore_all.policy_lifecycle.policy_number [TABLE]\njur_us_property_personal.raw_xml_document.policy_number [TABLE]",
+      "candidates": "",
+      "note": "Confirmed by schema column name."
+    },
+    {
+      "number": "74",
+      "column": "BV",
+      "header": "Citizens Policy Number",
+      "status": "Review - Possible Mapping",
+      "confidence": "Medium/Low",
+      "locations": "",
+      "candidates": "policy_number (100%) -> _view.policy.policy_number [VIEW]; _view.policy_lifecycle.policy_number [VIEW]; _view.policy_motor_us_commercial.policy_number [VIEW]; _view.policy_motor_us_fleet.policy_number [VIEW]; _view.policy_motor_us_personal.policy_number [VIEW]; _view.policy_property_commercial.policy_number [VIEW]; _view.policy_property_us_fl_personal_safepoint.policy_number [VIEW]; _view.raw_xml_document.policy_number [VIEW]; _view.raw_xml_document_property_us_personal.policy_number [VIEW]; core_all.policy.policy_number [TABLE]; core_all.policy_lifecycle.policy_number [TABLE]; jur_us_property_personal.raw_xml_document.policy_number [TABLE]\nexternal_policy_number (60%) -> _view.prior_insurance.external_policy_number [VIEW]; _view.prior_insurance_property_us_personal.external_policy_number [VIEW]; _view.residual_market_placement.external_policy_number [VIEW]; _view.residual_market_placement_property_us_personal.external_policy_number [VIEW]; core_all.prior_insurance.external_policy_number [TABLE]; jur_us_property_personal.residual_market_placement.external_policy_number [TABLE]\nchange_policy_number (60%) -> _view.job.change_policy_number [VIEW]; core_all.job.change_policy_number [TABLE]\nmaster_policy_number (60%) -> _view.group_master_policy.master_policy_number [VIEW]; core_all.group_master_policy.master_policy_number [TABLE]\nprior_policy_number (59%) -> _view.prior_insurance.prior_policy_number [VIEW]; _view.prior_insurance_property_us_personal.prior_policy_number [VIEW]; jur_us_property_personal.prior_insurance.prior_policy_number [TABLE]\nprevious_policy_number (58%) -> _view.policy.previous_policy_number [VIEW]; _view.policy_property_us_fl_personal_safepoint.previous_policy_number [VIEW]; jur_us_property_personal.policy.previous_policy_number [TABLE]\npolicy_number_long (57%) -> _view.policy_search_result.policy_number_long [VIEW]; core_all.policy_search_result.policy_number_long [TABLE]\npolicy_port_number (57%) -> _view.policy.policy_port_number [VIEW]; _view.policy_property_us_fl_personal_safepoint.policy_port_number [VIEW]; jur_us_property_personal.policy.policy_port_number [TABLE]",
+      "note": "Candidate only; do not treat as confirmed without data-model review."
+    },
+    {
+      "number": "75",
+      "column": "BW",
+      "header": "DC Premium Subtotal",
+      "status": "Review - Possible Mapping",
+      "confidence": "Medium/Low",
+      "locations": "",
+      "candidates": "premium_totals (48%) -> _view.premium_structure.premium_totals [VIEW]; core_all.premium_structure.premium_totals [TABLE]",
+      "note": "Candidate only; do not treat as confirmed without data-model review."
+    },
+    {
+      "number": "76",
+      "column": "BX",
+      "header": "DC Premium Total",
+      "status": "Review - Possible Mapping",
+      "confidence": "Medium/Low",
+      "locations": "",
+      "candidates": "premium_totals (52%) -> _view.premium_structure.premium_totals [VIEW]; core_all.premium_structure.premium_totals [TABLE]\nhas_total_premium (49%) -> _view.audit.has_total_premium [VIEW]; core_all.audit.has_total_premium [TABLE]\npremium (47%) -> _view.facultative_certificate.premium [VIEW]; _view.risk_coverage.premium [VIEW]; _view.risk_coverage_property_us_personal.premium [VIEW]; core_all.facultative_certificate.premium [TABLE]; jur_us_property_personal.risk_coverage.premium [TABLE]",
+      "note": "Candidate only; do not treat as confirmed without data-model review."
+    },
+    {
+      "number": "77",
+      "column": "BY",
+      "header": "Subtotal Difference",
+      "status": "Review - Possible Mapping",
+      "confidence": "Medium/Low",
+      "locations": "",
+      "candidates": "gross_difference (47%) -> _view.payment_exception.gross_difference [VIEW]; core_all.payment_exception.gross_difference [TABLE]",
+      "note": "Candidate only; do not treat as confirmed without data-model review."
+    },
+    {
+      "number": "78",
+      "column": "BZ",
+      "header": "Total Difference",
+      "status": "Review - Possible Mapping",
+      "confidence": "Medium/Low",
+      "locations": "",
+      "candidates": "gross_difference (50%) -> _view.payment_exception.gross_difference [VIEW]; core_all.payment_exception.gross_difference [TABLE]\ntotal (50%) -> _view.payment_plan.total [VIEW]; core_all.payment_plan.total [TABLE]\ntotal_currency (46%) -> _view.liability_activity_exposure.total_currency [VIEW]; _view.liability_activity_exposure_liability_us_commercial_safepoint.total_currency [VIEW]; ext_safepoint_us_liability_commercial.liability_activity_exposure.total_currency [TABLE]",
+      "note": "Candidate only; do not treat as confirmed without data-model review."
+    },
+    {
+      "number": "79",
+      "column": "CA",
+      "header": "Reason for Difference",
+      "status": "Review - Possible Mapping",
+      "confidence": "Medium/Low",
+      "locations": "",
+      "candidates": "reason (49%) -> _view.accumulator_movement.reason [VIEW]; _view.accumulator_movement_health.reason [VIEW]; _view.beneficiary_designation.reason [VIEW]; _view.beneficiary_designation_life.reason [VIEW]; _view.claim_exception.reason [VIEW]; _view.coverage_issue.reason [VIEW]; _view.delinquency_process.reason [VIEW]; _view.health_enrollment.reason [VIEW]; _view.health_enrollment_health.reason [VIEW]; _view.health_provider_participation.reason [VIEW]; _view.health_provider_participation_health.reason [VIEW]; _view.item_commission_write_off.reason [VIEW]\ngross_difference (49%) -> _view.payment_exception.gross_difference [VIEW]; core_all.payment_exception.gross_difference [TABLE]\nreason_for_denial (49%) -> _view.trip_accommodation.reason_for_denial [VIEW]; _view.trip_segment.reason_for_denial [VIEW]; core_all.trip_accommodation.reason_for_denial [TABLE]; core_all.trip_segment.reason_for_denial [TABLE]\ncommission_difference (47%) -> _view.payment_exception.commission_difference [VIEW]; core_all.payment_exception.commission_difference [TABLE]\nreason_evidence (47%) -> _view.non_renewal.reason_evidence [VIEW]; core_all.non_renewal.reason_evidence [TABLE]",
+      "note": "Candidate only; do not treat as confirmed without data-model review."
+    },
+    {
+      "number": "80",
+      "column": "CB",
+      "header": "Percent Matching:",
+      "status": "Not Found",
+      "confidence": "High (for name-based absence)",
+      "locations": "",
+      "candidates": "",
+      "note": "Column is not present by exact/normalized name in the supplied DDL."
+    },
+    {
+      "number": "81",
+      "column": "CC",
+      "header": "",
+      "status": "Not Found",
+      "confidence": "High (for name-based absence)",
+      "locations": "",
+      "candidates": "",
+      "note": "Column is not present by exact/normalized name in the supplied DDL."
+    }
+  ]
+}

@@ -21,6 +21,7 @@ import (
 	"github.com/ankitkumarflarre/datamigration/internal/execute"
 	"github.com/ankitkumarflarre/datamigration/internal/helix"
 	"github.com/ankitkumarflarre/datamigration/internal/ledger"
+	"github.com/ankitkumarflarre/datamigration/internal/quote"
 	"github.com/ankitkumarflarre/datamigration/internal/schema"
 	"github.com/ankitkumarflarre/datamigration/web"
 )
@@ -76,20 +77,43 @@ func serve(args []string) {
 	c.register(fset)
 	addr := fset.String("addr", "127.0.0.1:8080", "listen address (local only by default, D11)")
 	webDir := fset.String("web-dir", "", "serve the UI from this directory instead of the embedded build")
+	quoteDir := fset.String("quote-dir", "data/quotes", "durable local quote directory")
+	offline := fset.Bool("offline", false, "serve quote application without Helix")
 	_ = fset.Parse(args)
-	h, l := c.open()
-	defer l.Close()
+	quotes, err := quote.Open(*quoteDir)
+	if err != nil {
+		log.Fatal(err)
+	}
 	var ui fs.FS = web.Dist()
 	if *webDir != "" {
 		ui = os.DirFS(*webDir)
 	}
-	srv := api.NewServer(h, h, schema.New(h), l, ui)
+	var handler http.Handler
+	if *offline {
+		mux := http.NewServeMux()
+		quote.Register(mux, quotes)
+		mux.HandleFunc("GET /api/health", func(w http.ResponseWriter, r *http.Request) {
+			w.Header().Set("Content-Type", "application/json")
+			fmt.Fprint(w, `{"offline":true,"helix_url":"Offline · local quotes","helix_reachable":false,"helix_error":"Helix is disabled in offline mode","rule_sets":[],"ledger_records":0}`)
+		})
+		mux.HandleFunc("/api/", func(w http.ResponseWriter, r *http.Request) {
+			http.Error(w, "Migration and browsing require Helix; restart without -offline.", http.StatusServiceUnavailable)
+		})
+		mux.Handle("/", http.FileServer(http.FS(ui)))
+		handler = mux
+	} else {
+		h, l := c.open()
+		defer l.Close()
+		srv := api.NewServer(h, h, schema.New(h), l, ui)
+		srv.Quotes = quotes
+		handler = srv.Handler()
+	}
 	ln, err := net.Listen("tcp", *addr)
 	if err != nil {
 		log.Fatal(err)
 	}
-	log.Printf("migrator: http://%s  (Helix %s, ledger %s, %d records)", ln.Addr(), h.Base(), c.ledgerPath, len(l.All()))
-	hs := &http.Server{Handler: srv.Handler(), ReadHeaderTimeout: 10 * time.Second}
+	log.Printf("migrator: http://%s (quotes %s, offline %v)", ln.Addr(), *quoteDir, *offline)
+	hs := &http.Server{Handler: handler, ReadHeaderTimeout: 10 * time.Second}
 	go func() {
 		stop := make(chan os.Signal, 1)
 		signal.Notify(stop, os.Interrupt)

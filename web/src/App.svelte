@@ -7,9 +7,10 @@
   import Run from './lib/Run.svelte';
   import ThemeToggle from './lib/ThemeToggle.svelte';
   import Browse from './lib/Browse.svelte';
+  import QuoteApplication from './lib/personalhome/QuoteApplication.svelte';
 
-  type View = 'migrate' | 'browse';
-  let view = $state<View>(location.hash.startsWith('#browse') ? 'browse' : 'migrate');
+  type View = 'migrate' | 'browse' | 'personalhome';
+  let view = $state<View>(location.hash.startsWith('#reference') ? 'personalhome' : location.hash.startsWith('#personalhome') ? 'personalhome' : location.hash.startsWith('#browse') ? 'browse' : 'migrate');
 
   type Step = 'upload' | 'review' | 'approve' | 'run';
   const steps: { id: Step; label: string }[] = [
@@ -29,19 +30,27 @@
       try {
         job = await api.job(m[1]);
         step = job.progress ? 'run' : 'review';
-      } catch { history.replaceState(null, '', location.pathname); }
+      } catch { history.replaceState(null, '', location.pathname + (location.hash.startsWith('#personalhome') ? location.hash.split('?')[0] : '')); }
     }
     try { health = await api.health(); } catch { health = null; }
   });
 
+  onMount(() => {
+    const syncView = () => { const next = location.hash.startsWith('#reference') ? 'personalhome' : location.hash.startsWith('#personalhome') ? 'personalhome' : location.hash.startsWith('#browse') ? 'browse' : 'migrate'; if (next !== view && !window.dispatchEvent(new Event('quote-before-leave', { cancelable: true }))) return; view = next; };
+    window.addEventListener('hashchange', syncView);
+    return () => window.removeEventListener('hashchange', syncView);
+  });
+
   // Keep the job in the URL so a refresh returns to it.
   $effect(() => {
-    const want = view === 'browse' ? '#browse' : job ? `#job=${job.id}` : '';
+    const want = view === 'personalhome' ? `${(location.hash.startsWith('#personalhome') ? location.hash : '#personalhome/newquote').split('?')[0]}${job ? `?job=${job.id}` : ''}` : view === 'browse' ? '#browse' : job ? `#job=${job.id}` : '';
     if (location.hash !== want) history.replaceState(null, '', location.pathname + want);
   });
 
   const reachable = (i: number) => i === 0 || (job !== null && (i <= 2 || (job.approvals?.length ?? 0) > 0));
   const stepIndex = $derived(steps.findIndex((s) => s.id === step));
+
+  function switchView(next: View) { if (next === view) return; if (!window.dispatchEvent(new Event('quote-before-leave', { cancelable: true }))) return; view = next; }
 
   function onUploaded(j: Job) { job = j; step = 'review'; }
   function onApproved(j: Job) { job = j; step = 'run'; }
@@ -52,25 +61,28 @@
   <div class="brand">
     <span class="logo" aria-hidden="true">⇄</span>
     <div>
-      <div class="title">Rater → Helix Migrator</div>
-      <div class="xs muted">Policy Data · confirmed mapping rules · iteration 1 demo</div>
+      <div class="title">Manatee · Policy workspace</div>
+      <div class="xs muted">Quote applications · Helix migration</div>
     </div>
   </div>
   <nav class="views" aria-label="Sections">
-    <button class:on={view === 'migrate'} aria-current={view === 'migrate' ? 'page' : undefined} onclick={() => (view = 'migrate')}>Migrate</button>
-    <button class:on={view === 'browse'} aria-current={view === 'browse' ? 'page' : undefined} onclick={() => (view = 'browse')}>Browse data</button>
+    <button class:on={view === 'migrate'} aria-current={view === 'migrate' ? 'page' : undefined} onclick={() => switchView('migrate')}>Migrate</button>
+    <button class:on={view === 'browse'} aria-current={view === 'browse' ? 'page' : undefined} onclick={() => switchView('browse')}>Browse data</button>
+    <button class:on={view === 'personalhome'} aria-current={view === 'personalhome' ? 'page' : undefined} onclick={() => switchView('personalhome')}>Quote application</button>
   </nav>
   <div class="spacer"></div>
   {#if health}
-    <span class="badge {health.helix_reachable ? 'ok' : 'bad'}" title={health.helix_error ?? health.helix_url}>
-      {health.helix_reachable ? '● Helix connected' : '✕ Helix unreachable'}
+    <span class="badge {health.helix_reachable || health.offline ? 'ok' : 'bad'}" title={health.helix_error ?? health.helix_url}>
+      {health.offline ? '● Local quote storage' : health.helix_reachable ? '● Helix connected' : '✕ Helix unreachable'}
     </span>
     <span class="xs muted mono host">{health.helix_url.replace('https://', '')}</span>
   {/if}
   <ThemeToggle />
 </header>
 
-{#if view === 'browse'}
+{#if view === 'personalhome'}
+<main><QuoteApplication /></main>
+{:else if view === 'browse'}
 <main><Browse /></main>
 {:else}
 <nav class="stepper" aria-label="Progress">
@@ -149,6 +161,7 @@
   .file { max-width: 340px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   main { padding: var(--space-5); max-width: 1440px; margin: 0 auto; }
   @media (max-width: 720px) {
+    .topbar { flex-wrap: wrap; }
     .topbar, .stepper { padding: var(--space-3) var(--space-4); }
     main { padding: var(--space-4); }
     .sep, .host { display: none; }

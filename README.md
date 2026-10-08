@@ -78,3 +78,43 @@ The **Browse data** page (header) reads Helix back:
 - **Writes go to the shared remote Helix.** Dry run is on by default. A real write must be confirmed by typing `WRITE`. `migrator cleanup -yes` removes everything recorded in the ledger.
 - **Generated placeholders** (`GEN-…`) fill required fields the sheet does not provide (D6). They are deterministic, so re-runs update the same records rather than creating new ones.
 - **Jobs are held in memory.** Restarting the server forgets uploaded jobs. The ledger persists.
+
+## Working PersonalHome quote application
+
+Open **Quote application** in the header, or `/#personalhome/newquote`.
+
+Create a quote → Applicant → Risk schedule → Dwelling coverage → Underwriting → Insurance history → Claims history → Coverage summary → Additional interests → optional Billing instructions → Review.
+
+The application assigns a quote number, saves drafts on the server, validates each page before continuing, and resumes saved quotes after refresh/restart. Add and remove co-applicants, prior policies, losses and interests. Earlier edits invalidate downstream completion. Final submission records **Awaiting rating** locally; download the saved application as JSON.
+
+```bash
+make quote-run     # builds UI/server; starts locally without Helix credentials
+```
+
+For development, `go run ./cmd/migrator serve -offline -web-dir web/dist` starts the API on port 8080; `cd web && npm run dev` serves the UI with API proxying. Remove `-offline` to enable the existing migration/browse APIs with configured Helix access. Quotes persist under `data/quotes` (or `-quote-dir PATH`) with optimistic version checks and atomic file saves. Back up that directory to retain your applications. This remains a single-user, single-server local application.
+
+**Carrier integrations remain pending:** premiums, complete carrier underwriting/lookup rules, CLUE/NCF, e-signature, payment processing and binding. Submission does not send data to a carrier or write candidate UI mappings to Helix. The app does not fabricate a premium or issue coverage.
+
+The source inventory and mapping reference files remain in the repository. The Flow reference tab has been removed; old `#reference` links open the quote application. The [implementation plan](docs/PERSONALHOME_IMPLEMENTATION_PLAN.md) records source discrepancies and the implemented application scope.
+
+Regenerate source-derived definitions and run frontend tests:
+
+```bash
+python3 scripts/extract_personalhome.py
+python3 scripts/build_quote_schema.py
+cd web && npm test  # Node 22.18+ for native TypeScript stripping
+```
+
+### Demo data
+
+With the local quote server running, seed three fictional applications:
+
+```bash
+python3 scripts/seed_demo_quotes.py
+```
+
+- **Avery Demo:** HO3, $400,000 dwelling limit, co-applicant, pool, prior insurance and mortgagee escrow; awaiting rating.
+- **Morgan Demo:** HO6, $75,000 contents limit, prior insurance, a $2,250 fictional water-damage loss and condominium association; awaiting rating.
+- **Riley Demo:** HO3, saved draft at underwriting with a renovation declaration and notes.
+
+Names ending in Demo, `example.com` emails, 555-01xx phone numbers and fictional addresses distinguish the samples. The script uses the local API and its validations. Its seed index is stored in `data/demo-seed-index.json`; rerunning preserves existing demo quotes and user edits. No premiums, payments or bound policies are fabricated.

@@ -51,7 +51,7 @@ export interface Issue { row: number; column?: string; rule_id?: string; target?
 export interface PlanRow { row: number; policy_number: string; blocked: boolean; records: PlanRecord[] }
 export interface RowResult { row: number; policy_number: string; status: string; message?: string; actions?: Action[] }
 export interface Page<T> { total: number; offset: number; items: T[] }
-export interface Health { helix_url: string; helix_reachable: boolean; helix_error?: string; rule_sets: string[]; ledger_records: number }
+export interface Health { offline?: boolean; helix_url: string; helix_reachable: boolean; helix_error?: string; rule_sets: string[]; ledger_records: number }
 export interface RuleSetInfo { name: string; rules: number; sheet: string; source_report: string; sha256: string }
 export interface Leaf { variant: string; entity: string; title: string; module: string }
 export interface SchemaField { key: string; type: FieldType; required: boolean; write_once: boolean; ref_entity?: string }

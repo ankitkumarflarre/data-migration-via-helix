@@ -6,7 +6,7 @@ REPORT   ?= reference/Manatee FL Select HO Rater Effective 12.1.25 - Schema Vali
 DDL      ?= ../pythonProjects/ddl.sql
 RULESET  ?= manatee_fl_select_ho_12_1_25
 
-.PHONY: all ui build run test check rules cleanup clean
+.PHONY: all ui build run quote-run test check rules cleanup clean
 
 all: build
 
@@ -19,12 +19,15 @@ build: ui
 run: build
 	./bin/migrator serve -addr $(ADDR) -env-file $(ENV_FILE) -ledger $(LEDGER)
 
+quote-run: build
+	./bin/migrator serve -offline -addr $(ADDR) -quote-dir data/quotes
+
 test:
 	go vet ./...
 	go test ./... -count=1
 
 check: test
-	cd web && npm run check
+	cd web && npm run check && npm test
 
 # Regenerate the committed rule set from the mapping report (review the diff!).
 rules:

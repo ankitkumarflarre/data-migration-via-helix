@@ -1,0 +1,1858 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manatee PersonalHome – Complete Page Flow &amp; Field Analysis</title>
+<style>
+:root {
+  --primary:#1e3a5c;--primary-mid:#2a6496;--primary-light:#3b82f6;--primary-lighter:#dbeafe;
+  --bg:#f0f4f8;--sidebar-bg:#1a2f4a;--sidebar-text:#e2e8f0;--sidebar-hover:#243d58;
+  --sidebar-active:#2a6496;--card-bg:#fff;--border:#d1d9e6;--text:#0f172a;
+  --text-muted:#64748b;--success:#16a34a;--warning:#d97706;--danger:#dc2626;
+  --info:#0891b2;--header-h:60px;--sidebar-w:280px;
+  --tag-pb:#7c3aed;--tag-lob:#0891b2;--tag-override:#d97706;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);font-size:14px;overflow:hidden}
+
+/* ── HEADER ── */
+.hdr{position:fixed;top:0;left:0;right:0;height:var(--header-h);background:var(--primary);color:#fff;display:flex;align-items:center;padding:0 20px;gap:14px;z-index:200;box-shadow:0 2px 10px rgba(0,0,0,.35)}
+.hdr-logo{font-size:17px;font-weight:700;white-space:nowrap;display:flex;align-items:center;gap:8px}
+.hdr-sep{width:1px;height:28px;background:rgba(255,255,255,.3)}
+.hdr-meta{display:flex;gap:10px;flex-wrap:wrap}
+.hdr-badge{background:rgba(255,255,255,.13);border-radius:6px;padding:3px 9px;font-size:11px;white-space:nowrap}
+.hdr-badge span{font-weight:700}
+.hdr-right{margin-left:auto;font-size:12px;opacity:.75}
+.hdr-toggle{background:none;border:none;color:#fff;font-size:20px;cursor:pointer;padding:0 4px;display:none}
+
+/* ── LAYOUT ── */
+.layout{display:flex;margin-top:var(--header-h);height:calc(100vh - var(--header-h))}
+
+/* ── SIDEBAR ── */
+.sidebar{width:var(--sidebar-w);min-width:var(--sidebar-w);background:var(--sidebar-bg);color:var(--sidebar-text);display:flex;flex-direction:column;overflow:hidden;position:sticky;top:var(--header-h);height:calc(100vh - var(--header-h));transition:transform .25s}
+.sb-search{padding:10px 12px;border-bottom:1px solid rgba(255,255,255,.08)}
+.sb-search input{width:100%;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.12);border-radius:7px;padding:7px 11px;color:#fff;font-size:12px;outline:none}
+.sb-search input::placeholder{color:rgba(255,255,255,.4)}
+.sb-search input:focus{background:rgba(255,255,255,.14);border-color:var(--primary-light)}
+.sb-section{border-bottom:1px solid rgba(255,255,255,.07)}
+.sb-section-hdr{display:flex;align-items:center;gap:8px;padding:9px 14px;cursor:pointer;font-size:11px;text-transform:uppercase;letter-spacing:.7px;color:rgba(255,255,255,.5);user-select:none}
+.sb-section-hdr:hover{color:rgba(255,255,255,.8)}
+.sb-section-hdr .sb-arrow{margin-left:auto;transition:transform .2s;font-size:10px}
+.sb-section-hdr.open .sb-arrow{transform:rotate(90deg)}
+.sb-list{overflow-y:auto;flex:1}
+.sb-item{display:flex;align-items:center;gap:9px;padding:8px 14px 8px 20px;cursor:pointer;transition:background .12s;border-left:3px solid transparent;font-size:13px}
+.sb-item:hover{background:var(--sidebar-hover)}
+.sb-item.active{background:rgba(42,100,150,.5);border-left-color:var(--primary-light);color:#fff;font-weight:600}
+.sb-item.sb-top{padding-left:14px;font-weight:600;font-size:13px;border-left:3px solid transparent}
+.sb-item.sb-top.active{background:rgba(42,100,150,.6);border-left-color:#60a5fa}
+.sb-item .sb-num{background:rgba(255,255,255,.13);border-radius:4px;padding:1px 6px;font-size:10px;min-width:20px;text-align:center;flex-shrink:0}
+.sb-item.active .sb-num{background:var(--primary-light)}
+.sb-item .sb-cnt{margin-left:auto;font-size:11px;color:rgba(255,255,255,.35)}
+.sb-item.active .sb-cnt{color:rgba(255,255,255,.65)}
+.sb-suppressed{opacity:.5}
+.sb-search-results{display:none;padding:8px}
+.sb-search-results.show{display:block}
+.sr-item{padding:6px 10px;border-radius:6px;cursor:pointer;font-size:12px;margin-bottom:2px}
+.sr-item:hover{background:rgba(255,255,255,.1)}
+.sr-item .sr-pg{font-size:10px;color:rgba(255,255,255,.5);display:block}
+
+/* ── MAIN ── */
+.main{flex:1;overflow-y:auto;padding:0}
+.section-wrap{padding:24px}
+
+/* ── CONTENT SECTIONS ── */
+.content-section{display:none}
+.content-section.active{display:block}
+
+/* ── HERO INTRO ── */
+.hero{background:linear-gradient(135deg,#1a3a5c 0%,#2a6496 100%);color:#fff;padding:36px 40px;margin-bottom:0}
+.hero h1{font-size:26px;font-weight:800;margin-bottom:6px}
+.hero .sub{font-size:14px;opacity:.8;margin-bottom:20px}
+.hero-meta{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+.hero-chip{background:rgba(255,255,255,.15);border-radius:20px;padding:5px 14px;font-size:12px;border:1px solid rgba(255,255,255,.2)}
+.hero-chip b{font-weight:700}
+
+/* ── OVERVIEW CONTENT ── */
+.ov-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;margin-bottom:24px}
+.ov-card{background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:18px 20px}
+.ov-card h3{font-size:13px;text-transform:uppercase;letter-spacing:.6px;color:var(--primary);margin-bottom:10px;display:flex;align-items:center;gap:7px}
+.ov-card ul{padding-left:16px}
+.ov-card li{font-size:13px;line-height:1.7;color:#334155}
+
+/* ── FLOW SECTION ── */
+.flow-header{background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:18px 22px;margin-bottom:20px}
+.flow-header h2{font-size:18px;font-weight:700;color:var(--primary);margin-bottom:6px}
+.flow-header p{font-size:13px;color:var(--text-muted);line-height:1.6}
+
+.flow-legend{display:flex;flex-wrap:wrap;gap:9px;margin-bottom:20px}
+.badge{display:inline-block;padding:2px 9px;border-radius:10px;font-size:10px;font-weight:700;white-space:nowrap}
+.badge-pb{background:#ede9fe;color:#6d28d9}
+.badge-lob{background:#cffafe;color:#0369a1}
+.badge-cnd{background:#fef3c7;color:#92400e}
+.badge-bill{background:#dcfce7;color:#166534}
+.badge-sys{background:#e2e8f0;color:#475569}
+.fl-legend-item{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-muted)}
+
+/* ── FLOW NODES ── */
+.flow-container{display:flex;flex-direction:column;align-items:center;gap:0;padding:10px 0 30px}
+.flow-group{width:100%;max-width:780px}
+.flow-node{background:var(--card-bg);border:2px solid var(--border);border-radius:10px;padding:14px 20px;cursor:pointer;transition:all .18s;position:relative;display:flex;align-items:flex-start;gap:14px;margin:0 auto;max-width:780px}
+.flow-node:hover{border-color:var(--primary-light);box-shadow:0 4px 12px rgba(42,100,150,.15);transform:translateY(-1px)}
+.flow-node.entry-node{border-color:#16a34a;background:#f0fdf4}
+.flow-node.bind-node{border-color:#dc2626;background:#fff5f5}
+.flow-node.cond-node{border-color:#d97706;background:#fffbeb}
+.flow-node.popup-node{border-color:#7c3aed;background:#faf5ff}
+.fn-num{background:var(--primary);color:#fff;border-radius:8px;padding:4px 10px;font-size:12px;font-weight:700;white-space:nowrap;flex-shrink:0;min-width:62px;text-align:center}
+.entry-node .fn-num{background:#16a34a}
+.bind-node .fn-num{background:#dc2626}
+.cond-node .fn-num{background:#d97706}
+.popup-node .fn-num{background:#7c3aed}
+.fn-body{flex:1;min-width:0}
+.fn-title{font-size:14px;font-weight:700;color:var(--primary);display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.entry-node .fn-title{color:#166534}
+.bind-node .fn-title{color:#991b1b}
+.cond-node .fn-title{color:#92400e}
+.popup-node .fn-title{color:#6d28d9}
+.fn-vm{font-family:monospace;font-size:11px;color:var(--text-muted);margin:2px 0 6px}
+.fn-desc{font-size:12px;color:#334155;line-height:1.6}
+.fn-desc ul{padding-left:14px;margin:2px 0}
+.fn-desc li{line-height:1.65}
+.fn-link{position:absolute;right:14px;top:14px;background:var(--primary-lighter);color:var(--primary);border:none;border-radius:6px;padding:4px 10px;font-size:11px;cursor:pointer;font-weight:600;text-decoration:none;transition:all .15s}
+.fn-link:hover{background:var(--primary-light);color:#fff}
+.fn-cond-badge{display:inline-block;background:#fef3c7;color:#92400e;border:1px solid #fde68a;border-radius:4px;padding:2px 8px;font-size:10px;font-weight:700;margin-top:4px}
+
+/* flow arrows */
+.flow-arrow{display:flex;flex-direction:column;align-items:center;gap:0;margin:0 auto;width:60px}
+.fa-line{width:2px;height:18px;background:#94a3b8}
+.fa-head{color:#94a3b8;font-size:14px;line-height:1;margin-top:-4px}
+.flow-cond-label{background:#fff7ed;border:1px solid #fed7aa;border-radius:6px;padding:4px 14px;font-size:11px;color:#9a3412;font-weight:600;margin:0 auto 0;display:block;text-align:center;max-width:300px}
+
+/* ── MODEL COLLECTIONS ── */
+.mc-section{margin-bottom:20px}
+.mc-card{border-radius:10px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.08);margin-bottom:16px;border:1px solid var(--border)}
+.mc-hdr{display:flex;align-items:center;gap:10px;padding:12px 18px;color:#fff}
+.mc-primary{background:var(--primary)}
+.mc-secondary{background:#3a6a8a}
+.mc-hdr-num{font-size:18px;font-weight:900;opacity:.65}
+.mc-hdr-name{font-size:14px;font-weight:700}
+.mc-hdr-type{font-size:10px;background:rgba(255,255,255,.18);padding:2px 8px;border-radius:7px;margin-left:auto}
+.mc-desc{padding:9px 18px;font-size:12px;color:#334155;background:#f5f9ff;border-bottom:1px solid var(--border)}
+
+/* ── RESPONSIBILITY TABLE ── */
+.resp-tbl{width:100%;border-collapse:collapse;margin-bottom:12px;font-size:13px}
+.resp-tbl th{background:var(--primary);color:#fff;padding:10px 14px;text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.5px}
+.resp-tbl td{padding:10px 14px;border-bottom:1px solid var(--border);vertical-align:top;line-height:1.5}
+.resp-tbl tr:nth-child(even) td{background:#f7f9fc}
+.resp-tbl tr:hover td{background:#eef4fb}
+
+/* ── STATS BAR ── */
+.stats-bar{display:grid;grid-template-columns:repeat(auto-fill,minmax(108px,1fr));gap:10px;margin-bottom:20px}
+.stat-card{background:var(--card-bg);border:1px solid var(--border);border-radius:9px;padding:13px 14px;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.stat-card .sv{font-size:22px;font-weight:700;color:var(--primary)}
+.stat-card .sl{font-size:11px;color:var(--text-muted);margin-top:2px}
+
+/* ── PAGE DETAIL ── */
+.page-hdr-card{background:var(--card-bg);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin-bottom:18px}
+.page-title-row{display:flex;align-items:flex-start;gap:14px;flex-wrap:wrap;margin-bottom:14px}
+.page-title{font-size:22px;font-weight:700;color:var(--primary)}
+.page-subtitle{color:var(--text-muted);font-size:13px;margin-top:3px}
+.tag{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;margin-right:3px}
+.tag-pb{background:#ede9fe;color:#6d28d9}
+.tag-lob{background:#cffafe;color:#0369a1}
+.tag-override{background:#fef3c7;color:#92400e}
+.tag-suppressed{background:#fee2e2;color:#dc2626}
+.tag-green{background:#dcfce7;color:#16a34a}
+.page-meta-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:9px;margin-top:14px}
+.pm-item{background:#f8fafc;border-radius:7px;padding:9px 12px;border:1px solid var(--border)}
+.pm-lbl{font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px}
+.pm-val{font-size:12px;font-weight:600;margin-top:3px;word-break:break-word}
+
+/* ── SECTION CARDS ── */
+.detail-section{background:var(--card-bg);border:1px solid var(--border);border-radius:11px;margin-bottom:14px;overflow:hidden}
+.ds-hdr{display:flex;align-items:center;gap:10px;padding:13px 18px;cursor:pointer;user-select:none;border-bottom:1px solid var(--border)}
+.ds-hdr:hover{background:#f1f5f9}
+.ds-title{font-weight:600;font-size:14px;flex:1}
+.ds-badge{background:var(--primary-lighter);color:var(--primary);border-radius:20px;padding:2px 10px;font-size:11px;font-weight:600}
+.ds-arrow{color:var(--text-muted);transition:transform .2s;font-size:11px}
+.ds-arrow.open{transform:rotate(90deg)}
+.ds-body{padding:16px 18px}
+
+/* ── FILTER BAR ── */
+.filter-bar{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:12px;align-items:center}
+.filter-bar label{font-size:12px;color:var(--text-muted);font-weight:600}
+.fbtn{border:1px solid var(--border);background:#fff;border-radius:20px;padding:4px 11px;font-size:12px;cursor:pointer;transition:all .13s}
+.fbtn.on{background:var(--primary);color:#fff;border-color:var(--primary)}
+.fbtn:hover:not(.on){background:var(--primary-lighter)}
+.tbl-search{border:1px solid var(--border);border-radius:7px;padding:5px 11px;font-size:12px;outline:none;min-width:200px}
+.tbl-search:focus{border-color:var(--primary-light);box-shadow:0 0 0 3px rgba(59,130,246,.1)}
+
+/* ── TABLE ── */
+.tbl-wrap{overflow-x:auto;border-radius:7px;border:1px solid var(--border)}
+table{border-collapse:collapse;width:100%;font-size:12px}
+th{background:#f1f5f9;padding:9px 11px;text-align:left;font-weight:600;color:var(--text-muted);font-size:11px;text-transform:uppercase;letter-spacing:.4px;white-space:nowrap;position:sticky;top:0;z-index:5;cursor:pointer}
+th:hover{background:#e2e8f0}
+td{padding:8px 11px;border-top:1px solid var(--border);vertical-align:top}
+tr:hover td{background:#f8fafc}
+tr.expanded td{background:#eff6ff}
+
+/* ── PILLS ── */
+.pill{display:inline-block;border-radius:4px;padding:1px 7px;font-size:10px;font-weight:600;white-space:nowrap}
+.pill-req{background:#fee2e2;color:#dc2626}
+.pill-opt{background:#f1f5f9;color:#64748b}
+.pill-vis{background:#dcfce7;color:#16a34a}
+.pill-hid{background:#fef3c7;color:#d97706}
+.pill-cvis{background:#e0f2fe;color:#0369a1}
+.pill-int{background:#ede9fe;color:#7c3aed}
+.pill-ronly{background:#f1f5f9;color:#475569}
+.pill-calc{background:#fae8ff;color:#a21caf}
+
+/* ── EXPAND ROW ── */
+.expand-row td{padding:0!important;background:#eff6ff!important}
+.field-detail{padding:14px 16px;display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px}
+.fd-item{background:#fff;border:1px solid var(--border);border-radius:7px;padding:9px 12px}
+.fd-lbl{font-size:10px;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:.4px}
+.fd-val{font-size:12px;margin-top:3px;word-break:break-word}
+.fd-val.code{font-family:monospace;background:#f1f5f9;padding:2px 6px;border-radius:4px;font-size:11px}
+
+/* ── ALERTS ── */
+.alert{border-radius:8px;padding:9px 13px;font-size:12px;margin-bottom:8px;display:flex;gap:8px;align-items:flex-start;line-height:1.5}
+.alert-info{background:#eff6ff;border:1px solid #bfdbfe;color:#1e40af}
+.alert-warn{background:#fef3c7;border:1px solid #fde68a;color:#92400e}
+.alert-danger{background:#fee2e2;border:1px solid #fecaca;color:#991b1b}
+
+/* ── INHERITANCE FLOW ── */
+.inh-flow{display:flex;flex-direction:column;gap:5px}
+.inh-node{display:flex;align-items:center;gap:10px}
+.inh-box{background:#fff;border:1px solid var(--border);border-radius:7px;padding:7px 13px;font-size:12px;font-weight:600;flex:1}
+.inh-box.pb{border-color:#7c3aed;background:#faf5ff}
+.inh-box.lob{border-color:#0891b2;background:#ecfeff}
+.inh-box.override{border-color:#d97706;background:#fffbeb}
+.inh-down{text-align:center;color:#94a3b8;font-size:18px;font-weight:700;margin:1px 0 1px 14px}
+
+/* ── DEP TABLE ── */
+.dep-tbl th{background:#e8f0fa;color:var(--primary)}
+
+/* ── BACK NAV ── */
+.back-nav{display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap}
+.back-btn{background:#fff;border:1px solid var(--border);border-radius:8px;padding:7px 14px;font-size:13px;cursor:pointer;color:var(--primary);font-weight:600;transition:all .15s;display:flex;align-items:center;gap:6px}
+.back-btn:hover{background:var(--primary-lighter);border-color:var(--primary-light)}
+.breadcrumb{font-size:13px;color:var(--text-muted);display:flex;align-items:center;gap:6px}
+.breadcrumb .bc-sep{color:#cbd5e1}
+.breadcrumb .bc-cur{color:var(--primary);font-weight:600}
+
+/* ── SCROLL TOP ── */
+.scroll-top{position:fixed;bottom:22px;right:22px;background:var(--primary);color:#fff;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.2);font-size:14px;opacity:0;transition:opacity .2s;z-index:300;border:none}
+.scroll-top.show{opacity:1}
+
+/* ── VM TABLE (model collections) ── */
+.vm-tbl{width:100%;border-collapse:collapse;font-size:12px}
+.vm-tbl th{background:#e8f0fa;color:var(--primary);font-size:11px;text-transform:uppercase;padding:8px 12px;text-align:left;border-bottom:1px solid #cde}
+.vm-tbl td{padding:8px 12px;border-bottom:1px solid #f0f0f0;vertical-align:top}
+.vm-tbl tr:nth-child(even) td{background:#fafcff}
+.vm-tbl tr:hover td{background:#eef4fb}
+.vm-name{font-family:monospace;font-weight:700;color:#1a4e7a}
+.vm-page{color:#1a7a1a;font-weight:700}
+.vm-popup{color:#b86000;font-weight:700}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  .sidebar{position:fixed;top:var(--header-h);left:0;z-index:150;transform:translateX(-100%)}
+  .sidebar.open{transform:translateX(0)}
+  .hdr-toggle{display:block}
+  .hdr-meta{display:none}
+  .layout{display:block}
+  .main{height:calc(100vh - var(--header-h));overflow-y:auto}
+}
+@media(max-width:600px){
+  .stats-bar{grid-template-columns:repeat(3,1fr)}
+  .flow-node{flex-direction:column}
+  .fn-link{position:static;margin-top:8px}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════ HEADER ═══════════════════ -->
+<header class="hdr">
+  <button class="hdr-toggle" onclick="toggleSidebar()" title="Toggle sidebar">☰</button>
+  <div class="hdr-logo">🏠 Manatee PersonalHome</div>
+  <div class="hdr-sep"></div>
+  <div class="hdr-meta">
+    <div class="hdr-badge">Product: <span>Manatee</span></div>
+    <div class="hdr-badge">LOB: <span>PersonalHome (FL)</span></div>
+    <div class="hdr-badge">Manuscripts: <span>ProductBase + PersonalHome_Peril_1_0_0_0</span></div>
+    <div class="hdr-badge">Pages: <span id="hdr-pages">—</span></div>
+    <div class="hdr-badge">Fields: <span id="hdr-fields">—</span></div>
+  </div>
+  <div class="hdr-right">Complete Page Flow &amp; Field Analysis</div>
+</header>
+
+<!-- ═══════════════════ LAYOUT ═══════════════════ -->
+<div class="layout">
+
+<!-- ═══════════════════ SIDEBAR ═══════════════════ -->
+<nav class="sidebar" id="sidebar">
+  <div class="sb-search">
+    <input type="text" id="sb-search-input" placeholder="🔍 Search pages &amp; fields…" oninput="globalSearch(this.value)">
+  </div>
+
+  <!-- Search results overlay -->
+  <div class="sb-search-results" id="sb-search-results"></div>
+
+  <!-- Navigation tree -->
+  <div class="sb-list" id="sb-nav-list">
+    <!-- Section: Overview -->
+    <div class="sb-section">
+      <div class="sb-section-hdr open" onclick="toggleSbSection(this)">
+        <span>📘 Documentation</span>
+        <span class="sb-arrow">▶</span>
+      </div>
+      <div>
+        <div class="sb-item sb-top" data-target="sec-overview" onclick="showSection('sec-overview',this)">
+          <span>📋 Overview</span>
+        </div>
+        <div class="sb-item sb-top" data-target="sec-flow" onclick="showSection('sec-flow',this)">
+          <span>🔄 Page Flow</span>
+        </div>
+        <div class="sb-item sb-top" data-target="sec-mc" onclick="showSection('sec-mc',this)">
+          <span>🗂️ Model Collections</span>
+        </div>
+        <div class="sb-item sb-top" data-target="sec-resp" onclick="showSection('sec-resp',this)">
+          <span>⚖️ PB vs LOB Responsibilities</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section: Pages -->
+    <div class="sb-section">
+      <div class="sb-section-hdr open" onclick="toggleSbSection(this)">
+        <span>📄 Page Analysis</span>
+        <span class="sb-arrow">▶</span>
+      </div>
+      <div id="sb-pages-list">
+        <!-- Built dynamically -->
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- ═══════════════════ MAIN CONTENT ═══════════════════ -->
+<main class="main" id="main-content">
+
+  <!-- ══════════ OVERVIEW SECTION ══════════ -->
+  <div id="sec-overview" class="content-section active">
+    <div class="hero">
+      <h1>🏠 Manatee PersonalHome – Complete Analysis</h1>
+      <div class="sub">FL Select Homeowners (LOB = PersonalHome) | New Business Quote → Bind</div>
+      <div class="hero-meta">
+        <div class="hero-chip"><b>ProductBase:</b> Manatee_ProductBase_PersonalLines_1_0_0_0 + _2_0_0_0</div>
+        <div class="hero-chip"><b>LOB Manuscript:</b> Manatee_PersonalHome_Peril_1_0_0_0</div>
+        <div class="hero-chip"><b>Policy Form:</b> HO3 (Homeowner) / HO6 (Condo)</div>
+        <div class="hero-chip"><b>State:</b> Florida</div>
+        <div class="hero-chip"><b>Analysis Date:</b> September 2026</div>
+      </div>
+    </div>
+
+    <div class="section-wrap">
+      <div class="ov-grid">
+        <div class="ov-card">
+          <h3>🎯 What is Manatee PersonalHome?</h3>
+          <ul>
+            <li>FL Select Homeowners product on the Duck Creek platform</li>
+            <li>Covers HO3 (Homeowner) and HO6 (Condominium) policy forms</li>
+            <li>Managed by <b>Manatee carrier</b> within the Duck Creek ecosystem</li>
+            <li>Rides on a shared <b>ProductBase PersonalLines</b> framework</li>
+            <li>LOB-specific behaviour defined in <b>Manatee_PersonalHome_Peril_1_0_0_0</b></li>
+          </ul>
+        </div>
+        <div class="ov-card">
+          <h3>📑 Scope of This Analysis</h3>
+          <ul>
+            <li>Complete New Business Quote → Bind page flow (11 main steps + Entry &amp; Bind)</li>
+            <li>All navigable ViewModels and popup collections</li>
+            <li>Field-level details for 9 analysed pages</li>
+            <li>ProductBase vs LOB inheritance mapping</li>
+            <li>Field dependencies, conditions, and validation rules</li>
+            <li>Model Collections: MainInterview, ClueClaimHistoryDetail, SubscriberAgreement</li>
+          </ul>
+        </div>
+        <div class="ov-card">
+          <h3>🗺️ Overall Page Structure</h3>
+          <ul>
+            <li><b>ENTRY</b> – New Quote Selection (DCT System)</li>
+            <li><b>Pages 1-2</b> – Applicant &amp; Policy Information (ProductBase)</li>
+            <li><b>Pages 3-4</b> – Risk Schedule &amp; Dwelling Coverage (LOB)</li>
+            <li><b>Pages 5-6</b> – Underwriting &amp; Insurance History (ProductBase)</li>
+            <li><b>Pages 7-7B</b> – Claims History &amp; CLUE Report (ProductBase)</li>
+            <li><b>Pages 8-11</b> – Coverage Summary, Interests, Billing (PB + DCT Billing)</li>
+            <li><b>BIND</b> – Commit Transaction</li>
+          </ul>
+        </div>
+        <div class="ov-card">
+          <h3>🔗 Key Integrations</h3>
+          <ul>
+            <li><b>Maprisk / PBBI:</b> Geocoding, territory, lat/long, fire protection</li>
+            <li><b>LexisNexis:</b> CLUE report + NCF insurance score</li>
+            <li><b>Verisk 360:</b> Replacement cost valuation</li>
+            <li><b>Swiss Re Flood:</b> Flood scoring</li>
+            <li><b>Zesty AI:</b> Aerial photo capture</li>
+            <li><b>IVANS:</b> Download to agency management system</li>
+            <li><b>Insvista:</b> Notifications (applicable LOBs)</li>
+            <li><b>Data Insights:</b> Quote/bind business intelligence</li>
+          </ul>
+        </div>
+        <div class="ov-card">
+          <h3>⚡ Important Flow Conditions</h3>
+          <ul>
+            <li>Page 7B (CLUE Report) only appears when CLUE ran &amp; returned ≥1 claim</li>
+            <li>Underwriting page variant depends on LOB: FL Select, FL Advantage, LA Select, US Advantage</li>
+            <li>Make A Payment &amp; Billing Summary only shown when DCT Billing is enabled</li>
+            <li>Rating runs automatically when Coverage Summary loads (<code>calculate="2"</code>)</li>
+            <li>Subscriber Agreement popup required before Bind on new business</li>
+            <li>Transfer To Agency page only visible when ImportAgencyDNE = True &amp; user is SPAgencyAdmin</li>
+          </ul>
+        </div>
+        <div class="ov-card">
+          <h3>📐 Architecture Summary</h3>
+          <ul>
+            <li>3 Model Collections: MainInterview (primary), ClueClaimHistoryDetail (popup), SubscriberAgreement (popup)</li>
+            <li>26 ViewModels in MainInterview (pages + popups)</li>
+            <li>PersonalHome LOB adds: RiskSchedule + DwellingCoverage ViewModels</li>
+            <li>ProductBase defines all other pages; LOB can suppress or override</li>
+            <li>PolicyDetail page is <b>suppressed</b> in PersonalHome LOB (always hidden)</li>
+            <li>PricingPage is <b>suppressed</b> in PersonalHome LOB (Coverage Summary used instead)</li>
+          </ul>
+        </div>
+      </div>
+
+      <div style="text-align:center;margin-top:10px">
+        <button class="back-btn" onclick="showSection('sec-flow',document.querySelector('[data-target=sec-flow]'))">
+          View Page Flow →
+        </button>
+        &nbsp;
+        <button class="back-btn" onclick="showSection('sec-mc',document.querySelector('[data-target=sec-mc]'))">
+          View Model Collections →
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ PAGE FLOW SECTION ══════════ -->
+  <div id="sec-flow" class="content-section">
+    <div class="section-wrap">
+      <div class="flow-header">
+        <h2>🔄 Page Flow — New Business Quote → Bind</h2>
+        <p>The complete navigable workflow for creating a Manatee PersonalHome policy. Each node represents a page (ViewModel) within the <b>MainInterview</b> model collection. Click any page node to navigate to its detailed field analysis.</p>
+      </div>
+
+      <div class="flow-legend">
+        <div class="fl-legend-item"><span class="badge badge-sys">DCT System</span> Built-in system page</div>
+        <div class="fl-legend-item"><span class="badge badge-pb">ProductBase</span> Defined in ProductBase</div>
+        <div class="fl-legend-item"><span class="badge badge-lob">LOB</span> PersonalHome LOB-specific</div>
+        <div class="fl-legend-item"><span class="badge badge-cnd">Conditional</span> Shown under specific conditions</div>
+        <div class="fl-legend-item"><span class="badge badge-bill">Billing</span> DCT Billing integration</div>
+      </div>
+
+      <div class="flow-container">
+
+        <!-- ENTRY -->
+        <div class="flow-group">
+          <div class="flow-node entry-node" onclick="navigateToPage(null,'entry')">
+            <div class="fn-num">ENTRY</div>
+            <div class="fn-body">
+              <div class="fn-title">New Quote Selection <span class="badge badge-sys">DCT System</span></div>
+              <div class="fn-vm">ViewModel: NewQuote &nbsp;|&nbsp; ModelCollection: MainInterview</div>
+              <div class="fn-desc">
+                <ul>
+                  <li>Selects Line of Business: <b>FL Select Homeowners (PersonalHome)</b></li>
+                  <li>Enters policy effective date</li>
+                  <li>Clicks <b>Start</b> → system creates transaction and loads ProductBase interview</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flow-arrow"><div class="fa-line"></div><div class="fa-head">▼</div></div>
+
+        <!-- PAGE 1 -->
+        <div class="flow-group">
+          <div class="flow-node" onclick="navigateToPage('account','page')">
+            <div class="fn-num">PAGE 1</div>
+            <div class="fn-body">
+              <div class="fn-title">Applicant <span class="badge badge-pb">ProductBase</span></div>
+              <div class="fn-vm">ViewModel: Account &nbsp;|&nbsp; ModelCollection: MainInterview &nbsp;|&nbsp; ReadOnly: AccountPage.ReadOnly</div>
+              <div class="fn-desc">
+                <ul>
+                  <li>Insured name, mailing address, city, state, zip; entity type, date of birth, phone, email</li>
+                  <li>Producer selection (auto-selected if only one producer)</li>
+                  <li><b>Geocoding:</b> Maprisk auto-fills territory, protection class, lat/long, fire district, BCEG, and dwelling fields after address entry</li>
+                  <li>Co-applicant can be added here</li>
+                </ul>
+              </div>
+            </div>
+            <button class="fn-link" onclick="event.stopPropagation();navigateToPage('account','page')">Field Details →</button>
+          </div>
+        </div>
+
+        <div class="flow-arrow"><div class="fa-line"></div><div class="fa-head">▼</div></div>
+
+        <!-- PAGE 2 -->
+        <div class="flow-group">
+          <div class="flow-node" onclick="navigateToPage('policydetail','page')">
+            <div class="fn-num">PAGE 2</div>
+            <div class="fn-body">
+              <div class="fn-title">Policy Information <span class="badge badge-pb">ProductBase</span> <span class="badge badge-cnd">SUPPRESSED in PersonalHome</span></div>
+              <div class="fn-vm">ViewModel: PolicyDetail &nbsp;|&nbsp; ShowRef: PolicyDetailPage.Show (always False for PersonalHome LOB)</div>
+              <div class="fn-desc">
+                <ul>
+                  <li>Effective and expiration dates, policy term (forced 12-month by LOB)</li>
+                  <li>Prior policy number, prior carrier, e-policy discount, subscription agreement flag</li>
+                  <li>Writing company, consent-to-rate, CTR factor; Citizens conversion legacy premium and capping fields</li>
+                  <li>Risk origin (SPI, EZLynx, Applied, NsureHub) for API-imported policies</li>
+                </ul>
+              </div>
+            </div>
+            <button class="fn-link" onclick="event.stopPropagation();navigateToPage('policydetail','page')">Field Details →</button>
+          </div>
+        </div>
+
+        <div class="flow-arrow"><div class="fa-line"></div><div class="fa-head">▼</div></div>
+
+        <!-- PAGE 3 -->
+        <div class="flow-group">
+          <div class="flow-node" onclick="navigateToPage('dwellinginfo','page')">
+            <div class="fn-num">PAGE 3</div>
+            <div class="fn-body">
+              <div class="fn-title">Risk Schedule <span class="badge badge-lob">LOB</span></div>
+              <div class="fn-vm">ViewModel: RiskSchedule &nbsp;|&nbsp; ModelCollection: MainInterview &nbsp;|&nbsp; Source: Manatee_PersonalHome_Peril_1_0_0_0</div>
+              <div class="fn-desc">
+                <ul>
+                  <li><b>Policy form:</b> HO3 (Homeowner) or HO6 (Condo); usage, occupancy, building type, year built</li>
+                  <li><b>Construction:</b> type, stories, sq ft, families/units, foundation, electrical, plumbing, heating</li>
+                  <li><b>Roof:</b> type, shape, update year, remaining life</li>
+                  <li><b>Protection:</b> distance to fire station, feet to hydrant, protection class (auto-calculated), BCEG</li>
+                  <li><b>Wind mitigation:</b> terrain, wind speed location/design, roof deck attachment, roof-to-wall, secondary water resistance, opening protection</li>
+                  <li>Geocode auto-fills many fields on address lookup</li>
+                </ul>
+              </div>
+            </div>
+            <button class="fn-link" onclick="event.stopPropagation();navigateToPage('dwellinginfo','page')">Field Details →</button>
+          </div>
+        </div>
+
+        <div class="flow-arrow"><div class="fa-line"></div><div class="fa-head">▼</div></div>
+
+        <!-- PAGE 4 -->
+        <div class="flow-group">
+          <div class="flow-node" onclick="navigateToPage('dwellingcoverage','page')">
+            <div class="fn-num">PAGE 4</div>
+            <div class="fn-body">
+              <div class="fn-title">Dwelling Coverage <span class="badge badge-lob">LOB</span></div>
+              <div class="fn-vm">ViewModel: DwellingCoverage &nbsp;|&nbsp; ModelCollection: MainInterview &nbsp;|&nbsp; ShowRef: RatePage.Show</div>
+              <div class="fn-desc">
+                <ul>
+                  <li><b>Cov A</b> – Dwelling limit; <b>Cov B</b> – Other Structures % of Cov A; <b>Cov C</b> – Personal Property (HO3: % of CovA; HO6: min $10K)</li>
+                  <li><b>Cov D</b> – Loss of Use (auto-calculated); <b>Cov E</b> – Personal Liability; <b>Cov F</b> – Medical Payments ($3K, read-only)</li>
+                  <li>All-Peril Deductible; Hurricane Deductible (Excluded / $500 / 2% / 5% / 10%)</li>
+                  <li>Optional endorsements: Sinkhole, Ordinance or Law (25%/50%), Water Backup, Screened Enclosure, Limited Fungi/Bacteria, Loss Assessment, Replacement Cost Contents, Equipment Breakdown, Identity Fraud ($15K), Unscheduled Jewelry</li>
+                </ul>
+              </div>
+            </div>
+            <button class="fn-link" onclick="event.stopPropagation();navigateToPage('dwellingcoverage','page')">Field Details →</button>
+          </div>
+        </div>
+
+        <div class="flow-arrow"><div class="fa-line"></div><div class="fa-head">▼</div></div>
+
+        <!-- PAGE 5 -->
+        <div class="flow-group">
+          <div class="flow-node" onclick="navigateToPage(null,'uw')">
+            <div class="fn-num">PAGE 5</div>
+            <div class="fn-body">
+              <div class="fn-title">Underwriting <span class="badge badge-pb">ProductBase</span> <span class="badge badge-cnd">Conditional variant</span></div>
+              <div class="fn-vm">ViewModel: Underwriting (FL Select) | UnderwritingFLAdv (FL Adv) | UnderwritingLA | UnderwritingUS &nbsp;|&nbsp; ShowRef: varies by LOB</div>
+              <div class="fn-desc">
+                <ul>
+                  <li>Animals (pit bulls, exotic pets, guard dogs); trampoline, swimming pool, hot tub</li>
+                  <li>Property condition: for sale, disrepair, under renovation</li>
+                  <li>Commercial/day care use, farming, incidental occupancy; foreclosure/bankruptcy, criminal indictment, lead paint, landfill</li>
+                  <li>Prior coverage declined/cancelled, sinkhole awareness; renovation completion date and dollar value</li>
+                  <li>Answers trigger real-time decline and referral messages</li>
+                </ul>
+                <div class="fn-cond-badge">ShowRef: IsHOOrDwellingSelected (FL Select) | PolicyPrivate.IsFLAdvantageSelected | PolicyPrivate.IsLASelectSelected</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flow-arrow"><div class="fa-line"></div><div class="fa-head">▼</div></div>
+
+        <!-- PAGE 6 -->
+        <div class="flow-group">
+          <div class="flow-node" onclick="navigateToPage('insurancehistory','page')">
+            <div class="fn-num">PAGE 6</div>
+            <div class="fn-body">
+              <div class="fn-title">Insurance History <span class="badge badge-pb">ProductBase</span></div>
+              <div class="fn-vm">ViewModel: InsuranceHistory &nbsp;|&nbsp; ModelCollection: MainInterview &nbsp;|&nbsp; ReadOnly: InsuranceHistoryPage.ReadOnly</div>
+              <div class="fn-desc">
+                <ul>
+                  <li>"Do you have insurance within the past 30 days?" (Yes/No)</li>
+                  <li>Prior carrier name (dropdown list of standard carriers)</li>
+                  <li>Prior policy number, effective date, expiration date, limit, deductible</li>
+                  <li>Multiple prior carriers can be added; prior liability limit required for Advantage LOBs</li>
+                </ul>
+              </div>
+            </div>
+            <button class="fn-link" onclick="event.stopPropagation();navigateToPage('insurancehistory','page')">Field Details →</button>
+          </div>
+        </div>
+
+        <div class="flow-arrow"><div class="fa-line"></div><div class="fa-head">▼</div></div>
+
+        <!-- PAGE 7 -->
+        <div class="flow-group">
+          <div class="flow-node" onclick="navigateToPage('claimshistory','page')">
+            <div class="fn-num">PAGE 7</div>
+            <div class="fn-body">
+              <div class="fn-title">Claims History <span class="badge badge-pb">ProductBase v2</span></div>
+              <div class="fn-vm">ViewModel: ClaimHistorySafePoint &nbsp;|&nbsp; ModelCollection: MainInterview &nbsp;|&nbsp; ReadOnly: ClaimsHistoryPage.ReadOnly</div>
+              <div class="fn-desc">
+                <ul>
+                  <li><b>Order CLUE Report</b> – LexisNexis (FCRA popup appears first); <b>Order Insurance Score</b> – NCF credit-based score</li>
+                  <li>Manually add/edit prior losses (type, date, amount paid, source)</li>
+                  <li>Review CLUE claims; click <b>Detail</b> to open ClueClaimHistoryDetail popup collection</li>
+                  <li>Insurance Score override (Underwriter/Manager only)</li>
+                  <li><b>Run Eligibility Check</b> – Verisk AAL Score + RMS Gross Loss (FL/AL/TX Advantage only)</li>
+                  <li>Next button hidden if flood losses + flood indicator present</li>
+                </ul>
+              </div>
+            </div>
+            <button class="fn-link" onclick="event.stopPropagation();navigateToPage('claimshistory','page')">Field Details →</button>
+          </div>
+        </div>
+
+        <div class="flow-arrow"><div class="fa-line"></div><div class="fa-head">▼</div></div>
+
+        <!-- PAGE 7B conditional -->
+        <div class="flow-cond-label">Condition: CountClueLossReportSuccessStatusWithClaims = 1 (CLUE ran + ≥1 claim found)</div>
+        <div class="flow-arrow"><div class="fa-line"></div><div class="fa-head">▼</div></div>
+
+        <div class="flow-group">
+          <div class="flow-node cond-node" onclick="navigateToPage(null,'clue')">
+            <div class="fn-num">PAGE 7B</div>
+            <div class="fn-body">
+              <div class="fn-title">CLUE Loss History Report <span class="badge badge-cnd">Conditional</span></div>
+              <div class="fn-vm">ViewModel: CLUELossHistoryReport &nbsp;|&nbsp; ShowRef: CLUELossHistoryReportPage.Show &nbsp;|&nbsp; ReadOnly: CLUELossHistoryReportPage.ReadOnly</div>
+              <div class="fn-desc">
+                <ul>
+                  <li>Appears <b>only when</b> CLUE ran successfully and returned at least one claim</li>
+                  <li>Displays all LexisNexis CLUE claims for the insured's property</li>
+                  <li>Agent can click <b>Detail</b> for full claim details (popup); claims can be deleted or supplemented</li>
+                </ul>
+                <div class="fn-cond-badge">CONDITIONAL PAGE — only shown when CLUE has results</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flow-arrow"><div class="fa-line"></div><div class="fa-head">▼</div></div>
+
+        <!-- PAGE 8 -->
+        <div class="flow-group">
+          <div class="flow-node" onclick="navigateToPage(null,'coverage-summary')">
+            <div class="fn-num">PAGE 8 ⭐</div>
+            <div class="fn-body">
+              <div class="fn-title">Coverage Summary <span class="badge badge-pb">ProductBase v2</span></div>
+              <div class="fn-vm">ViewModel: CoverageSafepoint &nbsp;|&nbsp; calculate="2" (full rating on load) &nbsp;|&nbsp; ShowRef: CoveragePage.Show &nbsp;|&nbsp; prevPage: MakeAPayment</div>
+              <div class="fn-desc">
+                <ul>
+                  <li>Full rating runs automatically when page loads</li>
+                  <li>Displays Total Written Premium, Change, Prior Term; interactive coverage calculator</li>
+                  <li>Buttons: <b>Premium Detail</b>, <b>Rating Worksheet</b>, <b>View Forms</b>, <b>Quote Sheet</b></li>
+                  <li><b>Sign Subscriber Agreement and LPOA</b> button (opens SubscriberAgreement popup) — required before Bind</li>
+                  <li>Decline messages (red) and Refer messages displayed here</li>
+                  <li><b>Bind button</b> — submits policy for commit when all conditions met</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flow-arrow"><div class="fa-line"></div><div class="fa-head">▼</div></div>
+
+        <!-- PAGE 9 -->
+        <div class="flow-group">
+          <div class="flow-node" onclick="navigateToPage('additionalinterests','page')">
+            <div class="fn-num">PAGE 9</div>
+            <div class="fn-body">
+              <div class="fn-title">Additional Interests <span class="badge badge-pb">ProductBase v2</span></div>
+              <div class="fn-vm">ViewModel: AdditionalOtherInterestsSafePoint &nbsp;|&nbsp; ShowRef: AdditionalOtherInterestsPage.Show &nbsp;|&nbsp; ReadOnly: AdditionalOtherInterestsPage.ReadOnly</div>
+              <div class="fn-desc">
+                <ul>
+                  <li>Add/edit/remove Mortgagees (1st–4th rank), Additional Insureds, Additional Interests, Premium Finance companies</li>
+                  <li>Each entry: type, name, address, loan/reference number</li>
+                  <li>Click <b>Details</b> on any entry to open AdditionalOtherInterestDetailSafePoint popup</li>
+                  <li>Deleting 1st mortgagee when 2nd+ exists, or adding Additional Insured on endorsement, triggers underwriter referral</li>
+                </ul>
+              </div>
+            </div>
+            <button class="fn-link" onclick="event.stopPropagation();navigateToPage('additionalinterests','page')">Field Details →</button>
+          </div>
+        </div>
+
+        <div class="flow-arrow"><div class="fa-line"></div><div class="fa-head">▼</div></div>
+
+        <!-- PAGE 10 - conditional -->
+        <div class="flow-cond-label">Condition: DCT Billing enabled AND policy not yet in-force</div>
+        <div class="flow-arrow"><div class="fa-line"></div><div class="fa-head">▼</div></div>
+
+        <div class="flow-group">
+          <div class="flow-node cond-node" onclick="navigateToPage(null,'payment')">
+            <div class="fn-num">PAGE 10</div>
+            <div class="fn-body">
+              <div class="fn-title">Make A Payment <span class="badge badge-bill">DCT Billing</span></div>
+              <div class="fn-vm">ViewModel: MakeAPayment &nbsp;|&nbsp; ModelCollection: MainInterview &nbsp;|&nbsp; prevPage: BillingSummary</div>
+              <div class="fn-desc">
+                <ul>
+                  <li>Bill Class: Direct Bill, Mortgagee Escrow, Agency Bill</li>
+                  <li>Payment Plan: Annual, Semi-Annual, Quarterly</li>
+                  <li>Electronic Invoice (paperless billing) — requires email</li>
+                  <li>Initial payment processing if applicable (EFT / credit card)</li>
+                </ul>
+                <div class="fn-cond-badge">Only shown when DCT Billing is enabled</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flow-arrow"><div class="fa-line"></div><div class="fa-head">▼</div></div>
+
+        <div class="flow-group">
+          <div class="flow-node cond-node" onclick="navigateToPage(null,'billing')">
+            <div class="fn-num">PAGE 11</div>
+            <div class="fn-body">
+              <div class="fn-title">Billing Summary <span class="badge badge-bill">DCT Billing</span></div>
+              <div class="fn-vm">ViewModel: BillingSummary &nbsp;|&nbsp; ShowRef: BillingSummaryPage.Show &nbsp;|&nbsp; manuscriptIdRef: BillingSummary.ManuscriptID</div>
+              <div class="fn-desc">
+                <ul>
+                  <li>Read-only installment schedule showing all payment due dates and amounts</li>
+                  <li>Agent reviews before proceeding to Bind</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flow-arrow"><div class="fa-line"></div><div class="fa-head">▼</div></div>
+
+        <!-- BIND -->
+        <div class="flow-group">
+          <div class="flow-node bind-node" onclick="navigateToPage(null,'bind')">
+            <div class="fn-num">BIND</div>
+            <div class="fn-body">
+              <div class="fn-title">Commit Transaction <span class="badge badge-pb">ProductBase</span></div>
+              <div class="fn-vm">data.CompleteTransactionSetup — Triggered from Coverage Summary Bind button</div>
+              <div class="fn-desc">
+                <ul>
+                  <li>Policy number generated; forms printed (PDF package: jacket, dec page, all endorsements)</li>
+                  <li>IVANS download sent to agency management system; Insvista notification sent</li>
+                  <li>Mortgage Output Notifications sent to mortgagees; property inspection ordered if eligible</li>
+                  <li>Zesty AI photo capture requested; Data Insights receives quote/bind data</li>
+                  <li>Policy status changes to <b>In-Force / Committed</b></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- end flow-container -->
+
+      <!-- Popup flows note -->
+      <div class="detail-section" style="margin-top:10px">
+        <div class="ds-hdr" onclick="toggleSection(this)">
+          <span class="ds-title">🔲 Popup Collections (launched on-demand)</span>
+          <span class="ds-badge">3 Popups</span>
+          <span class="ds-arrow open">▶</span>
+        </div>
+        <div class="ds-body">
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px">
+            <div class="ov-card">
+              <h3>📋 CLUE Claim History Detail</h3>
+              <ul>
+                <li>Launched from Claims History page when agent clicks <b>Detail</b> on a CLUE claim row</li>
+                <li>ViewModel: ClueClaimHistoryDetail</li>
+                <li>ModelCollection: ClueClaimHistoryDetail (separate popup collection)</li>
+                <li>OK → commits; Cancel → rolls back</li>
+                <li>Source: ProductBase v2</li>
+              </ul>
+            </div>
+            <div class="ov-card">
+              <h3>✍️ Subscriber Agreement</h3>
+              <ul>
+                <li>Launched from Coverage Summary when <code>PolicyPrivate.IsSubAgreementPending = True</code></li>
+                <li>ViewModel: EmailNotificationACK</li>
+                <li>ModelCollection: SubscriberAgreement</li>
+                <li>Acknowledge → sets AgreementACK=True, triggers e-signature (SPICRMRequest)</li>
+                <li>Required before Bind button is enabled</li>
+              </ul>
+            </div>
+            <div class="ov-card">
+              <h3>👤 AOI Detail</h3>
+              <ul>
+                <li>Launched from Additional Interests page Details action</li>
+                <li>ViewModel: AdditionalOtherInterestDetailSafePoint</li>
+                <li>Full edit form for a single mortgagee / additional insured</li>
+                <li>Source: ProductBase v2</li>
+              </ul>
+            </div>
+            <div class="ov-card">
+              <h3>📝 FCRA Disclosures</h3>
+              <ul>
+                <li>FCRAPopUp – before ordering CLUE Report (ModelCollection: FCRA)</li>
+                <li>FCRANCFPopUp – before ordering Insurance Score (NCF)</li>
+                <li>Must be confirmed before service call proceeds</li>
+                <li>Source: ProductBase v1</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══════════ MODEL COLLECTIONS SECTION ══════════ -->
+  <div id="sec-mc" class="content-section">
+    <div class="section-wrap">
+
+      <div class="flow-header">
+        <h2>🗂️ Model Collections &amp; ViewModels</h2>
+        <p>The Manatee PersonalHome application uses <b>3 Model Collections</b>. <b>MainInterview</b> is the parent primary collection that drives the entire workflow. The other two are popup/modal collections launched on-demand. The PersonalHome LOB manuscript does not define its own separate model collections — it extends the MainInterview collection defined in ProductBase.</p>
+      </div>
+
+      <!-- MC1: MainInterview -->
+      <div class="mc-card">
+        <div class="mc-hdr mc-primary">
+          <div class="mc-hdr-num">1</div>
+          <div>
+            <div class="mc-hdr-name">MainInterview</div>
+            <div style="font-size:11px;opacity:.75">Source: Manatee_ProductBase_PersonalLines_1_0_0_0 → extended by _2_0_0_0</div>
+          </div>
+          <div class="mc-hdr-type">Primary Workflow Collection</div>
+        </div>
+        <div class="mc-desc">The main interview collection that drives the entire policy creation workflow from New Quote → Bind. All navigable pages (ViewModels) listed below are children of this collection. The LOB manuscript extends this collection by adding RiskSchedule and DwellingCoverage ViewModels.</div>
+        <div style="overflow-x:auto">
+          <table class="vm-tbl">
+            <thead><tr>
+              <th style="width:220px">ViewModel</th>
+              <th style="width:150px">Page Caption</th>
+              <th style="width:90px">Origin</th>
+              <th style="width:80px">Type</th>
+              <th>Purpose / Notes</th>
+            </tr></thead>
+            <tbody>
+              <tr><td class="vm-name">NewQuote</td><td>New Quote Selection</td><td><span class="badge badge-sys">DCT System</span></td><td class="vm-page">✔ Page</td><td>Entry point — LOB and effective date selection.</td></tr>
+              <tr><td class="vm-name">Account</td><td>Applicant</td><td><span class="badge badge-pb">ProductBase v1/v2</span></td><td class="vm-page">✔ Page</td><td>Insured info, mailing address, geocoding trigger, co-applicant, producer. ReadOnly: AccountPage.ReadOnly</td></tr>
+              <tr><td class="vm-name">PolicyDetail</td><td>Policy Information</td><td><span class="badge badge-pb">ProductBase v1/v2</span></td><td class="vm-page">✔ Page</td><td>Effective date, prior policy, e-policy, CTR, consent-to-rate. ShowRef: PolicyDetailPage.Show <b>(SUPPRESSED in PersonalHome)</b></td></tr>
+              <tr><td class="vm-name">RiskSchedule</td><td>Risk Schedule</td><td><span class="badge badge-lob">PersonalHome LOB</span></td><td class="vm-page">✔ Page</td><td>Dwelling physical characteristics, wind mitigation fields. Defined in Manatee_PersonalHome_Peril_1_0_0_0.</td></tr>
+              <tr><td class="vm-name">DwellingCoverage</td><td>Dwelling Coverage</td><td><span class="badge badge-lob">PersonalHome LOB</span></td><td class="vm-page">✔ Page</td><td>All coverage limits, deductibles, endorsements. Defined in Manatee_PersonalHome_Peril_1_0_0_0.</td></tr>
+              <tr><td class="vm-name">Underwriting</td><td>Underwriting</td><td><span class="badge badge-pb">ProductBase v1</span></td><td class="vm-page">✔ Page</td><td>Standard UW questions for FL Select HO/Dwelling. ShowRef: UnderwritingPage.Show</td></tr>
+              <tr><td class="vm-name">UnderwritingFLAdv</td><td>Underwriting</td><td><span class="badge badge-pb">ProductBase v2</span></td><td class="vm-page">✔ Page</td><td>FL Advantage-specific UW questions. ShowRef: PolicyPrivate.IsFLAdvantageSelected</td></tr>
+              <tr><td class="vm-name">UnderwritingLA</td><td>Underwriting</td><td><span class="badge badge-pb">ProductBase v1</span></td><td class="vm-page">✔ Page</td><td>Louisiana Select-specific UW (15 Yes/No items). ShowRef: PolicyPrivate.IsLASelectSelected</td></tr>
+              <tr><td class="vm-name">UnderwritingUS</td><td>Underwriting</td><td><span class="badge badge-pb">ProductBase v1</span></td><td class="vm-page">✔ Page</td><td>US Advantage UW questions (19 Yes/No items). ShowRef: USAdvantageLinesPrivate.ShowConditionForUSUnderwritingPage</td></tr>
+              <tr><td class="vm-name">InsuranceHistory</td><td>Insurance History</td><td><span class="badge badge-pb">ProductBase v1</span></td><td class="vm-page">✔ Page</td><td>Prior insurance carrier, dates, 30-day coverage question, prior liability limit. ReadOnly: InsuranceHistoryPage.ReadOnly</td></tr>
+              <tr><td class="vm-name">ClaimHistorySafePoint</td><td>Claims History</td><td><span class="badge badge-pb">ProductBase v1/v2</span></td><td class="vm-page">✔ Page</td><td>Order CLUE / NCF, add manual losses, Run Eligibility Check. ReadOnly: ClaimsHistoryPage.ReadOnly. Next hidden if flood losses + flood indicator.</td></tr>
+              <tr><td class="vm-name">CLUELossHistoryReport</td><td>CLUE Loss History Report</td><td><span class="badge badge-pb">ProductBase v1</span></td><td class="vm-page">✔ Page</td><td>ShowRef: CLUELossHistoryReportPage.Show (only if CLUE ran + ≥1 claim). ReadOnly: CLUELossHistoryReportPage.ReadOnly</td></tr>
+              <tr><td class="vm-name">NCFDetailPage</td><td>Insurance Score Detail</td><td><span class="badge badge-pb">ProductBase v1</span></td><td class="vm-page">✔ Page</td><td>NCF score detail, adverse action reasons. Shown when NCF score is available.</td></tr>
+              <tr><td class="vm-name">CoverageSafepoint</td><td>Coverage Summary</td><td><span class="badge badge-pb">ProductBase v1/v2</span></td><td class="vm-page">✔ Page</td><td>Key premium page. calculate="2" means full rating runs on load. Contains Bind button. ShowRef: CoveragePage.Show. ReadOnly: CoveragePage.ReadOnly. prevPage: MakeAPayment.</td></tr>
+              <tr><td class="vm-name">AdditionalOtherInterestsSafePoint</td><td>Additional Interests</td><td><span class="badge badge-pb">ProductBase v1/v2</span></td><td class="vm-page">✔ Page</td><td>Mortgagees, additional insureds, additional interests. ShowRef: AdditionalOtherInterestsPage.Show. ReadOnly: AdditionalOtherInterestsPage.ReadOnly.</td></tr>
+              <tr><td class="vm-name">Endorsements</td><td>Endorsements</td><td><span class="badge badge-pb">ProductBase v1</span></td><td class="vm-page">✔ Page</td><td>Manage policy endorsements. Used primarily on mid-term endorsement transactions.</td></tr>
+              <tr><td class="vm-name">ChangeSummary</td><td>Change Summary</td><td><span class="badge badge-pb">ProductBase v1</span></td><td class="vm-page">✔ Page</td><td>Summary of all data changes. Used on endorsement transactions to show before/after.</td></tr>
+              <tr><td class="vm-name">TransactionWorkflow</td><td>Transaction Workflow</td><td><span class="badge badge-pb">ProductBase v1</span></td><td class="vm-page">✔ Page</td><td>Workflow status and action buttons for approval-based transactions (Referred/Approved).</td></tr>
+              <tr><td class="vm-name">BillingSummary</td><td>Billing Summary</td><td><span class="badge badge-bill">DCT Billing</span></td><td class="vm-page">✔ Page</td><td>Read-only installment schedule. ShowRef: BillingSummaryPage.Show. manuscriptIdRef resolves from billing manuscript.</td></tr>
+              <tr><td class="vm-name">MakeAPayment</td><td>Make A Payment</td><td><span class="badge badge-bill">DCT Billing</span></td><td class="vm-page">✔ Page</td><td>Bill class, payment plan, electronic invoice, initial payment processing. prevPage: BillingSummary.</td></tr>
+              <tr><td class="vm-name">RatingSummary</td><td>Rating Summary</td><td><span class="badge badge-pb">ProductBase v1/v2</span></td><td class="vm-popup">⬡ Popup</td><td>Full peril-level rating breakdown. Launched via "Premium Detail" button from Coverage Summary. ShowRef: RatingSummary.Show.</td></tr>
+              <tr><td class="vm-name">TransferToAgency</td><td>Transfer To Agency</td><td><span class="badge badge-pb">ProductBase v1</span></td><td class="vm-page">✔ Page</td><td>Move policy to different agency. ShowRef: TransferToAgencyPage.Show (only when ImportAgencyDNE=True AND user is SPAgencyAdmin).</td></tr>
+              <tr><td class="vm-name">LossHistoryDetail</td><td>Loss History Detail</td><td><span class="badge badge-pb">ProductBase v1</span></td><td class="vm-popup">⬡ Popup</td><td>Add or edit a single manual loss record. Launched from Claims History page (popUp=1).</td></tr>
+              <tr><td class="vm-name">AdditionalOtherInterestDetailSafePoint</td><td>AOI Detail</td><td><span class="badge badge-pb">ProductBase v2</span></td><td class="vm-popup">⬡ Popup</td><td>Full edit form for a single mortgagee / additional insured entry. Launched from Additional Interests Details action.</td></tr>
+              <tr><td class="vm-name">FCRAPopUp</td><td>FCRA Disclosure</td><td><span class="badge badge-pb">ProductBase v1</span></td><td class="vm-popup">⬡ Popup</td><td>FCRA consumer disclosure confirmed before ordering CLUE Report. ModelCollection: FCRA.</td></tr>
+              <tr><td class="vm-name">FCRANCFPopUp</td><td>FCRA NCF Disclosure</td><td><span class="badge badge-pb">ProductBase v1</span></td><td class="vm-popup">⬡ Popup</td><td>FCRA consumer disclosure confirmed before ordering Insurance Score (NCF). ModelCollection: FCRA.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- MC2: ClueClaimHistoryDetail -->
+      <div class="mc-card">
+        <div class="mc-hdr mc-secondary">
+          <div class="mc-hdr-num">2</div>
+          <div>
+            <div class="mc-hdr-name">ClueClaimHistoryDetail</div>
+            <div style="font-size:11px;opacity:.75">Source: Manatee_ProductBase_PersonalLines_2_0_0_0</div>
+          </div>
+          <div class="mc-hdr-type">Popup Collection</div>
+        </div>
+        <div class="mc-desc">A popup model collection used to view and edit the full details of a single CLUE claim record. Launched from the Claims History page when the agent clicks the <b>Detail</b> hyperlink on any CLUE claim row. Uses <code>Session.beginTransactionRq</code> on open and <code>commitTransactionRq / rollbackTransactionRq</code> on OK/Cancel.</div>
+        <div style="overflow-x:auto">
+          <table class="vm-tbl">
+            <thead><tr><th>ViewModel</th><th>Caption</th><th>Origin</th><th>Navigable</th><th>Purpose</th></tr></thead>
+            <tbody>
+              <tr>
+                <td class="vm-name">ClueClaimHistoryDetail</td>
+                <td>Claim Details</td>
+                <td><span class="badge badge-pb">ProductBase v1/v2</span></td>
+                <td class="vm-popup">Popup only</td>
+                <td>Shows full detail of one CLUE claim: claim date, individual payments (cause of loss, amount paid). Agent can edit (non-agent roles) or view only (agent role). OK → commits; Cancel → rolls back. Returns to ClaimHistorySafePoint on close.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- MC3: SubscriberAgreement -->
+      <div class="mc-card">
+        <div class="mc-hdr mc-secondary">
+          <div class="mc-hdr-num">3</div>
+          <div>
+            <div class="mc-hdr-name">SubscriberAgreement</div>
+            <div style="font-size:11px;opacity:.75">Source: Manatee_ProductBase_PersonalLines_2_0_0_0</div>
+          </div>
+          <div class="mc-hdr-type">Popup Collection</div>
+        </div>
+        <div class="mc-desc">A popup model collection for the Subscriber Agreement and Limited Power of Attorney (LPOA) acknowledgement. Launched from the Coverage Summary page when <code>PolicyPrivate.IsSubAgreementPending = True</code> (new business only, policy not yet bound). The agent must complete this before the Bind button is enabled.</div>
+        <div style="overflow-x:auto">
+          <table class="vm-tbl">
+            <thead><tr><th>ViewModel</th><th>Caption</th><th>Origin</th><th>Navigable</th><th>Purpose</th></tr></thead>
+            <tbody>
+              <tr>
+                <td class="vm-name">EmailNotificationACK</td>
+                <td>Subscriber Agreement Acknowledgement</td>
+                <td><span class="badge badge-pb">ProductBase v2</span></td>
+                <td class="vm-popup">Popup only</td>
+                <td>Displays insured's email address for review. <br>• <em>"I acknowledge …"</em> → sets AgreementACK=True, triggers SPICRMRequest (e-signature sent), returns to CoverageSafepoint<br>• <em>"Return to Applicant"</em> → sets AgreementACK=False, navigates to Account page to correct email</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══════════ PB VS LOB RESPONSIBILITY SECTION ══════════ -->
+  <div id="sec-resp" class="content-section">
+    <div class="section-wrap">
+      <div class="flow-header">
+        <h2>⚖️ ProductBase vs LOB Responsibilities</h2>
+        <p>Clear delineation of what the ProductBase framework provides versus what the Manatee PersonalHome LOB manuscript owns and overrides.</p>
+      </div>
+      <div class="detail-section">
+        <div class="ds-hdr" onclick="toggleSection(this)">
+          <span class="ds-title">Responsibility Matrix</span>
+          <span class="ds-badge">6 Areas</span>
+          <span class="ds-arrow open">▶</span>
+        </div>
+        <div class="ds-body">
+          <div class="tbl-wrap">
+            <table class="resp-tbl">
+              <thead><tr>
+                <th style="width:160px">Area</th>
+                <th>ProductBase (Manatee_ProductBase_PersonalLines_1/2)</th>
+                <th>LOB (Manatee_PersonalHome_Peril_1)</th>
+              </tr></thead>
+              <tbody>
+                <tr>
+                  <td><strong>Model Collections</strong></td>
+                  <td>Defines all 3 model collections: MainInterview, ClueClaimHistoryDetail, SubscriberAgreement</td>
+                  <td>No separate model collections — extends MainInterview</td>
+                </tr>
+                <tr>
+                  <td><strong>ViewModels / Pages</strong></td>
+                  <td>Applicant, Policy Info, Underwriting (variants), Insurance History, Claims History, Coverage Summary, Additional Interests, Billing</td>
+                  <td>Risk Schedule, Dwelling Coverage (dwelling fields, coverages, endorsements, wind mitigation)</td>
+                </tr>
+                <tr>
+                  <td><strong>Rating Engine</strong></td>
+                  <td>Peril framework, subtotals, written premium, capping, CTR, fees/surcharges</td>
+                  <td>All peril factors, territory rates, wind mitigation lookup tables, coverage calculations (Cov A/B/C/D/E/F), sinkhole, screened enclosure, water backup</td>
+                </tr>
+                <tr>
+                  <td><strong>Form Rules / Printing</strong></td>
+                  <td>Print job orchestration, mailer pages, non-renewal notices, cancellation forms, NCF adverse letter</td>
+                  <td>HO3/HO6-specific forms: HO-3 policy jacket, NCPT notices, Dec page endorsement list, wind mitigation disclosure, sinkhole forms</td>
+                </tr>
+                <tr>
+                  <td><strong>Integrations</strong></td>
+                  <td>Maprisk geocoding, LexisNexis CLUE/NCF, Swiss Re Flood scoring, Verisk 360 valuation, Zesty AI, Insvista, IVANS, Data Insights</td>
+                  <td>None — relies on ProductBase integrations</td>
+                </tr>
+                <tr>
+                  <td><strong>UW/Eligibility Rules</strong></td>
+                  <td>DeclineRules, ReferralRules, IsBindableAgent/Manager (shared across all LOBs)</td>
+                  <td>RequiredFieldsCompletedHome (coverage combination validations: deductible/limit/form rules)</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ PAGE DETAIL SECTION ══════════ -->
+  <div id="sec-page-detail" class="content-section">
+    <div class="section-wrap" id="page-detail-content">
+      <!-- Rendered dynamically -->
+    </div>
+  </div>
+
+</main>
+</div>
+
+<button class="scroll-top" id="scroll-top" onclick="scrollToTop()">▲</button>
+
+<script>
+// ═══════════════════════════════════════════════════════════
+// DATA MODEL — extracted from both source files
+// ═══════════════════════════════════════════════════════════
+const pages = [
+{
+  id:"account", name:"Applicant", caption:"Account", num:1,
+  manuscript:"DCT_ProductBase_PersonalLines_1_0_0_0",
+  viewModel:"Account", topic:"MainInterview", source:"ProductBase",
+  validRef:"AccountPage.Show", readOnlyRef:"AccountPage.ReadOnly",
+  status:"active",
+  purpose:"Capture insured name, mailing address, geocoding via PBBI, co-applicant entry, producer selection",
+  inheritance:"ProductBase",
+  tags:["ProductBase"],
+  metaExtra:[
+    {label:"Model Collection",value:"MainInterview"},
+    {label:"Page Version",value:"2.0"},
+    {label:"Read Only Ref",value:"AccountPage.ReadOnly"},
+    {label:"usePartyMappings",value:"1"}
+  ],
+  navPrev:"",
+  navNext:"Policy Information (PAGE 2)",
+  fields:[
+    {id:1,label:"Primary Insured Text",tech:"AccountOutputNonShredded.PrimaryInsuredText",path:"PrimaryInsuredText",type:"string",control:"Label",rw:"Read",source:"Calculation",visibility:"Always Visible",visCondition:"—",enabled:"Read-Only",enabledCond:"Always",required:"Not Applicable",reqCond:"—",defaultVal:"'Primary Insured'",validation:"MaxLength: Name",calc:"Hardcoded value 'Primary Insured'",lookup:"—",group:"Applicant Info",pbLob:"ProductBase"},
+    {id:2,label:"First Name",tech:"AccountInput.FirstName",path:"person[1]/FirstName",type:"string",control:"Text Input",rw:"Read and Written",source:"Account Data",visibility:"Always Visible",visCondition:"—",enabled:"Always Enabled",enabledCond:"—",required:"Conditionally Required",reqCond:"IsNotQuote=True OR AccountPrivate.IsRequired=True",defaultVal:"—",validation:"MaxLength: 16",calc:"—",lookup:"—",group:"Applicant Info",pbLob:"ProductBase"},
+    {id:3,label:"Middle Initial (MI)",tech:"AccountInput.MiddleName",path:"person[1]/MiddleName",type:"string",control:"Text Input",rw:"Read and Written",source:"Account Data",visibility:"Always Visible",visCondition:"—",enabled:"Always Enabled",enabledCond:"—",required:"Optional",reqCond:"—",defaultVal:"—",validation:"MaxLength: 11",calc:"Concatenated into AccountInput.Name",lookup:"—",group:"Applicant Info",pbLob:"ProductBase"},
+    {id:4,label:"Last Name",tech:"AccountInput.LastName",path:"person[1]/LastName",type:"string",control:"Text Input",rw:"Read and Written",source:"Account Data",visibility:"Always Visible",visCondition:"—",enabled:"Always Enabled",enabledCond:"—",required:"Conditionally Required",reqCond:"IsNotQuote=True OR IsRequired=True",defaultVal:"—",validation:"MaxLength: 20",calc:"Affects AccountInput.Name (onChange)",lookup:"—",group:"Applicant Info",pbLob:"ProductBase"},
+    {id:5,label:"Name (Calculated)",tech:"AccountInput.Name",path:"Name",type:"string",control:"Computed",rw:"Read and Written",source:"Calculation",visibility:"Hidden (computed)",visCondition:"—",enabled:"—",enabledCond:"—",required:"Conditionally Required",reqCond:"Status = 'Application'",defaultVal:"—",validation:"MaxLength: Name",calc:"FirstName + ' ' + MiddleName + ' ' + LastName",lookup:"—",group:"Applicant Info",pbLob:"ProductBase"},
+    {id:6,label:"Party Search (Manual)",tech:"Action – partyStart:partySearch",path:"—",type:"action",control:"Hyperlink",rw:"Used in condition",source:"ViewModel",visibility:"Conditionally Visible",visCondition:"AccountPage.ManualPartySearch_Show = True",enabled:"—",enabledCond:"—",required:"Not Applicable",reqCond:"—",defaultVal:"—",validation:"—",calc:"Triggers popup party search",lookup:"—",group:"Applicant Info",pbLob:"ProductBase"},
+    {id:7,label:"Auto Search",tech:"Action – partyStart:searchResults",path:"—",type:"action",control:"Hyperlink",rw:"Used in condition",source:"ViewModel",visibility:"Conditionally Visible",visCondition:"AccountPage.AutomaticPartySearch_Show = True",enabled:"—",enabledCond:"—",required:"Not Applicable",reqCond:"—",defaultVal:"—",validation:"—",calc:"Auto-populates from party results",lookup:"—",group:"Applicant Info",pbLob:"ProductBase"},
+    {id:8,label:"Add Co-Applicant",tech:"Action – addObjectRecordRq (Person)",path:"—",type:"action",control:"Button",rw:"Write",source:"ViewModel",visibility:"Conditionally Visible",visCondition:"AccountPage.ShowAddCoApplicantButton = True; hidden if ReadOnly",enabled:"Always when visible",enabledCond:"—",required:"Not Applicable",reqCond:"—",defaultVal:"—",validation:"—",calc:"Adds new Person record",lookup:"—",group:"Co-Applicant",pbLob:"ProductBase"},
+    {id:9,label:"Co-Applicant Label",tech:"PersonOutputNonShredded.CoapplicantLabel",path:"CoapplicantLabel",type:"string",control:"Label",rw:"Read",source:"Calculation",visibility:"Conditionally Visible",visCondition:"AccountPrivate.CoApplicantExists = True",enabled:"Read-Only",enabledCond:"—",required:"Not Applicable",reqCond:"—",defaultVal:"—",validation:"—",calc:"'Co-Applicant #' + (Iteration - 1)",lookup:"—",group:"Co-Applicant",pbLob:"ProductBase"},
+    {id:10,label:"Co-Applicant First Name",tech:"PersonInput.FirstName",path:"FirstName",type:"string",control:"Text Input",rw:"Read and Written",source:"Person Data",visibility:"Conditionally Visible",visCondition:"Non-primary person row visible",enabled:"Always Enabled",enabledCond:"—",required:"Optional",reqCond:"—",defaultVal:"—",validation:"MaxLength: 16",calc:"—",lookup:"—",group:"Co-Applicant",pbLob:"ProductBase"},
+    {id:11,label:"Co-Applicant MI",tech:"PersonInput.MiddleName",path:"MiddleName",type:"string",control:"Text Input",rw:"Read and Written",source:"Person Data",visibility:"Conditionally Visible",visCondition:"Non-primary person row visible",enabled:"Always Enabled",enabledCond:"—",required:"Optional",reqCond:"—",defaultVal:"—",validation:"MaxLength: 11",calc:"—",lookup:"—",group:"Co-Applicant",pbLob:"ProductBase"},
+    {id:12,label:"Co-Applicant Last Name",tech:"PersonInput.LastName",path:"LastName",type:"string",control:"Text Input",rw:"Read and Written",source:"Person Data",visibility:"Conditionally Visible",visCondition:"Non-primary person row visible",enabled:"Always Enabled",enabledCond:"—",required:"Optional",reqCond:"—",defaultVal:"—",validation:"MaxLength: 20",calc:"—",lookup:"—",group:"Co-Applicant",pbLob:"ProductBase"},
+    {id:13,label:"Delete Co-Applicant",tech:"Action – delete Person",path:"—",type:"action",control:"Hyperlink",rw:"Write",source:"ViewModel",visibility:"Conditionally Visible",visCondition:"Non-primary person row",enabled:"—",enabledCond:"—",required:"Not Applicable",reqCond:"—",defaultVal:"—",validation:"—",calc:"Removes Person object",lookup:"—",group:"Co-Applicant",pbLob:"ProductBase"},
+    {id:14,label:"Phone Number",tech:"AccountInput.PrimaryPhone",path:"PrimaryPhone",type:"string",control:"Text Input",rw:"Read and Written",source:"Account Data",visibility:"Always Visible",visCondition:"—",enabled:"Always Enabled",enabledCond:"—",required:"Conditionally Required",reqCond:"IsNotQuote=True OR IsRequired=True",defaultVal:"From session (GetPhoneNumberFromNewQuote)",validation:"FormatMask: PhoneFax; MaxLength: PhoneFax",calc:"Default from GetPhoneNumberFromNewQuote.ExecuteRequest",lookup:"—",group:"Contact",pbLob:"ProductBase"},
+    {id:15,label:"E-mail Address",tech:"AccountInput.Email",path:"Email",type:"string",control:"Text Input",rw:"Read and Written",source:"Account Data",visibility:"Always Visible",visCondition:"—",enabled:"Always Enabled",enabledCond:"—",required:"Conditionally Required",reqCond:"AccountPrivate.IsRequired = True",defaultVal:"—",validation:"FormatMask: email",calc:"—",lookup:"—",group:"Contact",pbLob:"ProductBase"},
+    {id:16,label:"Address 1",tech:"AccountInput.Address1",path:"address/Address1",type:"string",control:"Text Input (onBlur)",rw:"Read and Written",source:"Account Data",visibility:"Always Visible",visCondition:"—",enabled:"Conditionally Enabled",enabledCond:"Geocode.AddressReadOnly = False",required:"Conditionally Required",reqCond:"IsNotQuote=True OR IsRequired=True",defaultVal:"Address.AddressConcatenation",validation:"MaxLength: Address",calc:"—",lookup:"—",group:"Address",pbLob:"ProductBase"},
+    {id:17,label:"Address 2",tech:"AccountInput.Address2",path:"address/Address2",type:"string",control:"Text Input",rw:"Read and Written",source:"Account Data",visibility:"Always Visible",visCondition:"—",enabled:"Conditionally Enabled",enabledCond:"Geocode.AddressReadOnly = False",required:"Optional",reqCond:"—",defaultVal:"—",validation:"MaxLength: Address",calc:"—",lookup:"—",group:"Address",pbLob:"ProductBase"},
+    {id:18,label:"City",tech:"AccountInput.City",path:"address/City",type:"string",control:"Text Input (onBlur)",rw:"Read and Written",source:"Account Data",visibility:"Always Visible",visCondition:"—",enabled:"Conditionally Enabled",enabledCond:"Geocode.AddressReadOnly = False",required:"Conditionally Required",reqCond:"IsNotQuote=True OR IsRequired=True",defaultVal:"—",validation:"MaxLength: City",calc:"—",lookup:"—",group:"Address",pbLob:"ProductBase"},
+    {id:19,label:"State",tech:"AccountInput.State",path:"address/State",type:"string",control:"Dropdown",rw:"Read and Written",source:"Account Data",visibility:"Always Visible",visCondition:"—",enabled:"Conditionally Enabled",enabledCond:"Geocode.AddressReadOnly = False",required:"Required",reqCond:"Always",defaultVal:"—",validation:"MaxLength: State; Options: US states; validRef: License",calc:"—",lookup:"StateAbbreviations, License",group:"Address",pbLob:"LOB Override"},
+    {id:20,label:"Zip Code",tech:"AccountInput.ZipCode",path:"address/ZipCode",type:"string",control:"Text Input (onBlur)",rw:"Read and Written",source:"Account Data",visibility:"Always Visible",visCondition:"—",enabled:"Conditionally Enabled",enabledCond:"Geocode.AddressReadOnly = False",required:"Conditionally Required",reqCond:"IsNotQuote=True OR IsRequired=True",defaultVal:"—",validation:"FormatMask: Zipcode; MaxLength: Zip",calc:"ZipCodeBase (1-5), ZipCodeAddOn (7-10)",lookup:"—",group:"Address",pbLob:"ProductBase"},
+    {id:21,label:"County",tech:"AccountInput.County",path:"County",type:"string",control:"Dropdown/Computed",rw:"Read and Written",source:"Lookup",visibility:"Always Visible",visCondition:"—",enabled:"Always Enabled",enabledCond:"—",required:"Optional",reqCond:"—",defaultVal:"—",validation:"DataService: dkCountyUS keyed by ACT + State",calc:"—",lookup:"dkCountyUS",group:"Address",pbLob:"ProductBase"},
+    {id:22,label:"Geocoding Status",tech:"Geocode.GeocodeStatusDisplay",path:"GeocodeStatusDisplay",type:"string",control:"Read-Only Display",rw:"Read",source:"Calculation",visibility:"Conditionally Visible",visCondition:"PitneyBowesOutput.GeocodingEnabled = True",enabled:"Read-Only",enabledCond:"Always",required:"Not Applicable",reqCond:"—",defaultVal:"Unverified",validation:"—",calc:"LastVerified>today-30:'Verified,date'; expired:'Expired,date'; else:'Unverified'",lookup:"—",group:"Geocoding",pbLob:"ProductBase"},
+    {id:23,label:"Verify Address",tech:"Action – PBBI Geocode",path:"—",type:"action",control:"Hyperlink",rw:"Used in condition",source:"ViewModel",visibility:"Conditionally Visible",visCondition:"Geocode.ShowPBBIVerifyAddress = True",enabled:"—",enabledCond:"—",required:"Not Applicable",reqCond:"—",defaultVal:"—",validation:"—",calc:"Triggers geocode; on accept: SetLastVerifiedToToday + StorePolicy",lookup:"—",group:"Geocoding",pbLob:"ProductBase"},
+    {id:24,label:"Edit Verified Address",tech:"Action – ClearLastVerified",path:"—",type:"action",control:"Hyperlink",rw:"Write",source:"ViewModel",visibility:"Conditionally Visible",visCondition:"Geocode.ShowPBBIEditAddress = True",enabled:"—",enabledCond:"—",required:"Not Applicable",reqCond:"—",defaultVal:"—",validation:"—",calc:"Clears geocode; re-enables address fields",lookup:"—",group:"Geocoding",pbLob:"ProductBase"},
+    {id:25,label:"View Map",tech:"Action – PBBI Interactive Map",path:"—",type:"action",control:"Hyperlink",rw:"Used in condition",source:"ViewModel",visibility:"Conditionally Visible",visCondition:"InteractiveMap.ShowPBBIInteractiveMapLink = True",enabled:"—",enabledCond:"—",required:"Not Applicable",reqCond:"—",defaultVal:"—",validation:"—",calc:"Opens Bing interactive map",lookup:"—",group:"Geocoding",pbLob:"ProductBase"},
+    {id:26,label:"Bing Map Link",tech:"AccountPrivate.XHTMLMapsBing",path:"—",type:"string",control:"XHTML Display",rw:"Read",source:"Calculation",visibility:"Always Visible",visCondition:"—",enabled:"Read-Only",enabledCond:"—",required:"Not Applicable",reqCond:"—",defaultVal:"—",validation:"—",calc:"Concatenates Bing URL with address",lookup:"—",group:"Geocoding",pbLob:"ProductBase"},
+    {id:27,label:"Google Map Link",tech:"AccountPrivate.XHTMLMapsGoogle",path:"—",type:"string",control:"XHTML Display",rw:"Read",source:"Calculation",visibility:"Always Visible",visCondition:"—",enabled:"Read-Only",enabledCond:"—",required:"Not Applicable",reqCond:"—",defaultVal:"—",validation:"—",calc:"Concatenates Google URL with address",lookup:"—",group:"Geocoding",pbLob:"ProductBase"},
+    {id:28,label:"Latitude / Longitude",tech:"AccountPBBI.Latitude / AccountPBBI.Longitude",path:"Latitude / Longitude",type:"string",control:"Internal Field",rw:"Read and Written",source:"PBBI Geocode Service",visibility:"Not UI-bound / Internal",visCondition:"—",enabled:"—",enabledCond:"—",required:"Not Applicable",reqCond:"—",defaultVal:"From PBBI geocode",validation:"—",calc:"Defaulted from account geocode if location matches",lookup:"PBBI Service",group:"Geocoding",pbLob:"ProductBase"}
+  ],
+  dependencies:[
+    {source:"AccountInput.FirstName + LastName + MiddleName",target:"AccountInput.Name",type:"Calculation input",condition:"onChange → Name recalculated",result:"Name = FirstName + ' ' + MiddleName + ' ' + LastName"},
+    {source:"AccountInput.Name",target:"QuoteNumber.Value",type:"postEffect",condition:"Name change",result:"Quote number refresh"},
+    {source:"Geocode.IsAccountInputLocked + GeocodingEnabled",target:"Geocode.AddressReadOnly",type:"Controls enabled state",condition:"Both True",result:"Address fields locked"},
+    {source:"AccountPage.ReadOnly",target:"AccountPage.ShowAddCoApplicantButton",type:"Visibility control",condition:"ReadOnly=True",result:"Button hidden in view mode"}
+  ]
+},
+{
+  id:"policydetail", name:"Policy Information", caption:"PolicyDetail", num:2,
+  manuscript:"DCT_ProductBase_PersonalLines_1_0_0_0",
+  viewModel:"PolicyDetail", topic:"MainInterview", source:"ProductBase",
+  validRef:"PolicyDetailPage.Show", status:"suppressed",
+  purpose:"Policy-level dates and term. SUPPRESSED in PersonalHome LOB (PolicyDetailPage.Show always False)",
+  inheritance:"ProductBase (Suppressed by LOB)",
+  tags:["ProductBase","Suppressed"],
+  navPrev:"Applicant (PAGE 1)", navNext:"Risk Schedule (PAGE 3)",
+  fields:[
+    {id:1,label:"Description",tech:"PolicyInput.Description",path:"Description",type:"string",control:"Text Input",rw:"Read and Written",source:"Policy Data",visibility:"Always Visible",visCondition:"—",enabled:"Always Enabled",enabledCond:"—",required:"Optional",reqCond:"—",defaultVal:"—",validation:"MaxLength: Description",calc:"—",lookup:"—",group:"Policy Info",pbLob:"ProductBase"},
+    {id:2,label:"Effective Date",tech:"PolicyInput.EffectiveDate",path:"EffectiveDate",type:"date",control:"Date Input (onBlur)",rw:"Read and Written",source:"Policy Data",visibility:"Always Visible",visCondition:"—",enabled:"Always Enabled",enabledCond:"—",required:"Conditionally Required",reqCond:"LOB specific",defaultVal:"—",validation:"FormatMask: Date",calc:"Drives written premium calc; affects rate version selection",lookup:"—",group:"Policy Info",pbLob:"ProductBase"},
+    {id:3,label:"Get Latest Rates Notice",tech:"GetLatestRates (Spacer + Action)",path:"—",type:"action",control:"Conditional Section",rw:"Used in condition",source:"ViewModel",visibility:"Conditionally Visible",visCondition:"GetLatestRates.Show = True",enabled:"—",enabledCond:"—",required:"Not Applicable",reqCond:"—",defaultVal:"—",validation:"—",calc:"Prompts to refresh rate version",lookup:"—",group:"Policy Info",pbLob:"ProductBase"},
+    {id:4,label:"Get Latest Rates Button",tech:"Action – GetLatestRates.Value",path:"—",type:"action",control:"Button",rw:"Write",source:"ViewModel",visibility:"Conditionally Visible",visCondition:"GetLatestRates.Show = True",enabled:"—",enabledCond:"—",required:"Not Applicable",reqCond:"—",defaultVal:"—",validation:"—",calc:"Executes rate version update",lookup:"—",group:"Policy Info",pbLob:"ProductBase"},
+    {id:5,label:"Term",tech:"PolicyInput.Term",path:"Term",type:"int",control:"Dropdown",rw:"Read and Written",source:"Policy Data",visibility:"Always Visible",visCondition:"—",enabled:"Read-Only (LOB override)",enabledCond:"PersonalHome forces readOnly=True",required:"Optional",reqCond:"—",defaultVal:"12 (1 Year)",validation:"Options: 6=6 Months (validRef=False), 12=1 Year, 0=Custom (validRef=False)",calc:"LOB PersonalHome forces 12-month term always",lookup:"—",group:"Policy Info",pbLob:"LOB Override"},
+    {id:6,label:"Expiration Date",tech:"PolicyInput.ExpirationDate",path:"ExpirationDate",type:"date",control:"Date Input (compute=1)",rw:"Read and Written",source:"Calculation",visibility:"Always Visible",visCondition:"—",enabled:"Always Enabled",enabledCond:"—",required:"Optional",reqCond:"—",defaultVal:"Computed from EffectiveDate + Term",validation:"FormatMask: Date",calc:"EffectiveDate + Term",lookup:"—",group:"Policy Info",pbLob:"ProductBase"}
+  ],
+  dependencies:[
+    {source:"PolicyInput.EffectiveDate",target:"PolicyInput.ExpirationDate",type:"Calculation",condition:"Always",result:"ExpirationDate = EffDate + Term"},
+    {source:"PolicyInput.Term",target:"PolicyInput.ExpirationDate",type:"Calculation",condition:"Always",result:"Affects expiration"}
+  ]
+},
+{
+  id:"locationdetail", name:"Location Detail", caption:"LocationDetail", num:3,
+  manuscript:"DCT_ProductBase_PersonalLines_1_0_0_0",
+  viewModel:"LocationDetail", topic:"LocationDetail", source:"ProductBase",
+  validRef:"LocationSchedulePage.Show", status:"active",
+  purpose:"Add/edit physical location address; geocode separately from account address",
+  inheritance:"ProductBase",
+  tags:["ProductBase"],
+  navPrev:"Policy Information (PAGE 2)", navNext:"Dwelling Info (PAGE 3 in flow = RiskSchedule)",
+  fields:[
+    {id:1,label:"Address 1",tech:"LocationInput.Address1",path:"address/Address1",type:"string",control:"Text Input (onBlur)",rw:"Read and Written",source:"Location Data",visibility:"Always Visible",visCondition:"—",enabled:"Conditionally Enabled",enabledCond:"LocationGeocode.AddressReadOnly = False",required:"Optional",reqCond:"—",defaultVal:"AccountInput.Address1",validation:"MaxLength: Address",calc:"—",lookup:"—",group:"Location Address",pbLob:"ProductBase"},
+    {id:2,label:"Address 2",tech:"LocationInput.Address2",path:"address/Address2",type:"string",control:"Text Input",rw:"Read and Written",source:"Location Data",visibility:"Always Visible",visCondition:"—",enabled:"Conditionally Enabled",enabledCond:"LocationGeocode.AddressReadOnly = False",required:"Optional",reqCond:"—",defaultVal:"AccountInput.Address2",validation:"MaxLength: Address",calc:"—",lookup:"—",group:"Location Address",pbLob:"ProductBase"},
+    {id:3,label:"City",tech:"LocationInput.City",path:"address/City",type:"string",control:"Text Input",rw:"Read and Written",source:"Location Data",visibility:"Always Visible",visCondition:"—",enabled:"Conditionally Enabled",enabledCond:"LocationGeocode.AddressReadOnly = False",required:"Optional",reqCond:"—",defaultVal:"AccountInput.City",validation:"MaxLength: City",calc:"—",lookup:"—",group:"Location Address",pbLob:"ProductBase"},
+    {id:4,label:"State",tech:"LocationInput.State",path:"address/State",type:"string",control:"Dropdown (onBlur)",rw:"Read and Written",source:"Location Data",visibility:"Always Visible",visCondition:"—",enabled:"Conditionally Enabled",enabledCond:"LocationGeocode.AddressReadOnly = False",required:"Optional",reqCond:"—",defaultVal:"AccountInput.State",validation:"Options: US states",calc:"—",lookup:"—",group:"Location Address",pbLob:"ProductBase"},
+    {id:5,label:"ZIP Code",tech:"LocationInput.ZipCode",path:"address/ZipCode",type:"string",control:"Text Input (onBlur)",rw:"Read and Written",source:"Location Data",visibility:"Always Visible",visCondition:"—",enabled:"Conditionally Enabled",enabledCond:"LocationGeocode.AddressReadOnly = False",required:"Optional",reqCond:"—",defaultVal:"AccountInput.ZipCode",validation:"FormatMask: Zipcode",calc:"ZipCodeBase (1-5), ZipCodeAddOn (7-10)",lookup:"—",group:"Location Address",pbLob:"ProductBase"},
+    {id:6,label:"County",tech:"LocationInput.County",path:"address/County",type:"string",control:"Dropdown",rw:"Read and Written",source:"Lookup",visibility:"Always Visible",visCondition:"—",enabled:"Always Enabled",enabledCond:"—",required:"Optional",reqCond:"—",defaultVal:"AccountInput.County",validation:"DataService: dkCountyUS",calc:"—",lookup:"dkCountyUS",group:"Location Address",pbLob:"ProductBase"},
+    {id:7,label:"Geocoding Status",tech:"LocationGeocode.GeocodeStatusDisplay",path:"GeocodeStatusDisplay",type:"string",control:"Read-Only Display",rw:"Read",source:"Calculation",visibility:"Conditionally Visible",visCondition:"PitneyBowesOutput.GeocodingEnabled = True",enabled:"Read-Only",enabledCond:"—",required:"Not Applicable",reqCond:"—",defaultVal:"Unverified",validation:"—",calc:"Same logic as account geocode",lookup:"—",group:"Geocoding",pbLob:"ProductBase"},
+    {id:8,label:"Verify Location",tech:"Action – PBBI Location Geocoding",path:"—",type:"action",control:"Hyperlink",rw:"Used in condition",source:"ViewModel",visibility:"Conditionally Visible",visCondition:"LocationGeocode.ShowPBBIVerifyAddress = True",enabled:"—",enabledCond:"—",required:"Not Applicable",reqCond:"—",defaultVal:"—",validation:"—",calc:"Geocode popup; on accept: SetLastVerifiedToToday",lookup:"—",group:"Geocoding",pbLob:"ProductBase"},
+    {id:9,label:"Edit Verified Address",tech:"Action – ClearLastVerified (Location)",path:"—",type:"action",control:"Hyperlink",rw:"Write",source:"ViewModel",visibility:"Conditionally Visible",visCondition:"LocationGeocode.ShowPBBIEditAddress = True",enabled:"—",enabledCond:"—",required:"Not Applicable",reqCond:"—",defaultVal:"—",validation:"—",calc:"Clears location geocode",lookup:"—",group:"Geocoding",pbLob:"ProductBase"},
+    {id:10,label:"View Map",tech:"Action – Interactive Map (Location)",path:"—",type:"action",control:"Hyperlink",rw:"Used in condition",source:"ViewModel",visibility:"Conditionally Visible",visCondition:"LocationInteractiveMap.ShowPBBIInteractiveMapLink = True",enabled:"—",enabledCond:"—",required:"Not Applicable",reqCond:"—",defaultVal:"—",validation:"—",calc:"Opens interactive map for location",lookup:"—",group:"Geocoding",pbLob:"ProductBase"},
+    {id:11,label:"OK",tech:"Action – close/return",path:"—",type:"action",control:"Button",rw:"Used in condition",source:"ViewModel",visibility:"Always Visible",visCondition:"—",enabled:"Always Enabled",enabledCond:"—",required:"Not Applicable",reqCond:"—",defaultVal:"—",validation:"—",calc:"Validates; triggers ClearInLocationEditMode (postCommand)",lookup:"—",group:"Actions",pbLob:"ProductBase"},
+    {id:12,label:"Cancel",tech:"Action – cancelChanges",path:"—",type:"action",control:"Button",rw:"Used in condition",source:"ViewModel",visibility:"Always Visible",visCondition:"—",enabled:"Always Enabled",enabledCond:"—",required:"Not Applicable",reqCond:"—",defaultVal:"—",validation:"—",calc:"Cancels changes",lookup:"—",group:"Actions",pbLob:"ProductBase"},
+    {id:13,label:"Delete Location",tech:"Action – delete (add mode)",path:"—",type:"action",control:"Button",rw:"Write",source:"ViewModel",visibility:"Conditionally Visible",visCondition:"InLocationAddMode = True",enabled:"—",enabledCond:"—",required:"Not Applicable",reqCond:"—",defaultVal:"—",validation:"—",calc:"Deletes new location in add mode",lookup:"—",group:"Actions",pbLob:"ProductBase"},
+    {id:14,label:"Reset to Applicant Address",tech:"Action – LocationPrivate.ResetToApplicantAddress",path:"—",type:"action",control:"Button",rw:"Write",source:"ViewModel",visibility:"Conditionally Visible",visCondition:"ShowResetToApplicantAddress = True AND AllPage.ReadOnly = False",enabled:"—",enabledCond:"—",required:"Not Applicable",reqCond:"—",defaultVal:"—",validation:"—",calc:"Copies AccountInput.Address1/2/City/State/ZipCode/County → LocationInput",lookup:"—",group:"Actions",pbLob:"ProductBase"}
+  ],
+  dependencies:[
+    {source:"AccountInput.Address1",target:"LocationInput.Address1",type:"Default value",condition:"New location",result:"Location inherits account address"},
+    {source:"LocationGeocode.IsVerified",target:"LocationGeocode.AddressReadOnly",type:"Lock control",condition:"IsVerified=True AND GeocodingEnabled=True",result:"Address fields locked"}
+  ]
+},
+{
+  id:"claimshistory", name:"Claims History", caption:"ClaimsHistory", num:4,
+  manuscript:"DCT_ProductBase_PersonalLines_1_0_0_0",
+  viewModel:"ClaimsHistory", topic:"MainInterview", source:"ProductBase",
+  validRef:"ClaimsHistoryPage.Show", status:"active",
+  purpose:"Capture prior loss history with manual entry; read-only on renewals/endorsements",
+  inheritance:"ProductBase",
+  tags:["ProductBase"],
+  navPrev:"Insurance History (PAGE 6)", navNext:"Coverage Summary (PAGE 8)",
+  fields:[
+    {id:1,label:"Prior Losses Header",tech:"Spacer/Static Text",path:"—",type:"static",control:"Label",rw:"Not UI-bound",source:"Manuscript",visibility:"Always Visible",visCondition:"—",enabled:"Read-Only",enabledCond:"—",required:"Not Applicable",reqCond:"—",defaultVal:"Static text",validation:"—",calc:"—",lookup:"—",group:"Loss History",pbLob:"ProductBase"},
+    {id:2,label:"Loss Number",tech:"LossOutputNonShredded.NumberDisplay",path:"NumberDisplay",type:"string",control:"Grid Column (Read-Only)",rw:"Read",source:"Calculation",visibility:"Conditionally Visible",visCondition:"PolicyPrivate.ShowLossInformation = True (LossCount > 0)",enabled:"Read-Only",enabledCond:"—",required:"Not Applicable",reqCond:"—",defaultVal:"—",validation:"—",calc:"LossPrivate.CurrentIteration",lookup:"—",group:"Loss History",pbLob:"ProductBase"},
+    {id:3,label:"Loss Type",tech:"LossInput.LossType",path:"LossType",type:"string",control:"Grid Column / Text Input",rw:"Read and Written",source:"Loss Data",visibility:"Conditionally Visible",visCondition:"ShowLossInformation = True",enabled:"Conditionally Enabled",enabledCond:"ClaimsHistoryPage.ReadOnly = False",required:"Required",reqCond:"In loss row",defaultVal:"—",validation:"MaxLength: 100; Required",calc:"—",lookup:"—",group:"Loss History",pbLob:"ProductBase"},
+    {id:4,label:"Date Of Loss",tech:"LossInput.DateOfLoss",path:"DateOfLoss",type:"date",control:"Grid Column / Date Input",rw:"Read and Written",source:"Loss Data",visibility:"Conditionally Visible",visCondition:"ShowLossInformation = True",enabled:"Conditionally Enabled",enabledCond:"ClaimsHistoryPage.ReadOnly = False",required:"Required",reqCond:"In loss row",defaultVal:"—",validation:"FormatMask: Date; Required",calc:"—",lookup:"—",group:"Loss History",pbLob:"ProductBase"},
+    {id:5,label:"Amount Paid",tech:"LossInput.AmountPaid",path:"AmountPaid",type:"float",control:"Grid Column / Currency Input",rw:"Read and Written",source:"Loss Data",visibility:"Conditionally Visible",visCondition:"ShowLossInformation = True",enabled:"Conditionally Enabled",enabledCond:"ClaimsHistoryPage.ReadOnly = False",required:"Required",reqCond:"In loss row",defaultVal:"—",validation:"FormatMask: PremiumInput; Required",calc:"—",lookup:"—",group:"Loss History",pbLob:"ProductBase"},
+    {id:6,label:"Description",tech:"LossInput.Description",path:"Description",type:"string",control:"Grid Column / Text Input",rw:"Read and Written",source:"Loss Data",visibility:"Conditionally Visible",visCondition:"ShowLossInformation = True",enabled:"Conditionally Enabled",enabledCond:"ClaimsHistoryPage.ReadOnly = False",required:"Optional",reqCond:"—",defaultVal:"—",validation:"MaxLength: Description",calc:"—",lookup:"—",group:"Loss History",pbLob:"ProductBase"},
+    {id:7,label:"Delete Loss",tech:"Action – delete (Loss row)",path:"—",type:"action",control:"Button in Grid",rw:"Write",source:"ViewModel",visibility:"Conditionally Visible",visCondition:"ShowLossInformation = True",enabled:"Always when visible",enabledCond:"—",required:"Not Applicable",reqCond:"—",defaultVal:"—",validation:"—",calc:"Removes Loss object",lookup:"—",group:"Actions",pbLob:"ProductBase"},
+    {id:8,label:"Add Loss",tech:"Action – add (Loss)",path:"—",type:"action",control:"Button",rw:"Write",source:"ViewModel",visibility:"Always Visible",visCondition:"—",enabled:"Conditionally Enabled",enabledCond:"ClaimsHistoryPage.ReadOnly = False",required:"Not Applicable",reqCond:"—",defaultVal:"—",validation:"—",calc:"Adds new Loss record",lookup:"—",group:"Actions",pbLob:"ProductBase"}
+  ],
+  dependencies:[
+    {source:"PolicyPrivate.LossCount",target:"PolicyPrivate.ShowLossInformation",type:"Visibility control",condition:"LossCount > 0",result:"Grid rows shown"},
+    {source:"AllPage.ReadOnly OR IsCurrentTransactionNew=False",target:"ClaimsHistoryPage.ReadOnly",type:"Page lock",condition:"ReadOnly or non-NB transaction",result:"All fields locked"}
+  ]
+},
+{
+  id:"insurancehistory", name:"Insurance History", caption:"InsuranceHistory", num:5,
+  manuscript:"DCT_ProductBase_PersonalLines_1_0_0_0",
+  viewModel:"InsuranceHistory", topic:"MainInterview", source:"ProductBase",
+  validRef:"InsuranceHistoryPage.Show", status:"active",
+  purpose:"Capture prior insurance carrier history",
+  inheritance:"ProductBase",
+  tags:["ProductBase"],
+  navPrev:"Underwriting (PAGE 5)", navNext:"Claims History (PAGE 7)",
+  fields:[
+    {id:1,label:"Carrier Name",tech:"PriorInsurance.CarrierName",path:"CarrierName",type:"string",control:"Grid Column",rw:"Read and Written",source:"Prior Insurance Data",visibility:"Always Visible",visCondition:"—",enabled:"Conditionally Enabled",enabledCond:"InsuranceHistoryPage.ReadOnly=False",required:"Optional",reqCond:"—",defaultVal:"—",validation:"—",calc:"—",lookup:"—",group:"Insurance History",pbLob:"ProductBase"},
+    {id:2,label:"Effective Date",tech:"PriorInsurance.EffectiveDate",path:"EffectiveDate",type:"date",control:"Grid Column",rw:"Read and Written",source:"Prior Insurance Data",visibility:"Always Visible",visCondition:"—",enabled:"Conditionally Enabled",enabledCond:"InsuranceHistoryPage.ReadOnly=False",required:"Optional",reqCond:"—",defaultVal:"—",validation:"FormatMask: Date",calc:"—",lookup:"—",group:"Insurance History",pbLob:"ProductBase"},
+    {id:3,label:"Expiration Date",tech:"PriorInsurance.ExpirationDate",path:"ExpirationDate",type:"date",control:"Grid Column",rw:"Read and Written",source:"Prior Insurance Data",visibility:"Always Visible",visCondition:"—",enabled:"Conditionally Enabled",enabledCond:"InsuranceHistoryPage.ReadOnly=False",required:"Optional",reqCond:"—",defaultVal:"—",validation:"FormatMask: Date",calc:"—",lookup:"—",group:"Insurance History",pbLob:"ProductBase"},
+    {id:4,label:"Limit",tech:"PriorInsurance.Limit",path:"Limit",type:"float",control:"Grid Column",rw:"Read and Written",source:"Prior Insurance Data",visibility:"Always Visible",visCondition:"—",enabled:"Conditionally Enabled",enabledCond:"InsuranceHistoryPage.ReadOnly=False",required:"Optional",reqCond:"—",defaultVal:"—",validation:"FormatMask: $###,###.##",calc:"—",lookup:"—",group:"Insurance History",pbLob:"ProductBase"},
+    {id:5,label:"Deductible",tech:"PriorInsurance.Deductible",path:"Deductible",type:"float",control:"Grid Column",rw:"Read and Written",source:"Prior Insurance Data",visibility:"Always Visible",visCondition:"—",enabled:"Conditionally Enabled",enabledCond:"InsuranceHistoryPage.ReadOnly=False",required:"Optional",reqCond:"—",defaultVal:"—",validation:"FormatMask: $###,###.##",calc:"—",lookup:"—",group:"Insurance History",pbLob:"ProductBase"},
+    {id:6,label:"Delete Carrier",tech:"Action – delete (PriorInsurance row)",path:"—",type:"action",control:"Button in Grid",rw:"Write",source:"ViewModel",visibility:"Always Visible",visCondition:"—",enabled:"Conditionally Enabled",enabledCond:"LockPolicy.False",required:"Not Applicable",reqCond:"—",defaultVal:"—",validation:"—",calc:"Removes PriorInsurance record",lookup:"—",group:"Actions",pbLob:"ProductBase"},
+    {id:7,label:"Add Carrier",tech:"Action – add (PriorInsurance)",path:"—",type:"action",control:"Button",rw:"Write",source:"ViewModel",visibility:"Always Visible",visCondition:"—",enabled:"Conditionally Enabled",enabledCond:"LockPolicy.False",required:"Not Applicable",reqCond:"—",defaultVal:"—",validation:"—",calc:"Adds new PriorInsurance record",lookup:"—",group:"Actions",pbLob:"ProductBase"}
+  ],
+  dependencies:[]
+},
+{
+  id:"additionalinterests", name:"Additional Interests", caption:"AdditionalOtherInterests", num:6,
+  manuscript:"DCT_ProductBase_PersonalLines_1_0_0_0",
+  viewModel:"AdditionalOtherInterests", topic:"MainInterview", source:"ProductBase",
+  validRef:"AdditionalOtherInterestsPage.Show", status:"active",
+  purpose:"Add/edit/remove mortgagees, additional insureds, additional interests",
+  inheritance:"ProductBase + LOB (Name required override)",
+  tags:["ProductBase","LOB Override"],
+  navPrev:"Coverage Summary (PAGE 8)", navNext:"Make A Payment (PAGE 10)",
+  fields:[
+    {id:1,label:"AOI Description",tech:"AdditionalOtherInterestInput.Description",path:"Description",type:"string",control:"Grid Column / Computed",rw:"Read",source:"Calculation",visibility:"Always Visible in grid",visCondition:"—",enabled:"Read-Only",enabledCond:"—",required:"Not Applicable",reqCond:"—",defaultVal:"—",validation:"—",calc:"Displays name/description of AOI",lookup:"—",group:"AOI",pbLob:"ProductBase"},
+    {id:2,label:"Details Popup",tech:"Action – specificIter (AdditionalOtherInterestDetail)",path:"—",type:"action",control:"Hyperlink",rw:"Read",source:"ViewModel",visibility:"Always Visible in grid",visCondition:"—",enabled:"Always Enabled",enabledCond:"—",required:"Not Applicable",reqCond:"—",defaultVal:"—",validation:"—",calc:"Opens AOI detail popup",lookup:"—",group:"AOI",pbLob:"ProductBase"},
+    {id:3,label:"Delete AOI",tech:"Action – delete",path:"—",type:"action",control:"Hyperlink",rw:"Write",source:"ViewModel",visibility:"Always Visible in grid",visCondition:"—",enabled:"Conditionally Enabled",enabledCond:"LockPolicy.False",required:"Not Applicable",reqCond:"—",defaultVal:"—",validation:"—",calc:"Removes AOI record",lookup:"—",group:"AOI",pbLob:"ProductBase"},
+    {id:4,label:"Add Additional Other Interest",tech:"Action – add (AOI popup)",path:"—",type:"action",control:"Button",rw:"Write",source:"ViewModel",visibility:"Always Visible",visCondition:"—",enabled:"Conditionally Enabled",enabledCond:"LockPolicy.False",required:"Not Applicable",reqCond:"—",defaultVal:"—",validation:"—",calc:"Opens AOI detail popup; adds new AOI",lookup:"—",group:"AOI",pbLob:"ProductBase"},
+    {id:5,label:"AOI Name",tech:"AdditionalOtherInterestInput.Name",path:"Name",type:"string",control:"Text Input (in popup)",rw:"Read and Written",source:"AOI Data",visibility:"Always Visible (in popup)",visCondition:"—",enabled:"Always Enabled",enabledCond:"—",required:"Required",reqCond:"Always",defaultVal:"—",validation:"MaxLength: Name; Required",calc:"LOB overrides: PersonalHome requires Name",lookup:"—",group:"AOI Detail",pbLob:"LOB Override"}
+  ],
+  dependencies:[]
+},
+{
+  id:"pricing", name:"Pricing", caption:"PricingPage", num:7,
+  manuscript:"DCT_ProductBase_PersonalLines_1_0_0_0",
+  viewModel:"PricingPage", topic:"MainInterview", source:"ProductBase",
+  validRef:"PricingPage.Show", status:"suppressed",
+  purpose:"Rating execution; displays premiums. SUPPRESSED in PersonalHome LOB (PricingPage.Show always False). Coverage Summary (CoverageSafepoint) is used instead.",
+  inheritance:"ProductBase (Suppressed by LOB)",
+  tags:["ProductBase","Suppressed"],
+  navPrev:"Claims History", navNext:"Coverage Summary",
+  fields:[
+    {id:1,label:"Rating Worksheet Button",tech:"Action – printjob:Worksheet",path:"—",type:"action",control:"Button",rw:"Used in condition",source:"ViewModel",visibility:"Conditionally Visible",visCondition:"PricingPage.ShowWorksheetButton = True",enabled:"Always",enabledCond:"—",required:"Not Applicable",reqCond:"—",defaultVal:"—",validation:"—",calc:"Generates rating worksheet PDF",lookup:"—",group:"Pricing Actions",pbLob:"ProductBase"},
+    {id:2,label:"Quote Letter Button",tech:"Action – printjob:Quote",path:"—",type:"action",control:"Button",rw:"Used in condition",source:"ViewModel",visibility:"Conditionally Visible",visCondition:"PolicyPrivate.IsQuote = True",enabled:"Always",enabledCond:"—",required:"Not Applicable",reqCond:"—",defaultVal:"—",validation:"—",calc:"Generates quote letter PDF",lookup:"—",group:"Pricing Actions",pbLob:"ProductBase"},
+    {id:3,label:"Application Button",tech:"Action – printjob:Application",path:"—",type:"action",control:"Button",rw:"Used in condition",source:"ViewModel",visibility:"Conditionally Visible",visCondition:"PolicyPrivate.IsApplication = True",enabled:"Always",enabledCond:"—",required:"Not Applicable",reqCond:"—",defaultVal:"—",validation:"—",calc:"Generates application PDF",lookup:"—",group:"Pricing Actions",pbLob:"ProductBase"},
+    {id:4,label:"Include Forms",tech:"PolicyAdmin.UseDCTFormsAndMessages",path:"UseDCTFormsAndMessages",type:"boolean",control:"Checkbox",rw:"Read and Written",source:"PolicyAdmin Data",visibility:"Always Visible",visCondition:"—",enabled:"Always Enabled",enabledCond:"—",required:"Optional",reqCond:"—",defaultVal:"True (LOB override)",validation:"—",calc:"—",lookup:"—",group:"Forms",pbLob:"LOB Override"},
+    {id:5,label:"View Forms Button",tech:"Action – previewAsyncPrintJob",path:"—",type:"action",control:"Button",rw:"Used in condition",source:"ViewModel",visibility:"Conditionally Visible",visCondition:"PolicyAdmin.UseDCTFormsAndMessages = True",enabled:"Always",enabledCond:"—",required:"Not Applicable",reqCond:"—",defaultVal:"—",validation:"—",calc:"Opens forms preview",lookup:"PrintingAndForms.PrintJobNames",group:"Forms",pbLob:"ProductBase"},
+    {id:6,label:"Premium",tech:"PolicyPremiums.Premium",path:"Premium",type:"float",control:"Read-Only Display",rw:"Read",source:"Calculation",visibility:"Always Visible",visCondition:"—",enabled:"Read-Only",enabledCond:"—",required:"Not Applicable",reqCond:"—",defaultVal:"—",validation:"—",calc:"Sum of all line premiums",lookup:"—",group:"Premium Display",pbLob:"ProductBase"},
+    {id:7,label:"Premium Change",tech:"PolicyPremiums.PremiumChange",path:"PremiumChange",type:"float",control:"Read-Only Display",rw:"Read",source:"Calculation",visibility:"Always Visible",visCondition:"—",enabled:"Read-Only",enabledCond:"—",required:"Not Applicable",reqCond:"—",defaultVal:"—",validation:"—",calc:"Premium change since prior term",lookup:"—",group:"Premium Display",pbLob:"ProductBase"},
+    {id:8,label:"Premium Prior",tech:"PolicyPremiums.PremiumPrior",path:"PremiumPrior",type:"float",control:"Read-Only Display",rw:"Read",source:"Calculation",visibility:"Always Visible",visCondition:"—",enabled:"Read-Only",enabledCond:"—",required:"Not Applicable",reqCond:"—",defaultVal:"—",validation:"—",calc:"Prior term premium",lookup:"—",group:"Premium Display",pbLob:"ProductBase"},
+    {id:9,label:"Premium Written",tech:"PolicyPremiums.PremiumWritten",path:"PremiumWritten",type:"float",control:"Read-Only Display",rw:"Read",source:"Calculation",visibility:"Always Visible",visCondition:"—",enabled:"Read-Only",enabledCond:"—",required:"Not Applicable",reqCond:"—",defaultVal:"—",validation:"—",calc:"Written (pro-rated) premium",lookup:"—",group:"Premium Display",pbLob:"ProductBase"}
+  ],
+  dependencies:[]
+},
+{
+  id:"dwellinginfo", name:"Dwelling Info (Risk Schedule)", caption:"DwellingPage / RiskSchedule", num:8,
+  manuscript:"Manatee_PersonalHome_Peril_1_0_0_0",
+  viewModel:"DwellingPage / RiskSchedule", topic:"MainInterview", source:"LOB – PersonalHome",
+  validRef:"DwellingPage.Show", status:"active",
+  purpose:"Capture dwelling physical characteristics: form, year built, construction, roof, wind mitigation parameters, fire protection, BCEG",
+  inheritance:"LOB (Manatee_PersonalHome_Peril overrides ALL dwelling fields)",
+  tags:["LOB","LOB Override"],
+  navPrev:"Policy Information", navNext:"Dwelling Coverage (PAGE 4 in flow)",
+  fields:[
+    {id:1,label:"Policy Form",tech:"DwellingInput.Form",path:"DwellingForm",type:"string",control:"Dropdown",rw:"Read and Written",source:"Dwelling Data",visibility:"Always Visible",visCondition:"—",enabled:"Always Enabled",enabledCond:"—",required:"Required",reqCond:"Always",defaultVal:"HO3",validation:"Options: HO3=Homeowner, HO6=Condo",calc:"onChange: DwellingPrivate.SetOccupancyType; LossAssessmentPrivate.DefaultLimit",lookup:"—",group:"Basic Info",pbLob:"LOB Override"},
+    {id:2,label:"Usage",tech:"DwellingInput.UseType",path:"UseType",type:"string",control:"Dropdown",rw:"Read and Written",source:"Dwelling Data",visibility:"Always Visible",visCondition:"—",enabled:"Always Enabled",enabledCond:"—",required:"Required",reqCond:"Always",defaultVal:"Primary",validation:"Options: Primary, Secondary, Seasonal(3-6), Seasonal(>6), FarmRanch, UnderConstruction, Rental(HO6 only)",calc:"—",lookup:"—",group:"Basic Info",pbLob:"LOB Override"},
+    {id:3,label:"Occupancy",tech:"DwellingInput.OccupancyType",path:"OccupancyType",type:"string",control:"Dropdown",rw:"Read and Written",source:"Dwelling Data",visibility:"Always Visible",visCondition:"—",enabled:"Always Enabled",enabledCond:"—",required:"Required",reqCond:"Always",defaultVal:"Owner (auto-set)",validation:"Options: Owner, Tenant, Unoccupied, Vacant",calc:"Auto-set: Form=HO4→Tenant; else→Owner via DwellingPrivate.SetOccupancyType",lookup:"—",group:"Basic Info",pbLob:"LOB Override"},
+    {id:4,label:"# of Months Unoccupied",tech:"DwellingInput.MonthsUnoccupied",path:"MonthsUnoccupied",type:"int",control:"Dropdown",rw:"Read and Written",source:"Dwelling Data",visibility:"Conditionally Visible",visCondition:"UseType NOT IN Secondary, Seasonal3to6, Seasonal6Mths",enabled:"Always Enabled",enabledCond:"—",required:"Optional",reqCond:"—",defaultVal:"—",validation:"Options: 0-12",calc:"—",lookup:"—",group:"Basic Info",pbLob:"LOB"},
+    {id:5,label:"Structure",tech:"DwellingInput.BuildingType",path:"BuildingType",type:"string",control:"Dropdown",rw:"Read and Written",source:"Dwelling Data",visibility:"Always Visible",visCondition:"—",enabled:"Always Enabled",enabledCond:"—",required:"Required",reqCond:"Always",defaultVal:"Dwelling",validation:"Options: Apartment(HO4), Condo(HO6), Dwelling, Rowhouse, Townhouse, Modular/Prefab",calc:"misc: FormIsHO4→Apartment",lookup:"—",group:"Basic Info",pbLob:"LOB Override"},
+    {id:6,label:"Year Built",tech:"DwellingInput.YearBuilt",path:"YearBuilt",type:"int",control:"Year Input",rw:"Read and Written",source:"Dwelling Data",visibility:"Always Visible",visCondition:"—",enabled:"Conditionally Enabled",enabledCond:"Not readOnly for Condo/Tenant",required:"Conditionally Required",reqCond:"Form NOT IN HO4/HO6",defaultVal:"—",validation:"1600 ≤ year ≤ EffectiveYear+1",calc:"Drives AgeOfDwelling, RoofAge calculations",lookup:"—",group:"Basic Info",pbLob:"LOB Override"},
+    {id:7,label:"Construction",tech:"DwellingInput.Construction",path:"Construction",type:"string",control:"Dropdown",rw:"Read and Written",source:"Dwelling Data",visibility:"Always Visible",visCondition:"—",enabled:"Always Enabled",enabledCond:"—",required:"Required",reqCond:"Always",defaultVal:"Frame",validation:"Options: Frame, Aluminum, PlasticSiding, Masonry, MasonryVeneer, Superior",calc:"Drives ProtectionConstructionFactor lookup",lookup:"—",group:"Basic Info",pbLob:"LOB Override"},
+    {id:8,label:"Protection Class",tech:"DwellingInput.RatedProtectionClass",path:"RatedProtectionClass",type:"string",control:"Dropdown",rw:"Read and Written",source:"Dwelling Data / Geocode",visibility:"Always Visible",visCondition:"—",enabled:"Always Enabled",enabledCond:"—",required:"Required",reqCond:"Always",defaultVal:"05; auto-from geocode/distance",validation:"Options: 01-10, Y/X/B variants; FormatMask: BlankOption",calc:"DwellingPrivate.CalcProtectionClass from Geocode; SplitPPC logic; Suburban 88 logic",lookup:"ProtectionConstructionFactors, BaseRates",group:"Basic Info",pbLob:"LOB Override"},
+    {id:9,label:"# of Families",tech:"DwellingInput.NumberOfFamilies",path:"NumberOfFamilies",type:"int",control:"Dropdown",rw:"Read and Written",source:"Dwelling Data",visibility:"Always Visible",visCondition:"—",enabled:"Always Enabled",enabledCond:"—",required:"Optional",reqCond:"—",defaultVal:"1",validation:"Options: 1-4",calc:"—",lookup:"—",group:"Basic Info",pbLob:"LOB Override"},
+    {id:10,label:"# of Units in Fire Division",tech:"DwellingInput.NumberOfUnits",path:"NumberOfUnits",type:"int",control:"Dropdown",rw:"Read and Written",source:"Dwelling Data",visibility:"Always Visible",visCondition:"—",enabled:"Always Enabled",enabledCond:"—",required:"Required",reqCond:"Always",defaultVal:"—",validation:"Options: 1-9(9=9+); FormatMask: BlankOption",calc:"Used in WindMitigation building type calc",lookup:"—",group:"Basic Info",pbLob:"LOB Override"},
+    {id:11,label:"Floor Unit (Floor #)",tech:"DwellingInput.NumberOfFloor",path:"NumberOfFloor",type:"string",control:"Text Input",rw:"Read and Written",source:"Dwelling Data",visibility:"Conditionally Visible",visCondition:"Form NOT HO6",enabled:"Always Enabled",enabledCond:"—",required:"Optional",reqCond:"—",defaultVal:"—",validation:"MaxLength: Mods",calc:"—",lookup:"—",group:"Basic Info",pbLob:"LOB"},
+    {id:12,label:"Foundation Type",tech:"DwellingInput.FoundationType",path:"FoundationType",type:"string",control:"Dropdown",rw:"Read and Written",source:"Dwelling Data",visibility:"Always Visible",visCondition:"—",enabled:"Always Enabled",enabledCond:"—",required:"Optional",reqCond:"—",defaultVal:"—",validation:"Options: Closed, Open (others validRef=False)",calc:"—",lookup:"—",group:"Basic Info",pbLob:"LOB Override"},
+    {id:13,label:"Square Feet",tech:"DwellingInput.SquareFeet",path:"SquareFeet",type:"int",control:"Number Input",rw:"Read and Written",source:"Dwelling Data",visibility:"Always Visible",visCondition:"—",enabled:"Always Enabled",enabledCond:"—",required:"Required",reqCond:"Always",defaultVal:"—",validation:"MaxLength: iValue; FormatMask: Limit",calc:"Used in HouseTypeFactors lookup",lookup:"HouseTypeFactors",group:"Basic Info",pbLob:"LOB Override"},
+    {id:14,label:"Pool on Premises?",tech:"DwellingInput.SwimmingPool",path:"SwimmingPool",type:"string",control:"Dropdown",rw:"Read and Written",source:"Dwelling Data",visibility:"Always Visible",visCondition:"—",enabled:"Always Enabled",enabledCond:"—",required:"Optional",reqCond:"—",defaultVal:"None",validation:"Options: None, Inground, AboveGround",calc:"Drives liability class factor",lookup:"LiabilityClassFactors",group:"Property Features",pbLob:"LOB Override"},
+    {id:15,label:"Slide (Pool)",tech:"DwellingInput.PoolSlide",path:"PoolSlide",type:"string",control:"Dropdown",rw:"Read and Written",source:"Dwelling Data",visibility:"Always Visible",visCondition:"—",enabled:"Always Enabled",enabledCond:"—",required:"Required",reqCond:"Always",defaultVal:"—",validation:"Options: N=No, Y=Yes; FormatMask: BlankOption",calc:"Drives liability class factor",lookup:"LiabilityClassFactors",group:"Property Features",pbLob:"LOB Override"},
+    {id:16,label:"Is pool surrounded by fence?",tech:"DwellingInput.PoolApprovedFence",path:"PoolApprovedFence",type:"string",control:"Dropdown",rw:"Read and Written",source:"Dwelling Data",visibility:"Always Visible",visCondition:"—",enabled:"Always Enabled",enabledCond:"—",required:"Required",reqCond:"Always",defaultVal:"—",validation:"Options: N=No, Y=Yes; FormatMask: BlankOption",calc:"—",lookup:"—",group:"Property Features",pbLob:"LOB Override"},
+    {id:17,label:"Diving Board (Pool)",tech:"DwellingInput.PoolDivingBoard",path:"PoolDivingBoard",type:"string",control:"Dropdown",rw:"Read and Written",source:"Dwelling Data",visibility:"Always Visible",visCondition:"—",enabled:"Always Enabled",enabledCond:"—",required:"Required",reqCond:"Always",defaultVal:"—",validation:"Options: N=No, Y=Yes; FormatMask: BlankOption",calc:"Drives liability class factor",lookup:"LiabilityClassFactors",group:"Property Features",pbLob:"LOB Override"},
+    {id:18,label:"Number of Stories",tech:"DwellingInput.NumberOfStories",path:"NumberOfStories",type:"float",control:"Dropdown",rw:"Read and Written",source:"Dwelling Data",visibility:"Always Visible",visCondition:"—",enabled:"Always Enabled",enabledCond:"—",required:"Optional",reqCond:"—",defaultVal:"1.0",validation:"Options: 1.0, 1.5, 2.0, 2.5, 3.0, 4, 5, 6, 7+",calc:"Used in WindMitigation building type calc",lookup:"—",group:"Construction",pbLob:"LOB Override"},
+    {id:19,label:"Primary Heat Type",tech:"DwellingInput.PrimaryHeatType",path:"PrimaryHeatType",type:"string",control:"Dropdown",rw:"Read and Written",source:"Dwelling Data",visibility:"Always Visible",visCondition:"—",enabled:"Always Enabled",enabledCond:"—",required:"Optional",reqCond:"—",defaultVal:"—",validation:"Options: Electric, Other, Gas, Unknown",calc:"Drives FuelTypeFactor",lookup:"FuelTypeFactors",group:"Construction",pbLob:"LOB Override"},
+    {id:20,label:"Supplemental Heat Type",tech:"DwellingInput.SupplementalHeatType",path:"SupplementalHeatType",type:"string",control:"Dropdown",rw:"Read and Written",source:"Dwelling Data",visibility:"Always Visible",visCondition:"—",enabled:"Always Enabled",enabledCond:"—",required:"Optional",reqCond:"—",defaultVal:"—",validation:"Options: FireplaceInsert, Electric, Gas, Other, Unknown",calc:"Drives HasFirePlace flag → HouseFeaturesFactor",lookup:"HouseFeaturesFactor",group:"Construction",pbLob:"LOB Override"},
+    {id:21,label:"Building Code Grade (BCEG)",tech:"DwellingInput.BuildingCodeEffectivenessGrading",path:"BuildingCodeEffectivenessGrading",type:"int",control:"Dropdown",rw:"Read and Written",source:"Dwelling Data",visibility:"Always Visible",visCondition:"—",enabled:"Always Enabled",enabledCond:"—",required:"Optional",reqCond:"—",defaultVal:"99 (Ungraded)",validation:"Options: 1-10, 98=Non Participating, 99=Ungraded; Cross-field: YearBuilt<1995→BCEG=99; YearBuilt>1995→BCEG≠99",calc:"—",lookup:"tblBCEGH03, tblBCEGH06",group:"Construction",pbLob:"LOB Override"},
+    {id:22,label:"Electrical System",tech:"DwellingInput.ElectricalSystem",path:"ElectricalSystem",type:"string",control:"Dropdown",rw:"Read and Written",source:"Dwelling Data",visibility:"Always Visible",visCondition:"—",enabled:"Always Enabled",enabledCond:"—",required:"Optional",reqCond:"—",defaultVal:"Unknown",validation:"Options: Breaker, Fuse, Other, Unknown",calc:"—",lookup:"—",group:"Construction",pbLob:"LOB Override"},
+    {id:23,label:"Opening Protection",tech:"DwellingInput.OpeningProtection",path:"OpeningProtection",type:"string",control:"Dropdown",rw:"Read and Written",source:"Dwelling Data",visibility:"Always Visible",visCondition:"—",enabled:"Always Enabled",enabledCond:"—",required:"Optional",reqCond:"—",defaultVal:"None",validation:"Options: ClassA, ClassB, ClassC, None, Unknown",calc:"Drives WindMitigation factor; validation rules on hurricane ded combos",lookup:"WindMitigationFactorHurricane, OpeningProtectionCode",group:"Wind Mitigation",pbLob:"LOB Override"},
+    {id:24,label:"Roof Type",tech:"DwellingInput.RoofType",path:"RoofType",type:"string",control:"Dropdown",rw:"Read and Written",source:"Dwelling Data",visibility:"Always Visible",visCondition:"—",enabled:"Always Enabled",enabledCond:"—",required:"Required",reqCond:"Always",defaultVal:"—",validation:"Options: Architectural, Asphalt, Builtup, Concrete, Fiberglass, Metal, Other, Slate, TileBarrelTile, TileFlatTile, Wood",calc:"Drives RoofAge → RoofSurfacesFactor; UW age rules",lookup:"RoofSurfacesFactor",group:"Roof",pbLob:"LOB Override"},
+    {id:25,label:"Sprinkler System",tech:"DwellingInput.Sprinkler",path:"Sprinkler",type:"string",control:"Dropdown",rw:"Read and Written",source:"Dwelling Data",visibility:"Always Visible",visCondition:"—",enabled:"Always Enabled",enabledCond:"—",required:"Optional",reqCond:"—",defaultVal:"None",validation:"Options: None, SinglePoint, WholeHome, Shutoff, ClassB=Full, ClassA=Partial",calc:"Drives SafetyDeviceDiscount",lookup:"SafetyDeviceDiscount",group:"Safety Devices",pbLob:"LOB Override"},
+    {id:26,label:"Locked Security Gate",tech:"DwellingInput.LockedSecurityGate",path:"LockedSecurityGate",type:"boolean",control:"Radio Buttons",rw:"Read and Written",source:"Dwelling Data",visibility:"Always Visible",visCondition:"—",enabled:"Always Enabled",enabledCond:"—",required:"Optional",reqCond:"—",defaultVal:"0 (No)",validation:"Options: Yes=1, No=0",calc:"—",lookup:"—",group:"Safety Devices",pbLob:"LOB"},
+    {id:27,label:"Security Guard",tech:"DwellingInput.SecurityAttendant",path:"SecurityAttendant",type:"boolean",control:"Radio Buttons",rw:"Read and Written",source:"Dwelling Data",visibility:"Always Visible",visCondition:"—",enabled:"Always Enabled",enabledCond:"—",required:"Optional",reqCond:"—",defaultVal:"0",validation:"Options: Yes=1, No=0",calc:"—",lookup:"—",group:"Safety Devices",pbLob:"LOB"},
+    {id:28,label:"Wiring",tech:"DwellingInput.Wiring",path:"Wiring",type:"string",control:"Dropdown",rw:"Read and Written",source:"Dwelling Data",visibility:"Always Visible",visCondition:"—",enabled:"Always Enabled",enabledCond:"—",required:"Optional",reqCond:"—",defaultVal:"—",validation:"Options: Copper, Aluminum, KnobAndTube, Unknown",calc:"—",lookup:"—",group:"Construction",pbLob:"LOB Override"},
+    {id:29,label:"# of Amps",tech:"DwellingInput.NumberOfAmps",path:"Amps",type:"int",control:"Text Input",rw:"Read and Written",source:"Dwelling Data",visibility:"Always Visible",visCondition:"—",enabled:"Always Enabled",enabledCond:"—",required:"Optional",reqCond:"—",defaultVal:"—",validation:"—",calc:"—",lookup:"—",group:"Construction",pbLob:"LOB"},
+    {id:30,label:"Plumbing Pipe Material",tech:"DwellingInput.PlumbingType",path:"PlumbingType",type:"string",control:"Dropdown",rw:"Read and Written",source:"Dwelling Data",visibility:"Always Visible",visCondition:"—",enabled:"Always Enabled",enabledCond:"—",required:"Optional",reqCond:"—",defaultVal:"—",validation:"Options: PVCCPVC, PEPEX, Copper, Polybutylene, GalvanizedSteel, Other",calc:"—",lookup:"—",group:"Construction",pbLob:"LOB"},
+    {id:31,label:"Roof Shape",tech:"DwellingInput.RoofGeometry",path:"RoofGeometry",type:"string",control:"Dropdown",rw:"Read and Written",source:"Dwelling Data",visibility:"Always Visible",visCondition:"—",enabled:"Always Enabled",enabledCond:"—",required:"Required",reqCond:"Always",defaultVal:"Gable",validation:"Options: Hip, Gable, Flat, Other, NA; masonry/HO6→must=NA",calc:"Wind mitigation factor",lookup:"RoofShapeCode, WindMitigationFactorHurricane",group:"Wind Mitigation",pbLob:"LOB Override"},
+    {id:32,label:"Miles To Fire Station",tech:"DwellingInput.DistanceToFireStation",path:"DistanceToFireStation",type:"string",control:"Dropdown",rw:"Read and Written",source:"Dwelling Data",visibility:"Always Visible",visCondition:"—",enabled:"Always Enabled",enabledCond:"—",required:"Required",reqCond:"Always",defaultVal:"—",validation:"Options: Within5miles, Greaterthan5miles",calc:"onChange → ClearProtectionClass; drives auto PPC",lookup:"—",group:"Fire Protection",pbLob:"LOB Override"},
+    {id:33,label:"Feet To Hydrant",tech:"DwellingInput.DistanceToHydrant",path:"DistanceToHydrant",type:"string",control:"Dropdown",rw:"Read and Written",source:"Dwelling Data",visibility:"Always Visible",visCondition:"—",enabled:"Always Enabled",enabledCond:"—",required:"Required",reqCond:"Always",defaultVal:"—",validation:"Options: Within1000ft, Greaterthan1000ft",calc:"onChange → ClearProtectionClass",lookup:"—",group:"Fire Protection",pbLob:"LOB Override"},
+    {id:34,label:"Responding Fire Department",tech:"DwellingInput.RespondingFireDepartment",path:"RespondingFireDepartment",type:"string",control:"Text Input",rw:"Read and Written",source:"Dwelling Data",visibility:"Always Visible",visCondition:"—",enabled:"Always Enabled",enabledCond:"—",required:"Required",reqCond:"Always",defaultVal:"—",validation:"MaxLength: City",calc:"—",lookup:"—",group:"Fire Protection",pbLob:"LOB Override"},
+    {id:35,label:"Remaining Useful Life of Roof",tech:"UpdatedServicesInfo.RemainingRoofLife",path:"RemainingRoofLife",type:"int",control:"Number Input",rw:"Read and Written",source:"Dwelling Data",visibility:"Always Visible",visCondition:"—",enabled:"Always Enabled",enabledCond:"—",required:"Optional",reqCond:"—",defaultVal:"—",validation:"—",calc:"—",lookup:"—",group:"Property Updates",pbLob:"LOB"},
+    {id:36,label:"Year Electrical Updated",tech:"UpdatedServicesInfo.ElectricSystemUpdateYear",path:"ElectricSystemUpdateYear",type:"int",control:"Year Input",rw:"Read and Written",source:"Dwelling Data",visibility:"Always Visible",visCondition:"—",enabled:"Always Enabled",enabledCond:"—",required:"Optional",reqCond:"—",defaultVal:"—",validation:"MaxLength: Year",calc:"—",lookup:"—",group:"Property Updates",pbLob:"LOB Override"},
+    {id:37,label:"Year Heating Updated",tech:"UpdatedServicesInfo.HeatingUpdateYear",path:"HeatingUpdateYear",type:"int",control:"Year Input",rw:"Read and Written",source:"Dwelling Data",visibility:"Always Visible",visCondition:"—",enabled:"Always Enabled",enabledCond:"—",required:"Optional",reqCond:"—",defaultVal:"—",validation:"MaxLength: Year",calc:"—",lookup:"—",group:"Property Updates",pbLob:"LOB Override"},
+    {id:38,label:"Year Plumbing Updated",tech:"UpdatedServicesInfo.PlumbingUpdateYear",path:"PlumbingUpdateYear",type:"int",control:"Year Input",rw:"Read and Written",source:"Dwelling Data",visibility:"Always Visible",visCondition:"—",enabled:"Always Enabled",enabledCond:"—",required:"Optional",reqCond:"—",defaultVal:"—",validation:"MaxLength: Year",calc:"—",lookup:"—",group:"Property Updates",pbLob:"LOB Override"},
+    {id:39,label:"Year Roof Updated",tech:"UpdatedServicesInfo.RoofUpdateYear",path:"RoofUpdateYear",type:"int",control:"Year Input",rw:"Read and Written",source:"Dwelling Data",visibility:"Always Visible",visCondition:"—",enabled:"Always Enabled",enabledCond:"—",required:"Optional",reqCond:"—",defaultVal:"—",validation:"min=YearBuilt; max=EffectiveYear",calc:"Drives DwellingPrivate.RoofAge = EffYear - RoofUpdateYear",lookup:"—",group:"Property Updates",pbLob:"LOB Override"},
+    {id:40,label:"Secondary Water Resistance",tech:"DwellingInput.SecondaryWaterResistance",path:"SecondaryWaterResistance",type:"string",control:"Dropdown",rw:"Read and Written",source:"Dwelling Data",visibility:"Always Visible",visCondition:"—",enabled:"Always Enabled",enabledCond:"—",required:"Optional",reqCond:"—",defaultVal:"No",validation:"Options: Yes, No, Unknown; SWR=No AND RoofDeck=Reinforce → validation error",calc:"Wind mitigation factor",lookup:"WindMitigationFactorHurricane",group:"Wind Mitigation",pbLob:"LOB Override"},
+    {id:41,label:"Accessible all year",tech:"DwellingInput.DwellingAccessibleToFireEquipment",path:"DwellingAccessibleToFireEquipment",type:"string",control:"Dropdown",rw:"Read and Written",source:"Dwelling Data",visibility:"Always Visible",visCondition:"—",enabled:"Always Enabled",enabledCond:"—",required:"Optional",reqCond:"—",defaultVal:"U (Unknown)",validation:"Options: N=No, Y=Yes, U=Unknown",calc:"Drives suburban PPC (88) calculation",lookup:"—",group:"Fire Protection",pbLob:"LOB Override"},
+    {id:42,label:"Roof to Wall Attachment",tech:"DwellingInput.RoofToWallAttachment",path:"RoofToWallAttachment",type:"string",control:"Dropdown",rw:"Read and Written",source:"Dwelling Data",visibility:"Always Visible",visCondition:"—",enabled:"Always Enabled",enabledCond:"—",required:"Optional",reqCond:"—",defaultVal:"ToeNails",validation:"Options: ToeNails, Clips, SingleWraps, DoubleWraps, Unknown, NA; complex validation vs RoofDeckAttachment, YearBuilt",calc:"Wind mitigation factor",lookup:"WindMitigationFactorHurricane, RoofWallConnectionCode",group:"Wind Mitigation",pbLob:"LOB Override"},
+    {id:43,label:"Roof Cover",tech:"DwellingInput.RoofCover",path:"RoofCover",type:"string",control:"Dropdown",rw:"Read and Written",source:"Dwelling Data",visibility:"Always Visible",visCondition:"—",enabled:"Always Enabled",enabledCond:"—",required:"Optional",reqCond:"—",defaultVal:"NonFBCEquivalent",validation:"Options: NonFBCEquivalent, FBCEquivalent, ReinforcedConcreteRoofDeck, NA",calc:"Wind mitigation; RoofCover=Reinforce→RoofDeckAttachment=Reinforce",lookup:"WindMitigationFactorHurricane",group:"Wind Mitigation",pbLob:"LOB Override"},
+    {id:44,label:"Terrain",tech:"DwellingInput.Terrain",path:"Terrain",type:"string",control:"Dropdown",rw:"Read and Written",source:"Dwelling Data",visibility:"Always Visible",visCondition:"—",enabled:"Always Enabled",enabledCond:"—",required:"Required",reqCond:"Always",defaultVal:"Unknown",validation:"Options: B, C, H, Unknown; Terrain=C→various UW rules on OpeningProtection, WindSpeedLocation",calc:"Wind mitigation factor",lookup:"WindMitigationFactorHurricane",group:"Wind Mitigation",pbLob:"LOB Override"},
+    {id:45,label:"Floor to Foundation Attachment",tech:"DwellingInput.FloorToFoundationAttachment",path:"FloorAttachment",type:"string",control:"Text Input",rw:"Read and Written",source:"Dwelling Data",visibility:"Always Visible",visCondition:"—",enabled:"Always Enabled",enabledCond:"—",required:"Optional",reqCond:"—",defaultVal:"—",validation:"MaxLength: sValue",calc:"—",lookup:"—",group:"Wind Mitigation",pbLob:"LOB"},
+    {id:46,label:"Wind Speed Design",tech:"DwellingInput.WindSpeedDesign",path:"WindSpeedDesign",type:"string",control:"Dropdown",rw:"Read and Written",source:"Dwelling Data",visibility:"Always Visible",visCondition:"—",enabled:"Always Enabled",enabledCond:"—",required:"Optional",reqCond:"—",defaultVal:"Unknown",validation:"Options: 100, 110, 120 mph+, Unknown; YearBuilt≥2002→WindSpeedDesign≠Unknown",calc:"Wind mitigation factor",lookup:"WindSpeedDesignCode",group:"Wind Mitigation",pbLob:"LOB"},
+    {id:47,label:"Wind Speed Location",tech:"DwellingInput.WindSpeedLocation",path:"WindSpeedLocation",type:"string",control:"Dropdown",rw:"Read and Written",source:"Dwelling Data",visibility:"Always Visible",visCondition:"—",enabled:"Always Enabled",enabledCond:"—",required:"Optional",reqCond:"—",defaultVal:"Unknown",validation:"Options: 100, 110, 120+, 120WBDR, Unknown; complex validation with WindSpeedDesign combos",calc:"Wind mitigation factor",lookup:"WindSpeedLocationCode",group:"Wind Mitigation",pbLob:"LOB"},
+    {id:48,label:"Roof Deck Attachment",tech:"DwellingInput.RoofDeckAttachment",path:"RoofDeckAttachment",type:"string",control:"Dropdown",rw:"Read and Written",source:"Dwelling Data",visibility:"Always Visible",visCondition:"—",enabled:"Always Enabled",enabledCond:"—",required:"Optional",reqCond:"—",defaultVal:"A6d@612",validation:"Options: A6d@612, B8d@612, C8d@66, WoodDeck, MetalDeck, Reinforce, NA; complex UW validation rules",calc:"Wind mitigation factor",lookup:"WindMitigationFactorHurricane, RoofDeckAttachmentCode",group:"Wind Mitigation",pbLob:"LOB Override"},
+    {id:49,label:"Hurricane Deductible",tech:"DwellingInput.HurricaneDeductible",path:"deductible[HurricaneDeductible]/sValue",type:"string",control:"Dropdown",rw:"Read and Written",source:"Dwelling Data",visibility:"Always Visible",visCondition:"—",enabled:"Always Enabled",enabledCond:"—",required:"Optional",reqCond:"—",defaultVal:"N (Excluded)",validation:"N=Excluded, $500, 2%, 5%, 10%; 30+ cross-field UW validations with CovA/C limits",calc:"Triggers DwellingOutputNonShredded.HurricaneDeductibleLNLimit (postEffect); % dollar calcs",lookup:"HO3DeductibleFactorTbl, HO6DeductibleFactorTbl",group:"Deductibles",pbLob:"LOB Override"},
+    {id:50,label:"All-Peril Deductible",tech:"DwellingInput.Deductible",path:"deductible[Standard]/sValue",type:"string",control:"Dropdown",rw:"Read and Written",source:"Dwelling Data",visibility:"Always Visible",visCondition:"—",enabled:"Conditionally Enabled",enabledCond:"ReadOnly if RiskPrivate.UsePerilDeductibles=True",required:"Optional",reqCond:"—",defaultVal:"500",validation:"Options: $500, $1000, $2500 primarily valid",calc:"Drives deductible factor calculation",lookup:"HO3DeductibleFactorTbl, HO6DeductibleFactorTbl",group:"Deductibles",pbLob:"LOB Override"},
+    {id:51,label:"Number Of Bathrooms",tech:"DwellingInput.NumberOfBathrooms",path:"NumberOfBathrooms",type:"string",control:"Dropdown",rw:"Read and Written",source:"Dwelling Data",visibility:"Always Visible",visCondition:"—",enabled:"Always Enabled",enabledCond:"—",required:"Optional",reqCond:"—",defaultVal:"1",validation:"Options: 1-5+",calc:"Drives HouseFeaturesFactor lookup",lookup:"HouseFeaturesFactor",group:"Construction",pbLob:"LOB Override"}
+  ],
+  dependencies:[
+    {source:"DwellingInput.Form",target:"DwellingInput.OccupancyType",type:"postEffect",condition:"Form=HO4→Tenant; else→Owner",result:"OccupancyType auto-set"},
+    {source:"DwellingInput.YearBuilt",target:"DwellingPrivate.AgeOfDwelling",type:"Calculation",condition:"Always",result:"EffectiveYear - YearBuilt → HouseTypeFactor, roof UW rules"},
+    {source:"DwellingInput.DistanceToFireStation",target:"DwellingInput.RatedProtectionClass",type:"onChange → Clear",condition:"Distance changes",result:"Forces re-entry of PPC"},
+    {source:"DwellingInput.HurricaneDeductible + Deductible",target:"RequiredFieldsCompletedHome",type:"Cross-field validation",condition:"30+ rules with form, CovA/C limits, year built",result:"Various UW messages 3-55"},
+    {source:"DwellingInput.RoofCover=Reinforce",target:"DwellingInput.RoofDeckAttachment",type:"Cross-field validation",condition:"Must match Reinforce",result:"UW messages 30/31"},
+    {source:"DwellingInput.Terrain=C + YearBuilt>2001 + County=Broward/MiamiDade",target:"DwellingInput.OpeningProtection",type:"Cross-field validation",condition:"Must=ClassA",result:"UW message 44"}
+  ]
+},
+{
+  id:"dwellingcoverage", name:"Dwelling Coverage", caption:"DwellingCoverage", num:9,
+  manuscript:"Manatee_PersonalHome_Peril_1_0_0_0",
+  viewModel:"DwellingCoverage", topic:"MainInterview", source:"LOB – PersonalHome",
+  validRef:"RatePage.Show", status:"active",
+  purpose:"Set all coverage limits, deductibles, and optional endorsements for the dwelling policy",
+  inheritance:"LOB (Coverage objects defined in Marketplace base; FL-specific overrides by PersonalHome Peril)",
+  tags:["LOB","LOB Override"],
+  navPrev:"Risk Schedule (PAGE 3)", navNext:"Underwriting (PAGE 5)",
+  fields:[
+    {id:1,label:"Dwelling Limit (A)",tech:"CoverageADwellingInput.Limit",path:"coverage[COA]/limit[Standard]/iValue",type:"int",control:"Currency Input",rw:"Read and Written",source:"Coverage Data",visibility:"Conditionally Visible",visCondition:"FormIsDwelling = True",enabled:"Always Enabled",enabledCond:"—",required:"Required",reqCond:"FormIsDwelling = True",defaultVal:"—",validation:"Min=0; if 0<Limit<40000 → forced to 40000 (MinimumLimit)",calc:"Drives: CovB included, CovC included, CovD included, Hurricane ded dollar calcs, MSB comparison",lookup:"BaseRates, KeyFactorsHO3, tblCovA",group:"Core Coverages",pbLob:"LOB Override"},
+    {id:2,label:"Other Structures Limit (B)",tech:"CoverageBOtherStructuresInput.Limit",path:"coverage[COB]/limit[Standard]/iValue",type:"int",control:"Currency Input",rw:"Read and Written",source:"Coverage Data",visibility:"Always Visible",visCondition:"—",enabled:"Always Enabled",enabledCond:"—",required:"Optional",reqCond:"—",defaultVal:"CovA × IncludedFactor",validation:"FormatMask: Limit; if<IncludedLimit→reset to IncludedLimit",calc:"IncludedLimit=CovA×factor; extra premium on amount above included",lookup:"CoverageInformation, AdditionalCoverageRatesA_D",group:"Core Coverages",pbLob:"LOB Override"},
+    {id:3,label:"Cov B Included Limit",tech:"CoverageBOtherStructuresOutput.IncludedLimit",path:"IncludedLimit",type:"int",control:"Read-Only Display",rw:"Read",source:"Calculation",visibility:"Always Visible",visCondition:"—",enabled:"Read-Only",enabledCond:"—",required:"Not Applicable",reqCond:"—",defaultVal:"—",validation:"FormatMask: Premium",calc:"= CovA × IncludedFactor",lookup:"CoverageInformation",group:"Core Coverages",pbLob:"LOB"},
+    {id:4,label:"Personal Property Limit (C) – HO3",tech:"CoverageCPersonalPropertyHO3Input.Limit",path:"coverage[COC]/limit[Standard]/iValue",type:"int",control:"Currency Input",rw:"Read and Written",source:"Coverage Data",visibility:"Conditionally Visible",visCondition:"FormIsDwelling = True",enabled:"Always Enabled",enabledCond:"—",required:"Optional",reqCond:"—",defaultVal:"CovA × IncludedFactor",validation:"Min/max rules; if<IncludedLimit→reset",calc:"Included=CovA×IncludedFactor; extra premium above included",lookup:"PersonalPropertyInformation, AdditionalCoverageRatesA_D",group:"Core Coverages",pbLob:"LOB Override"},
+    {id:5,label:"Personal Property Limit (C) – HO6",tech:"CoverageCPersonalPropertyHO46Input.Limit",path:"coverage[PersonalPropertyCondoOrTenant]/limit[Standard]/iValue",type:"int",control:"Currency Input",rw:"Read and Written",source:"Coverage Data",visibility:"Conditionally Visible",visCondition:"FormIsCondoOrTenant = True",enabled:"Always Enabled",enabledCond:"—",required:"Required",reqCond:"FormIsCondoOrTenant",defaultVal:"—",validation:"Minimum: 10,000",calc:"Drives base premium for condo/tenant",lookup:"KeyFactorsHO46",group:"Core Coverages",pbLob:"LOB Override"},
+    {id:6,label:"Cov C Included Limit",tech:"CoverageCPersonalPropertyHO3Output.IncludedLimit",path:"IncludedLimit",type:"int",control:"Read-Only Display",rw:"Read",source:"Calculation",visibility:"Always Visible",visCondition:"—",enabled:"Read-Only",enabledCond:"—",required:"Not Applicable",reqCond:"—",defaultVal:"—",validation:"FormatMask: Premium",calc:"= CovA × IncludedFactor",lookup:"PersonalPropertyInformation",group:"Core Coverages",pbLob:"LOB"},
+    {id:7,label:"Loss of Use Limit (D)",tech:"CoverageDLossOfUseInput.Limit",path:"coverage[COD]/limit[Standard]/iValue",type:"int",control:"Currency Input",rw:"Read and Written",source:"Coverage Data",visibility:"Always Visible",visCondition:"—",enabled:"Always Enabled",enabledCond:"—",required:"Optional",reqCond:"—",defaultVal:"IncludedLimit = BaseLimit × IncludedFactor",validation:"FormatMask: Limit; if<IncludedLimit→reset",calc:"Included=BaseLimit×IncludedFactor (dwelling:20%; condo:40%)",lookup:"LossOfUseInformation, AdditionalCoverageRatesA_D",group:"Core Coverages",pbLob:"LOB Override"},
+    {id:8,label:"Cov D Included Limit",tech:"CoverageDLossOfUseOutput.IncludedLimit",path:"IncludedLimit",type:"int",control:"Read-Only Display",rw:"Read",source:"Calculation",visibility:"Always Visible",visCondition:"—",enabled:"Read-Only",enabledCond:"—",required:"Not Applicable",reqCond:"—",defaultVal:"—",validation:"FormatMask: Premium",calc:"= BaseLimit × IncludedFactor",lookup:"LossOfUseInformation",group:"Core Coverages",pbLob:"LOB"},
+    {id:9,label:"Personal Liability Limit (E)",tech:"CoverageELiabilityInput.Limit",path:"coverage[COE]/limit[Standard]/sValue",type:"string",control:"Dropdown (readOnly)",rw:"Read and Written",source:"Coverage Data",visibility:"Always Visible",visCondition:"—",enabled:"Read-Only",enabledCond:"Always (readOnly=True in LOB override)",required:"Optional",reqCond:"—",defaultVal:"300000",validation:"Options: 0=No Coverage (validRef=UseTypeIsNotPrimary), 300000, 500000, 1000000; if Primary AND=0→300000",calc:"Drives LiabilityLimitFactor",lookup:"LiabilityLimitFactors, AdditionalCoverageRatesE",group:"Core Coverages",pbLob:"LOB Override"},
+    {id:10,label:"Medical Payments Limit (F)",tech:"CoverageFMedicalInput.Limit",path:"coverage[COF]/limit[Standard]/sValue",type:"string",control:"Dropdown (readOnly)",rw:"Read and Written",source:"Coverage Data",visibility:"Always Visible",visCondition:"—",enabled:"Read-Only",enabledCond:"Always (readOnly=True in LOB override)",required:"Optional",reqCond:"—",defaultVal:"3000",validation:"Options: 0=No Coverage (validRef=UseTypeIsNotPrimary), 3000, 5000; if CovE=0→F=0; if CovE≠0 AND F=0→F=3000",calc:"—",lookup:"AdditionalCoverageRatesF",group:"Core Coverages",pbLob:"LOB Override"},
+    {id:11,label:"All-Peril Deductible",tech:"DwellingInput.Deductible",path:"deductible[Standard]/sValue",type:"string",control:"Dropdown",rw:"Read and Written",source:"Dwelling Data",visibility:"Always Visible",visCondition:"—",enabled:"Conditionally Enabled",enabledCond:"ReadOnly if UsePerilDeductibles=True",required:"Optional",reqCond:"—",defaultVal:"500",validation:"$500, $1000, $2500 primarily; cross-field UW validations",calc:"Drives deductible factor",lookup:"HO3/HO6DeductibleFactorTbl",group:"Deductibles",pbLob:"LOB Override"},
+    {id:12,label:"Hurricane Deductible",tech:"DwellingInput.HurricaneDeductible",path:"deductible[HurricaneDeductible]/sValue",type:"string",control:"Dropdown",rw:"Read and Written",source:"Dwelling Data",visibility:"Always Visible",visCondition:"—",enabled:"Always Enabled",enabledCond:"—",required:"Optional",reqCond:"—",defaultVal:"N (Excluded)",validation:"N, $500, 2%, 5%, 10%; 30+ cross-field UW validations",calc:"% dollar calcs for CovA or CovC",lookup:"HO3/HO6DeductibleFactorTbl",group:"Deductibles",pbLob:"LOB Override"},
+    {id:13,label:"Replacement Cost – Dwelling",tech:"ReplacementCostDwellingInput.Indicator",path:"coverage[ReplacementCostDwelling]/Indicator",type:"boolean",control:"Checkbox",rw:"Read and Written",source:"Coverage Data",visibility:"Always Visible",visCondition:"—",enabled:"Always Enabled",enabledCond:"—",required:"Optional",reqCond:"—",defaultVal:"True (if FormIsHO2/HO3)",validation:"misc: forced False if form not HO2/HO3",calc:"—",lookup:"—",group:"Section I Endorsements",pbLob:"LOB Override"},
+    {id:14,label:"Replacement Cost Value",tech:"ReplacementCostDwellingInput.ReplacementCostValue",path:"coverage[ReplacementCostDwelling]/exposure[ReplacementCostValue]/iValue",type:"int",control:"Currency Input",rw:"Read and Written",source:"Coverage Data",visibility:"Always Visible",visCondition:"—",enabled:"Always Enabled",enabledCond:"—",required:"Conditionally Required",reqCond:"Indicator = True",defaultVal:"CoverageADwellingInput.Limit",validation:"Maximum: 1,000,000; if=0 AND CovA>0→set to CovA",calc:"—",lookup:"—",group:"Section I Endorsements",pbLob:"LOB"},
+    {id:15,label:"Sinkhole Indicator",tech:"SinkholeInput.Indicator",path:"coverage[Sinkhole]/Indicator",type:"boolean",control:"Checkbox",rw:"Read and Written",source:"Coverage Data",visibility:"Always Visible",visCondition:"—",enabled:"Always Enabled",enabledCond:"—",required:"Optional",reqCond:"—",defaultVal:"False",validation:"UW message 57 on endorsement timing",calc:"Affects Forms SICCGCC1013, SIC23941013 printing",lookup:"—",group:"Section I Endorsements",pbLob:"LOB"},
+    {id:16,label:"Ordinance Or Law",tech:"OrdinanceOrLawInput.Limit",path:"coverage[OrdinanceOrLaw]/limit[Standard]/Limit",type:"string",control:"Dropdown",rw:"Read and Written",source:"Coverage Data",visibility:"Always Visible",visCondition:"—",enabled:"Always Enabled",enabledCond:"—",required:"Optional",reqCond:"—",defaultVal:"25 (25%)",validation:"Options: N=None, 25%, 50%",calc:"Indicator=True when ≠ N",lookup:"OrdinanceOrLawRates",group:"Section I Endorsements",pbLob:"LOB Override"},
+    {id:17,label:"Water Back Up and Sump Overflow",tech:"WaterBackupAndSumpOverflowInput.Indicator",path:"coverage[WaterBackup]/Indicator",type:"boolean",control:"Checkbox",rw:"Read and Written",source:"Coverage Data",visibility:"Always Visible",visCondition:"—",enabled:"Always Enabled",enabledCond:"—",required:"Optional",reqCond:"—",defaultVal:"False",validation:"—",calc:"Limit auto-set to $10,000 (readOnly)",lookup:"—",group:"Section I Endorsements",pbLob:"LOB"},
+    {id:18,label:"Water Backup Limit",tech:"WaterBackupAndSumpOverflowInput.Limit",path:"Limit[Standard]/iValue",type:"int",control:"Read-Only Display",rw:"Read",source:"Hardcoded",visibility:"Always Visible",visCondition:"—",enabled:"Read-Only",enabledCond:"—",required:"Not Applicable",reqCond:"—",defaultVal:"10,000",validation:"Fixed $10,000",calc:"Fixed $10,000 limit",lookup:"—",group:"Section I Endorsements",pbLob:"LOB"},
+    {id:19,label:"Limited Fungi or Bacteria",tech:"LimitedFungiBacteriaInput.Limit",path:"coverage[LimitedFungiBacteria]/limit[Standard]/Limit",type:"string",control:"Dropdown",rw:"Read and Written",source:"Coverage Data",visibility:"Always Visible",visCondition:"—",enabled:"Always Enabled",enabledCond:"—",required:"Optional",reqCond:"—",defaultVal:"10/50",validation:"Options: N, $10K/$50K, $25K/$50K, $50K/$50K",calc:"Indicator=True when ≠ N",lookup:"LimitedFungiBacteriaRates",group:"Section I Endorsements",pbLob:"LOB Override"},
+    {id:20,label:"Loss Assessment Coverage",tech:"LossAssessmentInput.Indicator",path:"coverage[LossAssessment]/Indicator",type:"boolean",control:"Checkbox",rw:"Read and Written",source:"Coverage Data",visibility:"Always Visible",visCondition:"—",enabled:"Always Enabled",enabledCond:"—",required:"Optional",reqCond:"—",defaultVal:"False",validation:"—",calc:"onChange: DefaultLimit calculation",lookup:"—",group:"Section I Endorsements",pbLob:"LOB"},
+    {id:21,label:"Loss Assessment Limit",tech:"LossAssessmentInput.Limit",path:"coverage[LossAssessment]/limit[Standard]/iValue",type:"int",control:"Dropdown",rw:"Read and Written",source:"Coverage Data",visibility:"Always Visible",visCondition:"—",enabled:"Always Enabled",enabledCond:"—",required:"Optional",reqCond:"—",defaultVal:"1,000",validation:"Options: $1,000 to $50,000",calc:"—",lookup:"LossAssessmentRates",group:"Section I Endorsements",pbLob:"LOB Override"},
+    {id:22,label:"Carports, Pool Cages & Screen Enclosures",tech:"CarportsPoolCagesInput.Limit",path:"coverage[CarportsPoolCages]/limit[Standard]/Limit",type:"int",control:"Currency Input",rw:"Read and Written",source:"Coverage Data",visibility:"Always Visible",visCondition:"—",enabled:"Always Enabled",enabledCond:"—",required:"Optional",reqCond:"—",defaultVal:"0",validation:"Max: CarportsPoolCagesPrivate.MaximumLimit; if >0 AND <10000→set to 10000; UW: limit ≤ $75,000 (message 62)",calc:"Indicator=True when >0",lookup:"—",group:"Section I Endorsements",pbLob:"LOB"},
+    {id:23,label:"Replacement Cost – Contents",tech:"ReplacementCostContentsInput.Indicator",path:"coverage[ReplacementCostContents]/Indicator",type:"boolean",control:"Checkbox",rw:"Read and Written",source:"Coverage Data",visibility:"Always Visible",visCondition:"—",enabled:"Conditionally Enabled",enabledCond:"ReadOnly if Form=HO15",required:"Optional",reqCond:"—",defaultVal:"False; True if Form=HO15",validation:"misc: forced True if HO15",calc:"—",lookup:"—",group:"Section I Endorsements",pbLob:"LOB"},
+    {id:24,label:"Identity Fraud Expense",tech:"IdentityFraudExpenseCoverageInput.Indicator",path:"coverage[IdentityFraudExpense]/Indicator",type:"boolean",control:"Checkbox",rw:"Read and Written",source:"Coverage Data",visibility:"Always Visible",visCondition:"—",enabled:"Always Enabled",enabledCond:"—",required:"Optional",reqCond:"—",defaultVal:"False",validation:"—",calc:"Limit: $15,000 (readOnly)",lookup:"—",group:"Section I Endorsements",pbLob:"LOB"},
+    {id:25,label:"Identity Fraud Limit",tech:"IdentityFraudExpenseCoverageInput.Limit",path:"Limit[Standard]/iValue",type:"int",control:"Read-Only Display",rw:"Read",source:"Hardcoded",visibility:"Always Visible",visCondition:"—",enabled:"Read-Only",enabledCond:"—",required:"Not Applicable",reqCond:"—",defaultVal:"15,000",validation:"Fixed $15,000",calc:"Fixed $15,000",lookup:"—",group:"Section I Endorsements",pbLob:"LOB"},
+    {id:26,label:"Unscheduled Jewelry Indicator",tech:"UnscheduledJewelryInput.Indicator",path:"coverage[UnschdJewelry]/Indicator",type:"boolean",control:"Checkbox (auto)",rw:"Read and Written",source:"Coverage Data",visibility:"Always Visible",visCondition:"—",enabled:"Always Enabled",enabledCond:"—",required:"Optional",reqCond:"—",defaultVal:"False",validation:"True when Limit > MinimumLimit",calc:"—",lookup:"—",group:"Section I Endorsements",pbLob:"LOB"},
+    {id:27,label:"Unscheduled Jewelry Limit",tech:"UnscheduledJewelryInput.Limit",path:"Limit[Standard]/iValue",type:"int",control:"Currency Input",rw:"Read and Written",source:"Coverage Data",visibility:"Always Visible",visCondition:"—",enabled:"Always Enabled",enabledCond:"—",required:"Optional",reqCond:"—",defaultVal:"MinimumLimit",validation:"min: MinimumLimit; max: MaximumLimit",calc:"—",lookup:"UnscheduledPersonalPropertyInformation",group:"Section I Endorsements",pbLob:"LOB"},
+    {id:28,label:"Water Backup of Sewers or Drains",tech:"WaterBackupOfSewersOrDrainsInput.Indicator",path:"coverage[WaterBackupOfSewersOrDrains]/Indicator",type:"boolean",control:"Checkbox",rw:"Read and Written",source:"Coverage Data",visibility:"Always Visible",visCondition:"—",enabled:"Always Enabled",enabledCond:"—",required:"Optional",reqCond:"—",defaultVal:"False",validation:"—",calc:"Limit: $10,000 (readOnly)",lookup:"—",group:"Section I Endorsements",pbLob:"LOB Override"},
+    {id:29,label:"Personal Property Other Residence",tech:"PersonalPropertyOtherResidenceInput.Indicator",path:"coverage[PersonalPropertyOtherResidence]/Indicator",type:"boolean",control:"Checkbox",rw:"Read and Written",source:"Coverage Data",visibility:"Always Visible",visCondition:"—",enabled:"Always Enabled",enabledCond:"—",required:"Optional",reqCond:"—",defaultVal:"False",validation:"—",calc:"value=True; Included limit=CovC×IncludedFactor",lookup:"—",group:"Section I Endorsements",pbLob:"LOB"},
+    {id:30,label:"Personal Injury",tech:"PersonalInjuryInput.Indicator",path:"coverage[PersonalInjury]/Indicator",type:"boolean",control:"Checkbox",rw:"Read and Written",source:"Coverage Data",visibility:"Always Visible",visCondition:"—",enabled:"Always Enabled",enabledCond:"—",required:"Optional",reqCond:"—",defaultVal:"False",validation:"misc: if CovE Limit=0 → forced False; Limit: $5,000 (readOnly)",calc:"—",lookup:"—",group:"Section II Endorsements",pbLob:"LOB"},
+    {id:31,label:"Unit-Owners Rental to Others",tech:"UnitsRegularlyRentedToOthersInput.Indicator",path:"coverage[UnitsRegularlyRentedToOthers]/Indicator",type:"boolean",control:"Checkbox",rw:"Read and Written",source:"Coverage Data",visibility:"Always Visible",visCondition:"—",enabled:"Conditionally Enabled",enabledCond:"ReadOnly if NOT FormIsHO6",required:"Optional",reqCond:"—",defaultVal:"False",validation:"misc: forced False if not HO6",calc:"—",lookup:"—",group:"Section II Endorsements",pbLob:"LOB"},
+    {id:32,label:"Incidental Farming Personal Liability",tech:"IncidentalFarmingPersonalLiabilityInput.Indicator",path:"coverage[IncidentalFarmingPersonalLiability]/Indicator",type:"boolean",control:"Checkbox (auto)",rw:"Read and Written",source:"Coverage Data",visibility:"Always Visible",visCondition:"—",enabled:"Always Enabled",enabledCond:"—",required:"Optional",reqCond:"—",defaultVal:"False",validation:"True when Type ≠ None; Limit: $10,000 (readOnly)",calc:"—",lookup:"—",group:"Section II Endorsements",pbLob:"LOB Override"},
+    {id:33,label:"Choose Deductibles by Peril",tech:"RiskInput.UseDeductibleByPeril",path:"UseDeductibleByPeril",type:"boolean",control:"Checkbox",rw:"Read and Written",source:"Risk Data",visibility:"Always Visible",visCondition:"—",enabled:"Always Enabled",enabledCond:"—",required:"Optional",reqCond:"—",defaultVal:"False",validation:"—",calc:"True→peril-level deductibles; False→All-Peril applies",lookup:"—",group:"Risk Options",pbLob:"LOB"},
+    {id:34,label:"Coverage Tier / Package",tech:"LineInput.CoveragePackage",path:"CoveragePackage",type:"string",control:"Dropdown",rw:"Read and Written",source:"Line Data",visibility:"Always Visible",visCondition:"—",enabled:"Always Enabled",enabledCond:"—",required:"Optional",reqCond:"—",defaultVal:"Standard",validation:"Options: Standard, Deluxe, Plus",calc:"onChange → sets defaults for all coverage limits via CoverageDefaults table",lookup:"CoverageDefaults",group:"Risk Options",pbLob:"LOB"},
+    {id:35,label:"Equipment Breakdown",tech:"RiskInput.EquipmentBreakdown",path:"EquipmentBreakdown",type:"boolean",control:"Checkbox",rw:"Read and Written",source:"Risk Data",visibility:"Always Visible",visCondition:"—",enabled:"Always Enabled",enabledCond:"—",required:"Optional",reqCond:"—",defaultVal:"False",validation:"—",calc:"Premium: $50 flat if selected",lookup:"—",group:"Risk Options",pbLob:"LOB"},
+    {id:36,label:"Permitted Incidental Occupancy",tech:"RiskInput.PermittedIncidentalOccupancy",path:"PermittedIncidentalOccupancy",type:"boolean",control:"Checkbox",rw:"Read and Written",source:"Risk Data",visibility:"Always Visible",visCondition:"—",enabled:"Always Enabled",enabledCond:"—",required:"Optional",reqCond:"—",defaultVal:"False",validation:"UW message 56 (SOS rented + PIO combo)",calc:"Drives FormsRule.HO04420491",lookup:"—",group:"Risk Options",pbLob:"LOB"},
+    {id:37,label:"Special Computer Coverage",tech:"SpecialComputerCoverageInput.Indicator",path:"coverage[SpecialComputer]/Indicator",type:"boolean",control:"Checkbox",rw:"Read and Written",source:"Coverage Data",visibility:"Always Visible",visCondition:"—",enabled:"Always Enabled",enabledCond:"—",required:"Optional",reqCond:"—",defaultVal:"False",validation:"misc: forced False if FormIsHO15",calc:"Limit: $3,000 (readOnly)",lookup:"—",group:"Risk Options",pbLob:"LOB"},
+    {id:38,label:"Unit-Owners Special Coverage C",tech:"SpecialPersonalPropertyCoverageInput.Indicator",path:"coverage[SpecialPersonalProperty]/Indicator",type:"boolean",control:"Checkbox",rw:"Read and Written",source:"Coverage Data",visibility:"Always Visible",visCondition:"—",enabled:"Conditionally Enabled",enabledCond:"ReadOnly if FormIsDwelling",required:"Optional",reqCond:"—",defaultVal:"False",validation:"misc: forced False if FormIsDwelling",calc:"—",lookup:"—",group:"Risk Options",pbLob:"LOB"},
+    {id:39,label:"Coverage A Premium (display)",tech:"CoverageAOutput.Premium",path:"Coverage A premium",type:"float",control:"Read-Only Display",rw:"Read",source:"Calculation",visibility:"Always Visible",visCondition:"—",enabled:"Read-Only",enabledCond:"—",required:"Not Applicable",reqCond:"—",defaultVal:"—",validation:"—",calc:"CovA BaseRate × FormFactor × ProtConstrFactor × KeyFactor × RateAdjustmentFactor",lookup:"BaseRates, KeyFactorsHO3",group:"Premium Display",pbLob:"LOB"},
+    {id:40,label:"Coverage B Premium",tech:"CoverageBOtherStructuresOutput.Premium",path:"Premium",type:"float",control:"Read-Only Display",rw:"Read",source:"Calculation",visibility:"Always Visible",visCondition:"—",enabled:"Read-Only",enabledCond:"—",required:"Not Applicable",reqCond:"—",defaultVal:"—",validation:"—",calc:"TotalRevisedCovBLimit × RateAdjustmentFactor",lookup:"AdditionalCoverageRatesA_D",group:"Premium Display",pbLob:"LOB"},
+    {id:41,label:"Coverage C Premium",tech:"CoverageCPersonalPropertyHO3Output.Amount",path:"Amount",type:"float",control:"Read-Only Display",rw:"Read",source:"Calculation",visibility:"Always Visible",visCondition:"—",enabled:"Read-Only",enabledCond:"—",required:"Not Applicable",reqCond:"—",defaultVal:"—",validation:"—",calc:"TotalRevisedCovCLimit × RateAdjustmentFactor",lookup:"AdditionalCoverageRatesA_D",group:"Premium Display",pbLob:"LOB"},
+    {id:42,label:"Coverage D Premium",tech:"CoverageDLossOfUseOutput.Premium",path:"Premium",type:"float",control:"Read-Only Display",rw:"Read",source:"Calculation",visibility:"Always Visible",visCondition:"—",enabled:"Read-Only",enabledCond:"—",required:"Not Applicable",reqCond:"—",defaultVal:"—",validation:"—",calc:"TotalRevisedCovDLimit × RateAdjustmentFactor",lookup:"AdditionalCoverageRatesA_D",group:"Premium Display",pbLob:"LOB"}
+  ],
+  dependencies:[
+    {source:"CoverageADwellingInput.Limit",target:"CoverageBOtherStructuresPrivate.IncludedLimit",type:"Calculation",condition:"Always",result:"CovB included = CovA × factor"},
+    {source:"CoverageADwellingInput.Limit",target:"CoverageCPersonalPropertyHO3Private.IncludedLimit",type:"Calculation",condition:"FormIsDwelling",result:"CovC included = CovA × 0.5"},
+    {source:"CoverageADwellingInput.Limit",target:"CoverageDLossOfUsePrivate.IncludedLimit",type:"Calculation",condition:"Always",result:"CovD included = CovA × 0.2 (HO3)"},
+    {source:"CoverageADwellingInput.Limit",target:"ReplacementCostDwellingInput.ReplacementCostValue",type:"Default",condition:"CovA > 0",result:"RCE defaulted to CovA"},
+    {source:"CoverageELiabilityInput.Limit=0",target:"CoverageFMedicalInput.Limit",type:"Control",condition:"CovE=0",result:"CovF forced to 0"},
+    {source:"LineInput.CoveragePackage",target:"All coverage limits/deductibles",type:"Default setter",condition:"Package change",result:"CoverageDefaults table lookups set all limits"},
+    {source:"DwellingInput.Form",target:"CoverageADwellingInput.Indicator",type:"Calculation",condition:"FormIsDwelling=True",result:"CovA only active for dwelling forms"},
+    {source:"InflationGuardInput.Limit",target:"CoverageA/B/C/D Input.Limit",type:"Renewal adjust",condition:"On renewal",result:"limit × (1 + InflationGuard/100)"}
+  ]
+}
+];
+
+// ═══════════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════════
+let currentPageId = null;
+let expandedRows = new Set();
+let filters = {req:false,vis:false,hid:false,calc:false,pb:false,lob:false};
+let tblQuery = "";
+
+// ═══════════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════════
+function init(){
+  buildSidebarPages();
+  updateHeaderCounts();
+  // Auto-select overview
+  const firstItem = document.querySelector('[data-target="sec-overview"]');
+  if(firstItem) firstItem.classList.add('active');
+  document.querySelector('.main').addEventListener('scroll', e=>{
+    document.getElementById('scroll-top').classList.toggle('show', e.target.scrollTop > 300);
+  });
+}
+
+function buildSidebarPages(){
+  const list = document.getElementById('sb-pages-list');
+  list.innerHTML = pages.map(p=>`
+    <div class="sb-item${p.status==='suppressed'?' sb-suppressed':''}" data-page="${p.id}" onclick="openPage('${p.id}')">
+      <span class="sb-num">${p.num}</span>
+      <span>${p.name}</span>
+      <span class="sb-cnt">${p.fields.length}</span>
+    </div>`).join('');
+}
+
+function updateHeaderCounts(){
+  const allFields = pages.flatMap(p=>p.fields);
+  document.getElementById('hdr-pages').textContent = pages.length;
+  document.getElementById('hdr-fields').textContent = allFields.length;
+}
+
+// ═══════════════════════════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════════════════════════
+function showSection(sectionId, el){
+  document.querySelectorAll('.content-section').forEach(s=>s.classList.remove('active'));
+  document.getElementById(sectionId).classList.add('active');
+  document.querySelectorAll('.sb-item').forEach(i=>i.classList.remove('active'));
+  if(el) el.classList.add('active');
+  scrollToTop();
+}
+
+function openPage(pageId){
+  currentPageId = pageId;
+  expandedRows.clear();
+  filters = {req:false,vis:false,hid:false,calc:false,pb:false,lob:false};
+  tblQuery = "";
+  const page = pages.find(p=>p.id===pageId);
+  if(!page) return;
+  renderPageDetail(page);
+  document.querySelectorAll('.content-section').forEach(s=>s.classList.remove('active'));
+  document.getElementById('sec-page-detail').classList.add('active');
+  document.querySelectorAll('.sb-item').forEach(i=>i.classList.remove('active'));
+  const sbItem = document.querySelector(`[data-page="${pageId}"]`);
+  if(sbItem) sbItem.classList.add('active');
+  scrollToTop();
+  // Close sidebar on mobile
+  if(window.innerWidth <= 900) document.getElementById('sidebar').classList.remove('open');
+}
+
+function navigateToPage(pageId, type){
+  if(pageId && type==='page'){
+    openPage(pageId);
+  } else {
+    // Navigate to flow section for non-detail nodes
+    showSection('sec-flow', document.querySelector('[data-target="sec-flow"]'));
+  }
+}
+
+function scrollToTop(){
+  const main = document.querySelector('.main');
+  if(main) main.scrollTo({top:0,behavior:'smooth'});
+}
+
+function toggleSidebar(){
+  document.getElementById('sidebar').classList.toggle('open');
+}
+
+// ═══════════════════════════════════════════════════════════
+// SIDEBAR
+// ═══════════════════════════════════════════════════════════
+function toggleSbSection(hdr){
+  const body = hdr.nextElementSibling;
+  const open = body.style.display !== 'none';
+  body.style.display = open ? 'none' : '';
+  hdr.classList.toggle('open', !open);
+}
+
+// ═══════════════════════════════════════════════════════════
+// GLOBAL SEARCH
+// ═══════════════════════════════════════════════════════════
+function globalSearch(q){
+  const results = document.getElementById('sb-search-results');
+  const navList = document.getElementById('sb-nav-list');
+  if(!q.trim()){
+    results.classList.remove('show');
+    navList.style.display = '';
+    return;
+  }
+  const lq = q.toLowerCase();
+  const matches = [];
+  pages.forEach(p=>{
+    // Page name match
+    if(p.name.toLowerCase().includes(lq) || p.viewModel.toLowerCase().includes(lq) || p.purpose.toLowerCase().includes(lq)){
+      matches.push({type:'page',id:p.id,name:p.name,detail:p.viewModel,num:p.num});
+    }
+    // Field match
+    p.fields.forEach(f=>{
+      const searchable = [f.label,f.tech,f.path,f.group,f.validation,f.calc,f.lookup].join(' ').toLowerCase();
+      if(searchable.includes(lq)){
+        matches.push({type:'field',pageId:p.id,pageName:p.name,name:f.label,detail:f.tech,pageNum:p.num});
+      }
+    });
+  });
+  if(matches.length===0){
+    results.innerHTML = '<div style="padding:10px 14px;font-size:12px;color:rgba(255,255,255,.5)">No results found</div>';
+  } else {
+    const maxShow = 30;
+    const shown = matches.slice(0,maxShow);
+    results.innerHTML = shown.map(m=>{
+      if(m.type==='page'){
+        return `<div class="sr-item" onclick="openPage('${m.id}')">
+          <span>📄 ${m.name}</span>
+          <span class="sr-pg">Page ${m.num} · ViewModel: ${m.detail}</span>
+        </div>`;
+      } else {
+        return `<div class="sr-item" onclick="openPage('${m.pageId}')">
+          <span>🔸 ${m.name}</span>
+          <span class="sr-pg">Page ${m.pageNum}: ${m.pageName} · ${m.detail}</span>
+        </div>`;
+      }
+    }).join('') + (matches.length>maxShow ? `<div style="padding:6px 14px;font-size:11px;color:rgba(255,255,255,.4)">${matches.length-maxShow} more results…</div>` : '');
+  }
+  results.classList.add('show');
+  navList.style.display = 'none';
+}
+
+// Close search on outside click
+document.addEventListener('click', e=>{
+  if(!e.target.closest('.sb-search') && !e.target.closest('.sb-search-results')){
+    const results = document.getElementById('sb-search-results');
+    const navList = document.getElementById('sb-nav-list');
+    if(results) results.classList.remove('show');
+    if(navList) navList.style.display = '';
+    const inp = document.getElementById('sb-search-input');
+    if(inp) inp.value = '';
+  }
+});
+
+// ═══════════════════════════════════════════════════════════
+// PAGE DETAIL RENDERER
+// ═══════════════════════════════════════════════════════════
+function renderPageDetail(p){
+  const suppressed = p.status === 'suppressed';
+  const flds = p.fields;
+  const counts = {
+    total:flds.length,
+    vis:flds.filter(f=>f.visibility==="Always Visible").length,
+    cvis:flds.filter(f=>f.visibility.includes("Conditionally")).length,
+    hid:flds.filter(f=>f.visibility.includes("Hidden")||f.visibility.includes("Internal")||f.visibility.includes("Not UI")).length,
+    req:flds.filter(f=>f.required==="Required").length,
+    creq:flds.filter(f=>f.required.includes("Conditionally")).length,
+    calc:flds.filter(f=>f.calc&&f.calc!=="—").length,
+    lkp:flds.filter(f=>f.lookup&&f.lookup!=="—").length,
+    ronly:flds.filter(f=>f.enabled==="Read-Only").length
+  };
+
+  const tags = p.tags.map(t=>tagBadge(t)).join('');
+
+  let html = `
+  <div class="back-nav">
+    <button class="back-btn" onclick="showSection('sec-flow',document.querySelector('[data-target=sec-flow]'))">← Back to Flow</button>
+    <div class="breadcrumb">
+      <span onclick="showSection('sec-overview',document.querySelector('[data-target=sec-overview]'))" style="cursor:pointer;color:var(--primary)">Overview</span>
+      <span class="bc-sep">›</span>
+      <span onclick="showSection('sec-flow',document.querySelector('[data-target=sec-flow]'))" style="cursor:pointer;color:var(--primary)">Page Flow</span>
+      <span class="bc-sep">›</span>
+      <span class="bc-cur">${p.name}</span>
+    </div>
+  </div>
+
+  <div class="page-hdr-card">
+    <div class="page-title-row">
+      <div>
+        <div class="page-title">${p.name}${suppressed?` <span class="tag tag-suppressed" style="font-size:12px">SUPPRESSED</span>`:''}</div>
+        <div class="page-subtitle">ViewModel: ${p.caption}</div>
+        <div style="margin-top:8px">${tags}</div>
+      </div>
+    </div>
+    ${suppressed?`<div class="alert alert-warn" style="margin-top:12px">⚠️ This page is <b>suppressed</b> in the Manatee PersonalHome LOB. The validRef is overridden to always return <code>False</code>. Fields are defined in ProductBase but not shown in this product flow.</div>`:''}
+    <div class="page-meta-grid">
+      <div class="pm-item"><div class="pm-lbl">Manuscript</div><div class="pm-val" style="font-size:11px">${p.manuscript}</div></div>
+      <div class="pm-item"><div class="pm-lbl">ViewModel</div><div class="pm-val">${p.viewModel}</div></div>
+      <div class="pm-item"><div class="pm-lbl">Model Collection</div><div class="pm-val">${p.topic}</div></div>
+      <div class="pm-item"><div class="pm-lbl">Source</div><div class="pm-val">${p.source}</div></div>
+      <div class="pm-item"><div class="pm-lbl">Valid Ref</div><div class="pm-val" style="font-size:11px">${p.validRef}</div></div>
+      <div class="pm-item"><div class="pm-lbl">Inheritance</div><div class="pm-val" style="font-size:11px">${p.inheritance}</div></div>
+      ${p.navPrev?`<div class="pm-item"><div class="pm-lbl">← Prev Page</div><div class="pm-val" style="font-size:11px">${p.navPrev}</div></div>`:''}
+      ${p.navNext?`<div class="pm-item"><div class="pm-lbl">Next Page →</div><div class="pm-val" style="font-size:11px">${p.navNext}</div></div>`:''}
+    </div>
+    <div class="alert alert-info" style="margin-top:12px">📋 <b>Purpose:</b> ${p.purpose}</div>
+  </div>
+
+  ${buildSummarySection(counts)}
+  ${buildFieldsSection(p)}
+  ${buildDepsSection(p.dependencies)}
+  ${buildInheritanceSection(p)}
+  `;
+
+  document.getElementById('page-detail-content').innerHTML = html;
+}
+
+function buildSummarySection(c){
+  const items = [
+    ['Total Fields',c.total,'#1e3a5c'],['Always Visible',c.vis,'#16a34a'],
+    ['Conditional',c.cvis,'#0369a1'],['Hidden/Internal',c.hid,'#d97706'],
+    ['Required',c.req,'#dc2626'],['Cond. Required',c.creq,'#d97706'],
+    ['Calculated',c.calc,'#a21caf'],['Lookup-Based',c.lkp,'#0891b2'],
+    ['Read-Only',c.ronly,'#475569']
+  ];
+  return `
+  <div class="detail-section">
+    <div class="ds-hdr" onclick="toggleSection(this)">
+      <span class="ds-title">📊 Field Summary</span>
+      <span class="ds-badge">${c.total} Fields</span>
+      <span class="ds-arrow open">▶</span>
+    </div>
+    <div class="ds-body">
+      <div class="stats-bar" style="margin-bottom:0">
+        ${items.map(([l,v,c])=>`<div class="stat-card"><div class="sv" style="color:${c}">${v}</div><div class="sl">${l}</div></div>`).join('')}
+      </div>
+    </div>
+  </div>`;
+}
+
+function buildFieldsSection(p){
+  const groups = [...new Set(p.fields.map(f=>f.group))];
+  const groupsHTML = groups.map(g=>{
+    const gFields = applyFilters(p.fields.filter(f=>f.group===g));
+    if(gFields.length===0) return '';
+    return `
+    <div style="margin-bottom:18px">
+      <div style="font-weight:600;font-size:12px;color:var(--primary);margin-bottom:8px;padding:4px 0;border-bottom:2px solid var(--primary-lighter)">
+        ${g} <span style="font-size:11px;color:var(--text-muted);font-weight:400">(${gFields.length} field${gFields.length!==1?'s':''})</span>
+      </div>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr>
+            <th style="width:28px">#</th>
+            <th>Field Label</th>
+            <th>Technical Field</th>
+            <th>Data Path</th>
+            <th>Required</th>
+            <th>Visibility</th>
+            <th>Enabled</th>
+            <th>Default</th>
+            <th>PB/LOB</th>
+            <th style="width:30px"></th>
+          </tr></thead>
+          <tbody>${gFields.map(f=>buildFieldRow(f)).join('')}</tbody>
+        </table>
+      </div>
+    </div>`;
+  }).join('');
+
+  return `
+  <div class="detail-section">
+    <div class="ds-hdr" onclick="toggleSection(this)">
+      <span class="ds-title">📋 Field Details</span>
+      <span class="ds-badge">${p.fields.length} Fields</span>
+      <span class="ds-arrow open">▶</span>
+    </div>
+    <div class="ds-body">
+      <div class="filter-bar">
+        <label>Filter:</label>
+        <button class="fbtn${filters.req?' on':''}" onclick="toggleFilter('req','${p.id}')">Required</button>
+        <button class="fbtn${filters.vis?' on':''}" onclick="toggleFilter('vis','${p.id}')">Visible</button>
+        <button class="fbtn${filters.hid?' on':''}" onclick="toggleFilter('hid','${p.id}')">Hidden</button>
+        <button class="fbtn${filters.calc?' on':''}" onclick="toggleFilter('calc','${p.id}')">Calculated</button>
+        <button class="fbtn${filters.pb?' on':''}" onclick="toggleFilter('pb','${p.id}')">ProductBase</button>
+        <button class="fbtn${filters.lob?' on':''}" onclick="toggleFilter('lob','${p.id}')">LOB</button>
+        <input class="tbl-search" type="text" placeholder="🔍 Search fields…" value="${tblQuery}" oninput="tblSearch(this.value,'${p.id}')">
+      </div>
+      ${groupsHTML || '<div style="color:var(--text-muted);font-size:13px;padding:10px 0">No fields match the current filter.</div>'}
+    </div>
+  </div>`;
+}
+
+function buildFieldRow(f){
+  const exp = expandedRows.has(f.id);
+  return `
+  <tr class="${exp?'expanded':''}" style="cursor:pointer" onclick="toggleRow(${f.id})">
+    <td style="color:var(--text-muted);font-size:10px">${f.id}</td>
+    <td><strong style="font-size:12px">${f.label}</strong></td>
+    <td style="font-family:monospace;font-size:11px;color:#1e3a5c">${f.tech}</td>
+    <td style="font-family:monospace;font-size:11px;color:#475569">${f.path}</td>
+    <td>${reqBadge(f.required)}</td>
+    <td>${visBadge(f.visibility)}</td>
+    <td style="font-size:11px">${f.enabled}</td>
+    <td style="font-size:11px;max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${f.defaultVal}">${f.defaultVal}</td>
+    <td>${pbBadge(f.pbLob)}</td>
+    <td style="text-align:center;color:var(--primary);font-size:11px">${exp?'▲':'▼'}</td>
+  </tr>
+  ${exp?buildDetailRow(f):''}`;
+}
+
+function buildDetailRow(f){
+  return `
+  <tr class="expand-row"><td colspan="10">
+    <div class="field-detail">
+      <div class="fd-item"><div class="fd-lbl">Technical Field</div><div class="fd-val code">${f.tech}</div></div>
+      <div class="fd-item"><div class="fd-lbl">Data Path</div><div class="fd-val code">${f.path}</div></div>
+      <div class="fd-item"><div class="fd-lbl">Data Type</div><div class="fd-val">${f.type}</div></div>
+      <div class="fd-item"><div class="fd-lbl">Control Type</div><div class="fd-val">${f.control}</div></div>
+      <div class="fd-item"><div class="fd-lbl">Read / Write</div><div class="fd-val">${f.rw}</div></div>
+      <div class="fd-item"><div class="fd-lbl">Source</div><div class="fd-val">${f.source}</div></div>
+      <div class="fd-item"><div class="fd-lbl">Visibility</div><div class="fd-val">${visBadge(f.visibility)}${f.visCondition&&f.visCondition!=='—'?`<br><span style="font-size:10px;color:var(--text-muted)">Cond: ${f.visCondition}</span>`:''}</div></div>
+      <div class="fd-item"><div class="fd-lbl">Enabled</div><div class="fd-val">${f.enabled}${f.enabledCond&&f.enabledCond!=='—'?`<br><span style="font-size:10px;color:var(--text-muted)">${f.enabledCond}</span>`:''}</div></div>
+      <div class="fd-item"><div class="fd-lbl">Required</div><div class="fd-val">${reqBadge(f.required)}${f.reqCond&&f.reqCond!=='—'?`<br><span style="font-size:10px;color:var(--text-muted)">Cond: ${f.reqCond}</span>`:''}</div></div>
+      <div class="fd-item"><div class="fd-lbl">Default Value</div><div class="fd-val">${f.defaultVal}</div></div>
+      <div class="fd-item" style="grid-column:span 2"><div class="fd-lbl">Validation</div><div class="fd-val">${f.validation}</div></div>
+      <div class="fd-item" style="grid-column:span 2"><div class="fd-lbl">Calculation / Logic</div><div class="fd-val">${f.calc||'—'}</div></div>
+      <div class="fd-item"><div class="fd-lbl">Lookup / Table</div><div class="fd-val">${f.lookup||'—'}</div></div>
+      <div class="fd-item"><div class="fd-lbl">ProductBase / LOB</div><div class="fd-val">${pbBadge(f.pbLob)}</div></div>
+    </div>
+  </td></tr>`;
+}
+
+function buildDepsSection(deps){
+  if(!deps||deps.length===0){
+    return `<div class="detail-section">
+      <div class="ds-hdr" onclick="toggleSection(this)">
+        <span class="ds-title">🔗 Field Dependencies</span>
+        <span class="ds-badge">0</span>
+        <span class="ds-arrow">▶</span>
+      </div>
+    </div>`;
+  }
+  return `
+  <div class="detail-section">
+    <div class="ds-hdr" onclick="toggleSection(this)">
+      <span class="ds-title">🔗 Field Dependencies</span>
+      <span class="ds-badge">${deps.length}</span>
+      <span class="ds-arrow open">▶</span>
+    </div>
+    <div class="ds-body">
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr>
+            <th>Source Field</th><th>Target Field</th><th>Dependency Type</th>
+            <th>Condition</th><th>Result</th>
+          </tr></thead>
+          <tbody>${deps.map(d=>`
+            <tr>
+              <td style="font-family:monospace;font-size:11px;color:#1e3a5c">${d.source}</td>
+              <td style="font-family:monospace;font-size:11px;color:#0891b2">${d.target}</td>
+              <td><span class="pill" style="background:#ede9fe;color:#7c3aed">${d.type}</span></td>
+              <td style="font-size:12px">${d.condition}</td>
+              <td style="font-size:12px">${d.result}</td>
+            </tr>`).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>`;
+}
+
+function buildInheritanceSection(p){
+  let nodes;
+  if(p.tags.includes('LOB')||p.tags.includes('LOB Override')){
+    nodes=[
+      {label:'DCT_ProductBase_PersonalLines_1_0_0_0',cls:'pb',note:'ProductBase base'},
+      {label:'Manatee_Marketplace_PersonalHome_Peril_1_0_0_0',cls:'lob',note:'Marketplace data model'},
+      {label:'Manatee_PersonalHome_Peril_1_0_0_0 (FL)',cls:'override',note:'LOB overrides + FL rules'}
+    ];
+  } else {
+    nodes=[
+      {label:'DCT_ProductBase_PersonalLines_1_0_0_0',cls:'pb',note:'Base definition'},
+      {label:'Carrier_ProductBase_PersonalLines_1_0_0_0',cls:'pb',note:'Carrier base'},
+      {label:'Manatee_PersonalHome_Peril_1_0_0_0',cls:'override',note:'FL-specific context'}
+    ];
+  }
+  const pbCount = p.fields.filter(f=>f.pbLob==='ProductBase').length;
+  const lobCount = p.fields.filter(f=>f.pbLob==='LOB').length;
+  const ovCount = p.fields.filter(f=>f.pbLob.includes('Override')).length;
+  return `
+  <div class="detail-section">
+    <div class="ds-hdr" onclick="toggleSection(this)">
+      <span class="ds-title">🏗️ ProductBase / LOB Inheritance</span>
+      <span class="ds-badge">Chain</span>
+      <span class="ds-arrow open">▶</span>
+    </div>
+    <div class="ds-body">
+      <div style="display:flex;gap:24px;flex-wrap:wrap;align-items:flex-start">
+        <div class="inh-flow" style="min-width:240px">
+          ${nodes.map((n,i)=>`
+            ${i>0?'<div class="inh-down">↓</div>':''}
+            <div class="inh-node">
+              <div class="inh-box ${n.cls}">
+                <div style="font-size:12px">${n.label}</div>
+                <div style="font-size:10px;color:var(--text-muted);font-weight:400;margin-top:2px">${n.note}</div>
+              </div>
+            </div>`).join('')}
+        </div>
+        <div style="flex:1;min-width:180px">
+          <div style="font-weight:600;font-size:13px;margin-bottom:10px">Field Origin on this Page</div>
+          <div style="display:flex;flex-direction:column;gap:7px">
+            <div><span class="tag tag-pb">${pbCount}</span> <span style="font-size:12px;color:var(--text-muted)">ProductBase fields</span></div>
+            <div><span class="tag tag-lob">${lobCount}</span> <span style="font-size:12px;color:var(--text-muted)">LOB-only fields</span></div>
+            <div><span class="tag tag-override">${ovCount}</span> <span style="font-size:12px;color:var(--text-muted)">LOB Override fields</span></div>
+          </div>
+          <div style="margin-top:16px;font-size:12px">
+            <div style="font-weight:600;margin-bottom:6px">Legend</div>
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:5px"><div class="inh-box pb" style="flex:none;padding:3px 10px;font-size:11px">ProductBase</div><span style="color:var(--text-muted);font-size:11px">Defined in ProductBase</span></div>
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:5px"><div class="inh-box lob" style="flex:none;padding:3px 10px;font-size:11px">LOB</div><span style="color:var(--text-muted);font-size:11px">LOB Marketplace base</span></div>
+            <div style="display:flex;align-items:center;gap:8px"><div class="inh-box override" style="flex:none;padding:3px 10px;font-size:11px">LOB Override</div><span style="color:var(--text-muted);font-size:11px">ProductBase field overridden</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+// ═══════════════════════════════════════════════════════════
+// HELPERS
+// ═══════════════════════════════════════════════════════════
+function reqBadge(r){
+  if(r==='Required') return `<span class="pill pill-req">Required</span>`;
+  if(r.includes('Conditionally')) return `<span class="pill pill-cvis">Cond. Req</span>`;
+  if(r==='Not Applicable') return `<span class="pill pill-ronly">N/A</span>`;
+  return `<span class="pill pill-opt">Optional</span>`;
+}
+function visBadge(v){
+  if(v==='Always Visible') return `<span class="pill pill-vis">Always</span>`;
+  if(v.includes('Conditionally')) return `<span class="pill pill-cvis">Conditional</span>`;
+  if(v.includes('Hidden')) return `<span class="pill pill-hid">Hidden</span>`;
+  if(v.includes('Internal')||v.includes('Not UI')) return `<span class="pill pill-int">Internal</span>`;
+  return `<span class="pill pill-opt">${v.substring(0,15)}</span>`;
+}
+function pbBadge(p){
+  if(!p) return '';
+  if(p.includes('Override')) return `<span class="pill" style="background:#fef3c7;color:#92400e">LOB Override</span>`;
+  if(p==='LOB') return `<span class="pill" style="background:#cffafe;color:#0369a1">LOB</span>`;
+  return `<span class="pill" style="background:#ede9fe;color:#6d28d9">ProductBase</span>`;
+}
+function tagBadge(t){
+  const map={'ProductBase':'tag-pb','LOB':'tag-lob','LOB Override':'tag-override','Suppressed':'tag-suppressed'};
+  const cls = map[t]||'tag-green';
+  return `<span class="tag ${cls}">${t}</span>`;
+}
+
+function toggleSection(hdr){
+  const body = hdr.nextElementSibling;
+  const arrow = hdr.querySelector('.ds-arrow');
+  const open = body.style.display !== 'none';
+  body.style.display = open ? 'none' : '';
+  if(arrow) arrow.classList.toggle('open', !open);
+}
+
+function toggleRow(id){
+  if(expandedRows.has(id)) expandedRows.delete(id);
+  else expandedRows.add(id);
+  const page = pages.find(p=>p.id===currentPageId);
+  if(page) renderPageDetail(page);
+}
+
+function applyFilters(fields){
+  let f = fields;
+  if(filters.req) f = f.filter(x=>x.required==='Required'||x.required.includes('Conditionally'));
+  if(filters.vis) f = f.filter(x=>x.visibility==='Always Visible');
+  if(filters.hid) f = f.filter(x=>x.visibility.includes('Hidden')||x.visibility.includes('Internal')||x.visibility.includes('Not UI'));
+  if(filters.calc) f = f.filter(x=>x.calc&&x.calc!=='—');
+  if(filters.pb) f = f.filter(x=>x.pbLob==='ProductBase');
+  if(filters.lob) f = f.filter(x=>x.pbLob==='LOB'||x.pbLob.includes('Override'));
+  if(tblQuery){
+    const lq = tblQuery.toLowerCase();
+    f = f.filter(x=>[x.label,x.tech,x.path,x.group,x.validation||'',x.calc||'',x.lookup||''].some(v=>v&&v.toLowerCase().includes(lq)));
+  }
+  return f;
+}
+
+function toggleFilter(key, pageId){
+  filters[key] = !filters[key];
+  const page = pages.find(p=>p.id===pageId);
+  if(page) renderPageDetail(page);
+}
+
+function tblSearch(val, pageId){
+  tblQuery = val;
+  const page = pages.find(p=>p.id===pageId);
+  if(page) renderPageDetail(page);
+}
+
+// ═══════════════════════════════════════════════════════════
+// SCROLL TOP
+// ═══════════════════════════════════════════════════════════
+document.querySelector('.main').addEventListener('scroll', e=>{
+  document.getElementById('scroll-top').classList.toggle('show', e.target.scrollTop > 300);
+});
+
+init();
+</script>
+</body>
+</html>

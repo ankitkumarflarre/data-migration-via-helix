@@ -28,6 +28,7 @@ import (
 	"github.com/ankitkumarflarre/datamigration/internal/helix"
 	"github.com/ankitkumarflarre/datamigration/internal/ledger"
 	"github.com/ankitkumarflarre/datamigration/internal/plan"
+	"github.com/ankitkumarflarre/datamigration/internal/quote"
 	"github.com/ankitkumarflarre/datamigration/internal/rules"
 	"github.com/ankitkumarflarre/datamigration/internal/schema"
 )
@@ -36,6 +37,7 @@ const maxUpload = 25 << 20
 
 // Server holds the shared dependencies and the jobs.
 type Server struct {
+	Quotes *quote.Store
 	Helix  *helix.Client
 	API    execute.API
 	Schema *schema.Schema
@@ -83,6 +85,9 @@ func NewServer(h *helix.Client, api execute.API, s *schema.Schema, l *ledger.Led
 // Handler returns the HTTP routes.
 func (s *Server) Handler() http.Handler {
 	mux := http.NewServeMux()
+	if s.Quotes != nil {
+		quote.Register(mux, s.Quotes)
+	}
 	mux.HandleFunc("GET /api/health", s.health)
 	mux.HandleFunc("GET /api/rulesets", s.ruleSets)
 	mux.HandleFunc("POST /api/jobs", s.upload)
