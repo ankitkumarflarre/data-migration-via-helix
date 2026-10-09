@@ -32,6 +32,9 @@ type Field struct {
 	Label        string     `json:"label"`
 	Type         string     `json:"type"`
 	Required     bool       `json:"required"`
+	Derive       string     `json:"derive,omitempty"`
+	Unavailable  string     `json:"unavailable,omitempty"`
+	DisabledWhen *Condition `json:"disabledWhen,omitempty"`
 	ReadOnly     bool       `json:"readOnly,omitempty"`
 	Default      any        `json:"default,omitempty"`
 	Options      []string   `json:"options,omitempty"`
@@ -170,9 +173,13 @@ func (s *Store) read(id string) (*Quote, error) {
 	}
 	var q Quote
 	err = json.Unmarshal(b, &q)
+	if err == nil {
+		deriveValues(&q)
+	}
 	return &q, err
 }
 func (s *Store) write(q *Quote) error {
+	deriveValues(q)
 	b, err := json.MarshalIndent(q, "", "  ")
 	if err != nil {
 		return err
@@ -333,9 +340,16 @@ func apply(q *Quote, p Page, values map[string]any, rows []map[string]any) error
 	for _, f := range p.Fields {
 		allowed[f.Key] = f
 	}
+	context := map[string]any{}
+	for k, v := range q.Values {
+		context[k] = v
+	}
+	for k, v := range values {
+		context[k] = v
+	}
 	for k, v := range values {
 		f, ok := allowed[k]
-		if !ok || f.ReadOnly {
+		if !ok || f.ReadOnly || (f.DisabledWhen != nil && matches(f.DisabledWhen, context) && q.Values[k] != v) {
 			return &ValidationError{map[string]string{k: "Unknown or read-only field."}}
 		}
 		if v == nil || v == "" {
@@ -350,7 +364,7 @@ func apply(q *Quote, p Page, values map[string]any, rows []map[string]any) error
 		}
 		keys := map[string]bool{}
 		for _, f := range p.Collection.Fields {
-			keys[f.Key] = true
+			keys[f.Key] = !f.ReadOnly
 		}
 		for _, row := range rows {
 			for k := range row {
@@ -395,7 +409,7 @@ func apply(q *Quote, p Page, values map[string]any, rows []map[string]any) error
 func validateFields(fields []Field, values, context map[string]any, required bool, prefix string) map[string]string {
 	out := map[string]string{}
 	for _, f := range fields {
-		if f.ReadOnly || !matches(f.ShowWhen, context) {
+		if f.ReadOnly || !matches(f.ShowWhen, context) || (f.DisabledWhen != nil && matches(f.DisabledWhen, context)) {
 			continue
 		}
 		v, exists := values[f.Key]
@@ -536,6 +550,16 @@ func validate(q *Quote, p Page, required bool) map[string]string {
 		notes, _ := q.Values["Underwriting.Notes"].(string)
 		if yes && strings.TrimSpace(notes) == "" {
 			out["Underwriting.Notes"] = "Explain the Yes answers for underwriting review"
+		}
+	}
+	if p.ID == "account" {
+		if dob, ok := q.Values["Applicant.DateOfBirth"].(string); ok && dob > time.Now().UTC().Format("2006-01-02") {
+			out["Applicant.DateOfBirth"] = "Date of birth cannot be in the future"
+		}
+	}
+	if p.ID == "billing" && required && q.Values["Billing.Paperless"] == true {
+		if email, _ := q.Values["AccountInput.Email"].(string); strings.TrimSpace(email) == "" {
+			out["Billing.Paperless"] = "An applicant email is required for paperless invoices"
 		}
 	}
 	if p.ID == "billing" && required && q.Values["Billing.BillClass"] == "Mortgagee Escrow" {

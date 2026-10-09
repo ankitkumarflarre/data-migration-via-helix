@@ -1,8 +1,9 @@
 import definition from '../../../../internal/quote/schema.json' with {type:'json'};
 export type Value = string | number | boolean | null;
 export interface Condition {key: string; values: Value[]}
-export interface FormField {key:string; label:string; type:string; required:boolean; readOnly?:boolean; default?:Value; options?:string[]; group?:string; hint?:string; min?:number; max?:number; maxLength?:number; showWhen?:Condition; requiredWhen?:Condition}
-export interface FormPage {id:string; title:string; fields:FormField[]; notice?:string; when?:Condition; collection?:{key:string;label:string;fields:FormField[];when?:Condition}}
+export interface FormField {key:string; label:string; type:string; required:boolean; readOnly?:boolean; hidden?:boolean; derive?:string; unavailable?:string; note?:string; link?:string; sourceRefs?:string[]; disabledWhen?:Condition; default?:Value; options?:string[]; group?:string; hint?:string; min?:number; max?:number; maxLength?:number; showWhen?:Condition; requiredWhen?:Condition}
+export interface SourceAction {key:string;label:string;kind:string;reason:string;sourceRefs?:string[]}
+export interface FormPage {id:string; title:string; fields:FormField[]; notice?:string; actions?:SourceAction[];servicePanels?:{title:string;text:string;fields:string[];actions:string[]}[]; when?:Condition; collection?:{key:string;label:string;fields:FormField[];when?:Condition;sourceControls?:Partial<Record<string,string>>}}
 export const pages: FormPage[] = definition.pages;
 export interface Quote {id:string;number:string;version:number;status:string;created_at:string;updated_at:string;current_page:string;completed:string[];values:Record<string,Value>;collections:Record<string,Record<string,Value>[]>}
 export function matches(c:Condition|undefined,values:Record<string,Value>){return !c || c.values.includes(values[c.key]);}
@@ -15,6 +16,6 @@ async function call<T>(method:string,path:string,body?:unknown):Promise<T>{
  if(!response.ok)throw new QuoteError(data.error || 'Could not save quote.',data.fields ?? {},response.status);
  return data;
 }
-export const quotesAPI={list:()=>call<Quote[]>('GET',''),get:(id:string)=>call<Quote>('GET','/'+id),create:(values:Record<string,Value>)=>call<Quote>('POST','',{values}),save:(q:Quote,page:string,values:Record<string,Value>,rows:Record<string,Value>[],advance:boolean)=>call<Quote>('PUT','/'+q.id,{version:q.version,page,values,rows,advance}),submit:(q:Quote)=>call<Quote>('POST','/'+q.id+'/submit',{version:q.version})};
-export function pageValues(page:FormPage,values:Record<string,Value>){return Object.fromEntries(page.fields.filter(f=>!f.readOnly).map(f=>[f.key,values[f.key]??null]));}
+export const quotesAPI={list:()=>call<Quote[]>('GET',''),get:(id:string)=>call<Quote>('GET','/'+id),create:(values:Record<string,Value>)=>call<Quote>('POST','',{values}),save:(q:Quote,page:string,values:Record<string,Value>,rows:Record<string,Value>[],advance:boolean)=>call<Quote>('PUT','/'+q.id,{version:q.version,page,values,rows:rows.map(row=>{const collection=pages.find(p=>p.id===page)?.collection;return collection?Object.fromEntries(collection.fields.filter(f=>!f.readOnly).map(f=>[f.key,row[f.key]??null])):row;}),advance}),submit:(q:Quote)=>call<Quote>('POST','/'+q.id+'/submit',{version:q.version})};
+export function pageValues(page:FormPage,values:Record<string,Value>){return Object.fromEntries(page.fields.filter(f=>!f.readOnly&&(!f.disabledWhen||!matches(f.disabledWhen,values))).map(f=>[f.key,values[f.key]??null]));}
 export function fieldDefaults(fields:FormField[]){return Object.fromEntries(fields.filter(f=>f.default!==undefined).map(f=>[f.key,f.default!]));}

@@ -1,5 +1,5 @@
 {
-  "version": 1,
+  "version": 2,
   "pages": [
     {
       "id": "newquote",
@@ -40,7 +40,10 @@
           "key": "PolicyInput.EffectiveDate",
           "label": "Effective date",
           "type": "date",
-          "required": true
+          "required": true,
+          "sourceRefs": [
+            "policydetail:2"
+          ]
         },
         {
           "key": "Quote.DCTBilling",
@@ -48,6 +51,145 @@
           "type": "boolean",
           "required": false,
           "default": false
+        },
+        {
+          "key": "PolicyDetails.PriorPolicyNumber",
+          "label": "Prior policy number",
+          "type": "text",
+          "required": false,
+          "group": "Policy information",
+          "narrativeSource": "Prior policy number"
+        },
+        {
+          "key": "PolicyDetails.PriorCarrier",
+          "label": "Prior carrier",
+          "type": "text",
+          "required": false,
+          "group": "Policy information",
+          "narrativeSource": "Prior carrier"
+        },
+        {
+          "key": "PolicyDetails.EPolicyDiscount",
+          "label": "E-policy discount",
+          "type": "boolean",
+          "required": false,
+          "group": "Policy information",
+          "narrativeSource": "E-policy discount"
+        },
+        {
+          "key": "PolicyDetails.SubscriptionAgreement",
+          "label": "Subscription agreement flag",
+          "type": "boolean",
+          "required": false,
+          "group": "Policy information",
+          "readOnly": true,
+          "unavailable": "Awaiting signed subscriber agreement",
+          "narrativeSource": "Subscription agreement flag"
+        },
+        {
+          "key": "PolicyDetails.WritingCompany",
+          "label": "Writing company",
+          "type": "text",
+          "required": false,
+          "group": "Policy information",
+          "narrativeSource": "Writing company"
+        },
+        {
+          "key": "PolicyDetails.ConsentToRate",
+          "label": "Consent to rate",
+          "type": "boolean",
+          "required": false,
+          "group": "Policy information",
+          "narrativeSource": "Consent to rate"
+        },
+        {
+          "key": "PolicyDetails.CTRFactor",
+          "label": "Consent-to-rate factor",
+          "type": "number",
+          "required": false,
+          "group": "Policy information",
+          "min": 0,
+          "narrativeSource": "Consent-to-rate factor"
+        },
+        {
+          "key": "PolicyDetails.CitizensLegacyPremium",
+          "label": "Citizens conversion legacy premium",
+          "type": "number",
+          "required": false,
+          "group": "Policy information",
+          "min": 0,
+          "narrativeSource": "Citizens conversion legacy premium"
+        },
+        {
+          "key": "PolicyDetails.CitizensCapping",
+          "label": "Citizens conversion capping details",
+          "type": "textarea",
+          "required": false,
+          "group": "Policy information",
+          "narrativeSource": "Citizens conversion capping details"
+        },
+        {
+          "key": "PolicyDetails.RiskOrigin",
+          "label": "Risk origin",
+          "type": "text",
+          "required": false,
+          "group": "Policy information",
+          "narrativeSource": "Risk origin"
+        },
+        {
+          "key": "PolicyInput.Description",
+          "label": "Description",
+          "type": "text",
+          "required": false,
+          "group": "Policy Info",
+          "sourceRefs": [
+            "policydetail:1"
+          ]
+        },
+        {
+          "key": "PolicyInput.Term",
+          "label": "Term",
+          "type": "integer",
+          "required": false,
+          "group": "Policy Info",
+          "readOnly": true,
+          "derive": "constant",
+          "default": 12,
+          "sourceRefs": [
+            "policydetail:5"
+          ]
+        },
+        {
+          "key": "PolicyInput.ExpirationDate",
+          "label": "Expiration Date",
+          "type": "date",
+          "required": false,
+          "group": "Policy Info",
+          "readOnly": true,
+          "derive": "expirationDate",
+          "sourceRefs": [
+            "policydetail:6"
+          ]
+        }
+      ],
+      "actions": [
+        {
+          "key": "GetLatestRates (Spacer + Action)",
+          "label": "Get Latest Rates Notice",
+          "kind": "unavailable",
+          "reason": "Carrier rate-version service is not connected.",
+          "sourceRefs": [
+            "policydetail:3"
+          ]
+        },
+        {
+          "key": "Action \u2013 GetLatestRates.Value",
+          "label": "Get Latest Rates Button",
+          "kind": "unavailable",
+          "reason": "Carrier rate-version service is not connected.",
+          "sourceRefs": [
+            "policydetail:4"
+          ]
         }
       ]
     },
@@ -63,7 +205,10 @@
           "group": "Applicant Info",
           "hint": "MaxLength: 16",
           "source": "AccountInput.FirstName",
-          "maxLength": 16
+          "maxLength": 16,
+          "sourceRefs": [
+            "account:2"
+          ]
         },
         {
           "key": "AccountInput.MiddleName",
@@ -73,7 +218,10 @@
           "group": "Applicant Info",
           "hint": "MaxLength: 11",
           "source": "AccountInput.MiddleName",
-          "maxLength": 11
+          "maxLength": 11,
+          "sourceRefs": [
+            "account:3"
+          ]
         },
         {
           "key": "AccountInput.LastName",
@@ -83,7 +231,10 @@
           "group": "Applicant Info",
           "hint": "MaxLength: 20",
           "source": "AccountInput.LastName",
-          "maxLength": 20
+          "maxLength": 20,
+          "sourceRefs": [
+            "account:4"
+          ]
         },
         {
           "key": "AccountInput.PrimaryPhone",
@@ -92,7 +243,10 @@
           "required": true,
           "group": "Contact",
           "hint": "FormatMask: PhoneFax; MaxLength: PhoneFax",
-          "source": "AccountInput.PrimaryPhone"
+          "source": "AccountInput.PrimaryPhone",
+          "sourceRefs": [
+            "account:14"
+          ]
         },
         {
           "key": "AccountInput.Email",
@@ -101,7 +255,10 @@
           "required": true,
           "group": "Contact",
           "hint": "FormatMask: email",
-          "source": "AccountInput.Email"
+          "source": "AccountInput.Email",
+          "sourceRefs": [
+            "account:15"
+          ]
         },
         {
           "key": "AccountInput.Address1",
@@ -110,7 +267,10 @@
           "required": true,
           "group": "Address",
           "hint": "MaxLength: Address",
-          "source": "AccountInput.Address1"
+          "source": "AccountInput.Address1",
+          "sourceRefs": [
+            "account:16"
+          ]
         },
         {
           "key": "AccountInput.Address2",
@@ -119,7 +279,10 @@
           "required": false,
           "group": "Address",
           "hint": "MaxLength: Address",
-          "source": "AccountInput.Address2"
+          "source": "AccountInput.Address2",
+          "sourceRefs": [
+            "account:17"
+          ]
         },
         {
           "key": "AccountInput.City",
@@ -128,7 +291,10 @@
           "required": true,
           "group": "Address",
           "hint": "MaxLength: City",
-          "source": "AccountInput.City"
+          "source": "AccountInput.City",
+          "sourceRefs": [
+            "account:18"
+          ]
         },
         {
           "key": "AccountInput.State",
@@ -139,7 +305,10 @@
           "hint": "MaxLength: State; Options: US states; validRef: License",
           "source": "AccountInput.State",
           "default": "FL",
-          "maxLength": 2
+          "maxLength": 2,
+          "sourceRefs": [
+            "account:19"
+          ]
         },
         {
           "key": "AccountInput.ZipCode",
@@ -148,7 +317,10 @@
           "required": true,
           "group": "Address",
           "hint": "FormatMask: Zipcode; MaxLength: Zip",
-          "source": "AccountInput.ZipCode"
+          "source": "AccountInput.ZipCode",
+          "sourceRefs": [
+            "account:20"
+          ]
         },
         {
           "key": "AccountInput.County",
@@ -157,7 +329,139 @@
           "required": false,
           "group": "Address",
           "hint": "DataService: dkCountyUS keyed by ACT + State",
-          "source": "AccountInput.County"
+          "source": "AccountInput.County",
+          "sourceRefs": [
+            "account:21"
+          ]
+        },
+        {
+          "key": "Applicant.EntityType",
+          "label": "Entity type",
+          "type": "text",
+          "required": false,
+          "group": "Applicant Info",
+          "options": [
+            "Individual",
+            "Trust",
+            "Corporation",
+            "Partnership",
+            "Other"
+          ],
+          "note": "Captured locally; carrier entity codes require confirmation.",
+          "narrativeSource": "Entity type"
+        },
+        {
+          "key": "Applicant.DateOfBirth",
+          "label": "Date of birth",
+          "type": "date",
+          "required": false,
+          "group": "Applicant Info",
+          "narrativeSource": "Date of birth"
+        },
+        {
+          "key": "Applicant.Producer",
+          "label": "Producer",
+          "type": "text",
+          "required": false,
+          "group": "Producer",
+          "note": "Enter the producer name or code. Producer-directory lookup is not connected.",
+          "narrativeSource": "Producer"
+        },
+        {
+          "key": "Applicant.Territory",
+          "label": "Territory",
+          "type": "text",
+          "required": false,
+          "readOnly": true,
+          "unavailable": "Awaiting geocoding service",
+          "group": "Geocoding",
+          "narrativeSource": "Territory"
+        },
+        {
+          "key": "Applicant.FireDistrict",
+          "label": "Fire district",
+          "type": "text",
+          "required": false,
+          "readOnly": true,
+          "unavailable": "Awaiting geocoding service",
+          "group": "Geocoding",
+          "narrativeSource": "Fire district"
+        },
+        {
+          "key": "AccountOutputNonShredded.PrimaryInsuredText",
+          "label": "Primary Insured Text",
+          "type": "text",
+          "required": false,
+          "group": "Applicant Info",
+          "readOnly": true,
+          "derive": "constant",
+          "default": "Primary Insured",
+          "sourceRefs": [
+            "account:1"
+          ]
+        },
+        {
+          "key": "AccountInput.Name",
+          "label": "Name (Calculated)",
+          "type": "text",
+          "required": false,
+          "group": "Applicant Info",
+          "readOnly": true,
+          "derive": "fullName",
+          "hidden": true,
+          "sourceRefs": [
+            "account:5"
+          ]
+        },
+        {
+          "key": "Geocode.GeocodeStatusDisplay",
+          "label": "Geocoding Status",
+          "type": "text",
+          "required": false,
+          "group": "Geocoding",
+          "readOnly": true,
+          "derive": "constant",
+          "default": "Unverified",
+          "sourceRefs": [
+            "account:22"
+          ]
+        },
+        {
+          "key": "AccountPrivate.XHTMLMapsBing",
+          "label": "Bing Map Link",
+          "type": "text",
+          "required": false,
+          "group": "Geocoding",
+          "readOnly": true,
+          "link": "bing",
+          "sourceRefs": [
+            "account:26"
+          ]
+        },
+        {
+          "key": "AccountPrivate.XHTMLMapsGoogle",
+          "label": "Google Map Link",
+          "type": "text",
+          "required": false,
+          "group": "Geocoding",
+          "readOnly": true,
+          "link": "google",
+          "sourceRefs": [
+            "account:27"
+          ]
+        },
+        {
+          "key": "AccountPBBI.Latitude / AccountPBBI.Longitude",
+          "label": "Latitude / Longitude",
+          "type": "text",
+          "required": false,
+          "group": "Geocoding",
+          "readOnly": true,
+          "hidden": true,
+          "unavailable": "Awaiting PBBI coordinates",
+          "sourceRefs": [
+            "account:28"
+          ]
         }
       ],
       "collection": {
@@ -172,7 +476,10 @@
             "group": "Co-Applicant",
             "hint": "MaxLength: 16",
             "source": "PersonInput.FirstName",
-            "maxLength": 16
+            "maxLength": 16,
+            "sourceRefs": [
+              "account:10"
+            ]
           },
           {
             "key": "PersonInput.MiddleName",
@@ -182,7 +489,10 @@
             "group": "Co-Applicant",
             "hint": "MaxLength: 11",
             "source": "PersonInput.MiddleName",
-            "maxLength": 11
+            "maxLength": 11,
+            "sourceRefs": [
+              "account:11"
+            ]
           },
           {
             "key": "PersonInput.LastName",
@@ -192,10 +502,76 @@
             "group": "Co-Applicant",
             "hint": "MaxLength: 20",
             "source": "PersonInput.LastName",
-            "maxLength": 20
+            "maxLength": 20,
+            "sourceRefs": [
+              "account:12"
+            ]
+          },
+          {
+            "key": "PersonOutputNonShredded.CoapplicantLabel",
+            "label": "Co-Applicant Label",
+            "type": "text",
+            "required": false,
+            "group": "Co-Applicant",
+            "readOnly": true,
+            "derive": "coapplicantLabel",
+            "sourceRefs": [
+              "account:9"
+            ]
           }
-        ]
-      }
+        ],
+        "sourceControls": {
+          "collection-add": "account:8",
+          "collection-remove": "account:13"
+        }
+      },
+      "actions": [
+        {
+          "key": "Action \u2013 partyStart:partySearch",
+          "label": "Party Search (Manual)",
+          "kind": "unavailable",
+          "reason": "Party search and PBBI geocoding are not connected.",
+          "sourceRefs": [
+            "account:6"
+          ]
+        },
+        {
+          "key": "Action \u2013 partyStart:searchResults",
+          "label": "Auto Search",
+          "kind": "unavailable",
+          "reason": "Party search and PBBI geocoding are not connected.",
+          "sourceRefs": [
+            "account:7"
+          ]
+        },
+        {
+          "key": "Action \u2013 PBBI Geocode",
+          "label": "Verify Address",
+          "kind": "unavailable",
+          "reason": "Party search and PBBI geocoding are not connected.",
+          "sourceRefs": [
+            "account:23"
+          ]
+        },
+        {
+          "key": "Action \u2013 ClearLastVerified",
+          "label": "Edit Verified Address",
+          "kind": "unavailable",
+          "reason": "Party search and PBBI geocoding are not connected.",
+          "sourceRefs": [
+            "account:24"
+          ]
+        },
+        {
+          "key": "Action \u2013 PBBI Interactive Map",
+          "label": "View Map",
+          "kind": "unavailable",
+          "reason": "Party search and PBBI geocoding are not connected.",
+          "sourceRefs": [
+            "account:25"
+          ]
+        }
+      ]
     },
     {
       "id": "dwellinginfo",
@@ -208,7 +584,10 @@
           "required": true,
           "group": "Risk address",
           "hint": "MaxLength: Address",
-          "source": "LocationInput.Address1"
+          "source": "LocationInput.Address1",
+          "sourceRefs": [
+            "locationdetail:1"
+          ]
         },
         {
           "key": "LocationInput.Address2",
@@ -217,7 +596,10 @@
           "required": false,
           "group": "Risk address",
           "hint": "MaxLength: Address",
-          "source": "LocationInput.Address2"
+          "source": "LocationInput.Address2",
+          "sourceRefs": [
+            "locationdetail:2"
+          ]
         },
         {
           "key": "LocationInput.City",
@@ -226,7 +608,10 @@
           "required": true,
           "group": "Risk address",
           "hint": "MaxLength: City",
-          "source": "LocationInput.City"
+          "source": "LocationInput.City",
+          "sourceRefs": [
+            "locationdetail:3"
+          ]
         },
         {
           "key": "LocationInput.State",
@@ -239,7 +624,10 @@
           "options": [
             "FL"
           ],
-          "default": "FL"
+          "default": "FL",
+          "sourceRefs": [
+            "locationdetail:4"
+          ]
         },
         {
           "key": "LocationInput.ZipCode",
@@ -248,7 +636,10 @@
           "required": true,
           "group": "Risk address",
           "hint": "FormatMask: Zipcode",
-          "source": "LocationInput.ZipCode"
+          "source": "LocationInput.ZipCode",
+          "sourceRefs": [
+            "locationdetail:5"
+          ]
         },
         {
           "key": "LocationInput.County",
@@ -257,7 +648,10 @@
           "required": true,
           "group": "Risk address",
           "hint": "DataService: dkCountyUS",
-          "source": "LocationInput.County"
+          "source": "LocationInput.County",
+          "sourceRefs": [
+            "locationdetail:6"
+          ]
         },
         {
           "key": "DwellingInput.UseType",
@@ -276,7 +670,10 @@
             "UnderConstruction",
             "Rental"
           ],
-          "default": "Primary"
+          "default": "Primary",
+          "sourceRefs": [
+            "dwellinginfo:2"
+          ]
         },
         {
           "key": "DwellingInput.OccupancyType",
@@ -292,7 +689,10 @@
             "Unoccupied",
             "Vacant"
           ],
-          "default": "Owner"
+          "default": "Owner",
+          "sourceRefs": [
+            "dwellinginfo:3"
+          ]
         },
         {
           "key": "DwellingInput.MonthsUnoccupied",
@@ -303,7 +703,19 @@
           "hint": "Options: 0-12",
           "source": "DwellingInput.MonthsUnoccupied",
           "min": 0,
-          "max": 12
+          "max": 12,
+          "sourceRefs": [
+            "dwellinginfo:4"
+          ],
+          "showWhen": {
+            "key": "DwellingInput.UseType",
+            "values": [
+              "Primary",
+              "FarmRanch",
+              "UnderConstruction",
+              "Rental"
+            ]
+          }
         },
         {
           "key": "DwellingInput.BuildingType",
@@ -319,6 +731,9 @@
             "Rowhouse",
             "Townhouse",
             "Modular/Prefab"
+          ],
+          "sourceRefs": [
+            "dwellinginfo:5"
           ]
         },
         {
@@ -335,7 +750,10 @@
             "values": [
               "HO3"
             ]
-          }
+          },
+          "sourceRefs": [
+            "dwellinginfo:6"
+          ]
         },
         {
           "key": "DwellingInput.Construction",
@@ -353,7 +771,10 @@
             "MasonryVeneer",
             "Superior"
           ],
-          "default": "Frame"
+          "default": "Frame",
+          "sourceRefs": [
+            "dwellinginfo:7"
+          ]
         },
         {
           "key": "DwellingInput.RatedProtectionClass",
@@ -362,7 +783,10 @@
           "required": true,
           "group": "Basic Info",
           "hint": "Options: 01-10, Y/X/B variants; FormatMask: BlankOption",
-          "source": "DwellingInput.RatedProtectionClass"
+          "source": "DwellingInput.RatedProtectionClass",
+          "sourceRefs": [
+            "dwellinginfo:8"
+          ]
         },
         {
           "key": "DwellingInput.NumberOfFamilies",
@@ -374,7 +798,10 @@
           "source": "DwellingInput.NumberOfFamilies",
           "min": 1,
           "default": 1,
-          "max": 4
+          "max": 4,
+          "sourceRefs": [
+            "dwellinginfo:9"
+          ]
         },
         {
           "key": "DwellingInput.NumberOfUnits",
@@ -385,7 +812,10 @@
           "hint": "Options: 1-9(9=9+); FormatMask: BlankOption",
           "source": "DwellingInput.NumberOfUnits",
           "min": 1,
-          "max": 9
+          "max": 9,
+          "sourceRefs": [
+            "dwellinginfo:10"
+          ]
         },
         {
           "key": "DwellingInput.NumberOfFloor",
@@ -398,9 +828,12 @@
           "showWhen": {
             "key": "DwellingInput.Form",
             "values": [
-              "HO6"
+              "HO3"
             ]
-          }
+          },
+          "sourceRefs": [
+            "dwellinginfo:11"
+          ]
         },
         {
           "key": "DwellingInput.FoundationType",
@@ -413,6 +846,9 @@
           "options": [
             "Closed",
             "Open"
+          ],
+          "sourceRefs": [
+            "dwellinginfo:12"
           ]
         },
         {
@@ -423,7 +859,10 @@
           "group": "Basic Info",
           "hint": "MaxLength: iValue; FormatMask: Limit",
           "source": "DwellingInput.SquareFeet",
-          "min": 1
+          "min": 1,
+          "sourceRefs": [
+            "dwellinginfo:13"
+          ]
         },
         {
           "key": "DwellingInput.SwimmingPool",
@@ -438,7 +877,10 @@
             "Inground",
             "AboveGround"
           ],
-          "default": "None"
+          "default": "None",
+          "sourceRefs": [
+            "dwellinginfo:14"
+          ]
         },
         {
           "key": "DwellingInput.PoolSlide",
@@ -452,13 +894,9 @@
             "N",
             "Y"
           ],
-          "showWhen": {
-            "key": "DwellingInput.SwimmingPool",
-            "values": [
-              "Inground",
-              "AboveGround"
-            ]
-          }
+          "sourceRefs": [
+            "dwellinginfo:15"
+          ]
         },
         {
           "key": "DwellingInput.PoolApprovedFence",
@@ -472,13 +910,9 @@
             "N",
             "Y"
           ],
-          "showWhen": {
-            "key": "DwellingInput.SwimmingPool",
-            "values": [
-              "Inground",
-              "AboveGround"
-            ]
-          }
+          "sourceRefs": [
+            "dwellinginfo:16"
+          ]
         },
         {
           "key": "DwellingInput.PoolDivingBoard",
@@ -492,13 +926,9 @@
             "N",
             "Y"
           ],
-          "showWhen": {
-            "key": "DwellingInput.SwimmingPool",
-            "values": [
-              "Inground",
-              "AboveGround"
-            ]
-          }
+          "sourceRefs": [
+            "dwellinginfo:17"
+          ]
         },
         {
           "key": "DwellingInput.NumberOfStories",
@@ -509,7 +939,10 @@
           "hint": "Options: 1.0, 1.5, 2.0, 2.5, 3.0, 4, 5, 6, 7+",
           "source": "DwellingInput.NumberOfStories",
           "min": 0,
-          "default": 1
+          "default": 1,
+          "sourceRefs": [
+            "dwellinginfo:18"
+          ]
         },
         {
           "key": "DwellingInput.PrimaryHeatType",
@@ -524,6 +957,9 @@
             "Other",
             "Gas",
             "Unknown"
+          ],
+          "sourceRefs": [
+            "dwellinginfo:19"
           ]
         },
         {
@@ -540,6 +976,9 @@
             "Gas",
             "Other",
             "Unknown"
+          ],
+          "sourceRefs": [
+            "dwellinginfo:20"
           ]
         },
         {
@@ -550,7 +989,10 @@
           "group": "Construction",
           "hint": "Options: 1-10, 98=Non Participating, 99=Ungraded; Cross-field: YearBuilt<1995\u2192BCEG=99; YearBuilt>1995\u2192BCEG\u226099",
           "source": "DwellingInput.BuildingCodeEffectivenessGrading",
-          "min": 0
+          "min": 0,
+          "sourceRefs": [
+            "dwellinginfo:21"
+          ]
         },
         {
           "key": "DwellingInput.ElectricalSystem",
@@ -566,7 +1008,10 @@
             "Other",
             "Unknown"
           ],
-          "default": "Unknown"
+          "default": "Unknown",
+          "sourceRefs": [
+            "dwellinginfo:22"
+          ]
         },
         {
           "key": "DwellingInput.OpeningProtection",
@@ -582,6 +1027,9 @@
             "ClassC",
             "None",
             "Unknown"
+          ],
+          "sourceRefs": [
+            "dwellinginfo:23"
           ]
         },
         {
@@ -604,6 +1052,9 @@
             "TileBarrelTile",
             "TileFlatTile",
             "Wood"
+          ],
+          "sourceRefs": [
+            "dwellinginfo:24"
           ]
         },
         {
@@ -621,6 +1072,9 @@
             "Shutoff",
             "ClassB",
             "ClassA"
+          ],
+          "sourceRefs": [
+            "dwellinginfo:25"
           ]
         },
         {
@@ -631,7 +1085,10 @@
           "group": "Safety Devices",
           "hint": "Options: Yes=1, No=0",
           "source": "DwellingInput.LockedSecurityGate",
-          "default": false
+          "default": false,
+          "sourceRefs": [
+            "dwellinginfo:26"
+          ]
         },
         {
           "key": "DwellingInput.SecurityAttendant",
@@ -641,7 +1098,10 @@
           "group": "Safety Devices",
           "hint": "Options: Yes=1, No=0",
           "source": "DwellingInput.SecurityAttendant",
-          "default": false
+          "default": false,
+          "sourceRefs": [
+            "dwellinginfo:27"
+          ]
         },
         {
           "key": "DwellingInput.Wiring",
@@ -656,6 +1116,9 @@
             "Aluminum",
             "KnobAndTube",
             "Unknown"
+          ],
+          "sourceRefs": [
+            "dwellinginfo:28"
           ]
         },
         {
@@ -666,7 +1129,10 @@
           "group": "Construction",
           "hint": "",
           "source": "DwellingInput.NumberOfAmps",
-          "min": 0
+          "min": 0,
+          "sourceRefs": [
+            "dwellinginfo:29"
+          ]
         },
         {
           "key": "DwellingInput.PlumbingType",
@@ -683,6 +1149,9 @@
             "Polybutylene",
             "GalvanizedSteel",
             "Other"
+          ],
+          "sourceRefs": [
+            "dwellinginfo:30"
           ]
         },
         {
@@ -700,7 +1169,10 @@
             "Other",
             "NA"
           ],
-          "default": "Gable"
+          "default": "Gable",
+          "sourceRefs": [
+            "dwellinginfo:31"
+          ]
         },
         {
           "key": "DwellingInput.DistanceToFireStation",
@@ -713,6 +1185,9 @@
           "options": [
             "Within5miles",
             "Greaterthan5miles"
+          ],
+          "sourceRefs": [
+            "dwellinginfo:32"
           ]
         },
         {
@@ -726,6 +1201,9 @@
           "options": [
             "Within1000ft",
             "Greaterthan1000ft"
+          ],
+          "sourceRefs": [
+            "dwellinginfo:33"
           ]
         },
         {
@@ -735,7 +1213,10 @@
           "required": true,
           "group": "Fire Protection",
           "hint": "MaxLength: City",
-          "source": "DwellingInput.RespondingFireDepartment"
+          "source": "DwellingInput.RespondingFireDepartment",
+          "sourceRefs": [
+            "dwellinginfo:34"
+          ]
         },
         {
           "key": "UpdatedServicesInfo.RemainingRoofLife",
@@ -745,7 +1226,10 @@
           "group": "Property Updates",
           "hint": "",
           "source": "UpdatedServicesInfo.RemainingRoofLife",
-          "min": 0
+          "min": 0,
+          "sourceRefs": [
+            "dwellinginfo:35"
+          ]
         },
         {
           "key": "UpdatedServicesInfo.ElectricSystemUpdateYear",
@@ -755,7 +1239,10 @@
           "group": "Property Updates",
           "hint": "MaxLength: Year",
           "source": "UpdatedServicesInfo.ElectricSystemUpdateYear",
-          "min": 0
+          "min": 0,
+          "sourceRefs": [
+            "dwellinginfo:36"
+          ]
         },
         {
           "key": "UpdatedServicesInfo.HeatingUpdateYear",
@@ -765,7 +1252,10 @@
           "group": "Property Updates",
           "hint": "MaxLength: Year",
           "source": "UpdatedServicesInfo.HeatingUpdateYear",
-          "min": 0
+          "min": 0,
+          "sourceRefs": [
+            "dwellinginfo:37"
+          ]
         },
         {
           "key": "UpdatedServicesInfo.PlumbingUpdateYear",
@@ -775,7 +1265,10 @@
           "group": "Property Updates",
           "hint": "MaxLength: Year",
           "source": "UpdatedServicesInfo.PlumbingUpdateYear",
-          "min": 0
+          "min": 0,
+          "sourceRefs": [
+            "dwellinginfo:38"
+          ]
         },
         {
           "key": "UpdatedServicesInfo.RoofUpdateYear",
@@ -785,7 +1278,10 @@
           "group": "Property Updates",
           "hint": "min=YearBuilt; max=EffectiveYear",
           "source": "UpdatedServicesInfo.RoofUpdateYear",
-          "min": 0
+          "min": 0,
+          "sourceRefs": [
+            "dwellinginfo:39"
+          ]
         },
         {
           "key": "DwellingInput.SecondaryWaterResistance",
@@ -799,6 +1295,9 @@
             "Yes",
             "No",
             "Unknown"
+          ],
+          "sourceRefs": [
+            "dwellinginfo:40"
           ]
         },
         {
@@ -813,6 +1312,9 @@
             "N",
             "Y",
             "U"
+          ],
+          "sourceRefs": [
+            "dwellinginfo:41"
           ]
         },
         {
@@ -830,6 +1332,9 @@
             "DoubleWraps",
             "Unknown",
             "NA"
+          ],
+          "sourceRefs": [
+            "dwellinginfo:42"
           ]
         },
         {
@@ -845,6 +1350,9 @@
             "FBCEquivalent",
             "ReinforcedConcreteRoofDeck",
             "NA"
+          ],
+          "sourceRefs": [
+            "dwellinginfo:43"
           ]
         },
         {
@@ -861,7 +1369,10 @@
             "H",
             "Unknown"
           ],
-          "default": "Unknown"
+          "default": "Unknown",
+          "sourceRefs": [
+            "dwellinginfo:44"
+          ]
         },
         {
           "key": "DwellingInput.FloorToFoundationAttachment",
@@ -870,7 +1381,10 @@
           "required": false,
           "group": "Wind Mitigation",
           "hint": "MaxLength: sValue",
-          "source": "DwellingInput.FloorToFoundationAttachment"
+          "source": "DwellingInput.FloorToFoundationAttachment",
+          "sourceRefs": [
+            "dwellinginfo:45"
+          ]
         },
         {
           "key": "DwellingInput.WindSpeedDesign",
@@ -885,6 +1399,9 @@
             "110",
             "120 mph+",
             "Unknown"
+          ],
+          "sourceRefs": [
+            "dwellinginfo:46"
           ]
         },
         {
@@ -901,6 +1418,9 @@
             "120+",
             "120WBDR",
             "Unknown"
+          ],
+          "sourceRefs": [
+            "dwellinginfo:47"
           ]
         },
         {
@@ -919,6 +1439,9 @@
             "MetalDeck",
             "Reinforce",
             "NA"
+          ],
+          "sourceRefs": [
+            "dwellinginfo:48"
           ]
         },
         {
@@ -928,7 +1451,130 @@
           "required": false,
           "group": "Construction",
           "hint": "Options: 1-5+",
-          "source": "DwellingInput.NumberOfBathrooms"
+          "source": "DwellingInput.NumberOfBathrooms",
+          "sourceRefs": [
+            "dwellinginfo:51"
+          ]
+        },
+        {
+          "key": "LocationGeocode.GeocodeStatusDisplay",
+          "label": "Geocoding Status",
+          "type": "text",
+          "required": false,
+          "group": "Geocoding",
+          "readOnly": true,
+          "derive": "constant",
+          "default": "Unverified",
+          "sourceRefs": [
+            "locationdetail:7"
+          ]
+        },
+        {
+          "key": "DwellingInput.Form",
+          "label": "Policy Form",
+          "type": "text",
+          "required": false,
+          "group": "Basic Info",
+          "readOnly": true,
+          "note": "Edit on New quote.",
+          "sourceRefs": [
+            "dwellinginfo:1"
+          ]
+        },
+        {
+          "key": "DwellingInput.HurricaneDeductible",
+          "label": "Hurricane Deductible",
+          "type": "text",
+          "required": false,
+          "group": "Deductibles",
+          "readOnly": true,
+          "note": "Edit on Dwelling coverage.",
+          "sourceRefs": [
+            "dwellinginfo:49"
+          ]
+        },
+        {
+          "key": "DwellingInput.Deductible",
+          "label": "All-Peril Deductible",
+          "type": "text",
+          "required": false,
+          "group": "Deductibles",
+          "readOnly": true,
+          "note": "Edit on Dwelling coverage.",
+          "sourceRefs": [
+            "dwellinginfo:50"
+          ],
+          "disabledWhen": {
+            "key": "RiskInput.UseDeductibleByPeril",
+            "values": [
+              true
+            ]
+          }
+        }
+      ],
+      "actions": [
+        {
+          "key": "Action \u2013 PBBI Location Geocoding",
+          "label": "Verify Location",
+          "kind": "unavailable",
+          "reason": "Location geocoding is not connected.",
+          "sourceRefs": [
+            "locationdetail:8"
+          ]
+        },
+        {
+          "key": "Action \u2013 ClearLastVerified (Location)",
+          "label": "Edit Verified Address",
+          "kind": "unavailable",
+          "reason": "Location geocoding is not connected.",
+          "sourceRefs": [
+            "locationdetail:9"
+          ]
+        },
+        {
+          "key": "Action \u2013 Interactive Map (Location)",
+          "label": "View Map",
+          "kind": "unavailable",
+          "reason": "Location geocoding is not connected.",
+          "sourceRefs": [
+            "locationdetail:10"
+          ]
+        },
+        {
+          "key": "Action \u2013 close/return",
+          "label": "OK",
+          "kind": "save-location",
+          "reason": "Location geocoding is not connected.",
+          "sourceRefs": [
+            "locationdetail:11"
+          ]
+        },
+        {
+          "key": "Action \u2013 cancelChanges",
+          "label": "Cancel",
+          "kind": "cancel-location",
+          "reason": "Location geocoding is not connected.",
+          "sourceRefs": [
+            "locationdetail:12"
+          ]
+        },
+        {
+          "key": "Action \u2013 delete (add mode)",
+          "label": "Delete Location",
+          "kind": "clear-location",
+          "reason": "Location geocoding is not connected.",
+          "sourceRefs": [
+            "locationdetail:13"
+          ]
+        },
+        {
+          "key": "Action \u2013 LocationPrivate.ResetToApplicantAddress",
+          "label": "Reset to Applicant Address",
+          "kind": "copy-address",
+          "reason": "Location geocoding is not connected.",
+          "sourceRefs": [
+            "locationdetail:14"
+          ]
         }
       ]
     },
@@ -950,7 +1596,10 @@
             "values": [
               "HO3"
             ]
-          }
+          },
+          "sourceRefs": [
+            "dwellingcoverage:1"
+          ]
         },
         {
           "key": "CoverageBOtherStructuresInput.Limit",
@@ -960,7 +1609,10 @@
           "group": "Core Coverages",
           "hint": "FormatMask: Limit; if<IncludedLimit\u2192reset to IncludedLimit",
           "source": "CoverageBOtherStructuresInput.Limit",
-          "min": 0
+          "min": 0,
+          "sourceRefs": [
+            "dwellingcoverage:2"
+          ]
         },
         {
           "key": "CoverageCPersonalPropertyHO3Input.Limit",
@@ -976,7 +1628,10 @@
             "values": [
               "HO3"
             ]
-          }
+          },
+          "sourceRefs": [
+            "dwellingcoverage:4"
+          ]
         },
         {
           "key": "CoverageCPersonalPropertyHO46Input.Limit",
@@ -992,7 +1647,10 @@
             "values": [
               "HO6"
             ]
-          }
+          },
+          "sourceRefs": [
+            "dwellingcoverage:5"
+          ]
         },
         {
           "key": "CoverageDLossOfUseInput.Limit",
@@ -1002,7 +1660,10 @@
           "group": "Core Coverages",
           "hint": "FormatMask: Limit; if<IncludedLimit\u2192reset",
           "source": "CoverageDLossOfUseInput.Limit",
-          "min": 0
+          "min": 0,
+          "sourceRefs": [
+            "dwellingcoverage:7"
+          ]
         },
         {
           "key": "DwellingInput.Deductible",
@@ -1017,7 +1678,16 @@
             "1000",
             "2500"
           ],
-          "default": "500"
+          "default": "500",
+          "sourceRefs": [
+            "dwellingcoverage:11"
+          ],
+          "disabledWhen": {
+            "key": "RiskInput.UseDeductibleByPeril",
+            "values": [
+              true
+            ]
+          }
         },
         {
           "key": "DwellingInput.HurricaneDeductible",
@@ -1034,7 +1704,10 @@
             "5%",
             "10%"
           ],
-          "default": "N"
+          "default": "N",
+          "sourceRefs": [
+            "dwellingcoverage:12"
+          ]
         },
         {
           "key": "ReplacementCostDwellingInput.Indicator",
@@ -1050,7 +1723,10 @@
             "values": [
               "HO3"
             ]
-          }
+          },
+          "sourceRefs": [
+            "dwellingcoverage:13"
+          ]
         },
         {
           "key": "ReplacementCostDwellingInput.ReplacementCostValue",
@@ -1067,7 +1743,10 @@
               true
             ]
           },
-          "max": 1000000
+          "max": 1000000,
+          "sourceRefs": [
+            "dwellingcoverage:14"
+          ]
         },
         {
           "key": "SinkholeInput.Indicator",
@@ -1077,7 +1756,10 @@
           "group": "Section I Endorsements",
           "hint": "UW message 57 on endorsement timing",
           "source": "SinkholeInput.Indicator",
-          "default": false
+          "default": false,
+          "sourceRefs": [
+            "dwellingcoverage:15"
+          ]
         },
         {
           "key": "OrdinanceOrLawInput.Limit",
@@ -1092,7 +1774,10 @@
             "25",
             "50"
           ],
-          "default": "25"
+          "default": "25",
+          "sourceRefs": [
+            "dwellingcoverage:16"
+          ]
         },
         {
           "key": "WaterBackupAndSumpOverflowInput.Indicator",
@@ -1102,7 +1787,10 @@
           "group": "Section I Endorsements",
           "hint": "",
           "source": "WaterBackupAndSumpOverflowInput.Indicator",
-          "default": false
+          "default": false,
+          "sourceRefs": [
+            "dwellingcoverage:17"
+          ]
         },
         {
           "key": "LimitedFungiBacteriaInput.Limit",
@@ -1118,7 +1806,10 @@
             "25/50",
             "50/50"
           ],
-          "default": "10/50"
+          "default": "10/50",
+          "sourceRefs": [
+            "dwellingcoverage:19"
+          ]
         },
         {
           "key": "LossAssessmentInput.Indicator",
@@ -1128,7 +1819,10 @@
           "group": "Section I Endorsements",
           "hint": "",
           "source": "LossAssessmentInput.Indicator",
-          "default": false
+          "default": false,
+          "sourceRefs": [
+            "dwellingcoverage:20"
+          ]
         },
         {
           "key": "LossAssessmentInput.Limit",
@@ -1145,7 +1839,10 @@
               true
             ]
           },
-          "max": 50000
+          "max": 50000,
+          "sourceRefs": [
+            "dwellingcoverage:21"
+          ]
         },
         {
           "key": "CarportsPoolCagesInput.Limit",
@@ -1156,7 +1853,10 @@
           "hint": "Max: CarportsPoolCagesPrivate.MaximumLimit; if >0 AND <10000\u2192set to 10000; UW: limit \u2264 $75,000 (message 62)",
           "source": "CarportsPoolCagesInput.Limit",
           "min": 0,
-          "max": 75000
+          "max": 75000,
+          "sourceRefs": [
+            "dwellingcoverage:22"
+          ]
         },
         {
           "key": "ReplacementCostContentsInput.Indicator",
@@ -1166,7 +1866,10 @@
           "group": "Section I Endorsements",
           "hint": "misc: forced True if HO15",
           "source": "ReplacementCostContentsInput.Indicator",
-          "default": false
+          "default": false,
+          "sourceRefs": [
+            "dwellingcoverage:23"
+          ]
         },
         {
           "key": "IdentityFraudExpenseCoverageInput.Indicator",
@@ -1176,7 +1879,24 @@
           "group": "Section I Endorsements",
           "hint": "",
           "source": "IdentityFraudExpenseCoverageInput.Indicator",
-          "default": false
+          "default": false,
+          "sourceRefs": [
+            "dwellingcoverage:24"
+          ]
+        },
+        {
+          "key": "UnscheduledJewelryInput.Indicator",
+          "label": "Unscheduled Jewelry Indicator",
+          "type": "boolean",
+          "required": false,
+          "group": "Section I Endorsements",
+          "hint": "True when Limit > MinimumLimit",
+          "source": "UnscheduledJewelryInput.Indicator",
+          "default": false,
+          "sourceRefs": [
+            "dwellingcoverage:26"
+          ],
+          "note": "Selection is captured for review. Automatic reconciliation requires carrier minimum-limit or farming-type rules."
         },
         {
           "key": "UnscheduledJewelryInput.Limit",
@@ -1186,7 +1906,10 @@
           "group": "Section I Endorsements",
           "hint": "min: MinimumLimit; max: MaximumLimit",
           "source": "UnscheduledJewelryInput.Limit",
-          "min": 0
+          "min": 0,
+          "sourceRefs": [
+            "dwellingcoverage:27"
+          ]
         },
         {
           "key": "WaterBackupOfSewersOrDrainsInput.Indicator",
@@ -1196,7 +1919,10 @@
           "group": "Section I Endorsements",
           "hint": "",
           "source": "WaterBackupOfSewersOrDrainsInput.Indicator",
-          "default": false
+          "default": false,
+          "sourceRefs": [
+            "dwellingcoverage:28"
+          ]
         },
         {
           "key": "PersonalPropertyOtherResidenceInput.Indicator",
@@ -1206,7 +1932,10 @@
           "group": "Section I Endorsements",
           "hint": "",
           "source": "PersonalPropertyOtherResidenceInput.Indicator",
-          "default": false
+          "default": false,
+          "sourceRefs": [
+            "dwellingcoverage:29"
+          ]
         },
         {
           "key": "PersonalInjuryInput.Indicator",
@@ -1216,7 +1945,10 @@
           "group": "Section II Endorsements",
           "hint": "misc: if CovE Limit=0 \u2192 forced False; Limit: $5,000 (readOnly)",
           "source": "PersonalInjuryInput.Indicator",
-          "default": false
+          "default": false,
+          "sourceRefs": [
+            "dwellingcoverage:30"
+          ]
         },
         {
           "key": "UnitsRegularlyRentedToOthersInput.Indicator",
@@ -1232,7 +1964,57 @@
             "values": [
               "HO6"
             ]
-          }
+          },
+          "sourceRefs": [
+            "dwellingcoverage:31"
+          ]
+        },
+        {
+          "key": "IncidentalFarmingPersonalLiabilityInput.Indicator",
+          "label": "Incidental Farming Personal Liability",
+          "type": "boolean",
+          "required": false,
+          "group": "Section II Endorsements",
+          "hint": "True when Type \u2260 None; Limit: $10,000 (readOnly)",
+          "source": "IncidentalFarmingPersonalLiabilityInput.Indicator",
+          "default": false,
+          "sourceRefs": [
+            "dwellingcoverage:32"
+          ],
+          "note": "Selection is captured for review. Automatic reconciliation requires carrier minimum-limit or farming-type rules."
+        },
+        {
+          "key": "RiskInput.UseDeductibleByPeril",
+          "label": "Choose Deductibles by Peril",
+          "type": "boolean",
+          "required": false,
+          "group": "Risk Options",
+          "hint": "",
+          "source": "RiskInput.UseDeductibleByPeril",
+          "default": false,
+          "sourceRefs": [
+            "dwellingcoverage:33"
+          ],
+          "note": "Selection is saved. Peril-specific deductibles require carrier configuration."
+        },
+        {
+          "key": "LineInput.CoveragePackage",
+          "label": "Coverage Tier / Package",
+          "type": "text",
+          "required": false,
+          "group": "Risk Options",
+          "hint": "Options: Standard, Deluxe, Plus",
+          "source": "LineInput.CoveragePackage",
+          "sourceRefs": [
+            "dwellingcoverage:34"
+          ],
+          "options": [
+            "Standard",
+            "Deluxe",
+            "Plus"
+          ],
+          "default": "Standard",
+          "note": "Selection is saved. Package limit defaults require the carrier CoverageDefaults table."
         },
         {
           "key": "RiskInput.EquipmentBreakdown",
@@ -1242,7 +2024,10 @@
           "group": "Risk Options",
           "hint": "",
           "source": "RiskInput.EquipmentBreakdown",
-          "default": false
+          "default": false,
+          "sourceRefs": [
+            "dwellingcoverage:35"
+          ]
         },
         {
           "key": "RiskInput.PermittedIncidentalOccupancy",
@@ -1252,7 +2037,10 @@
           "group": "Risk Options",
           "hint": "UW message 56 (SOS rented + PIO combo)",
           "source": "RiskInput.PermittedIncidentalOccupancy",
-          "default": false
+          "default": false,
+          "sourceRefs": [
+            "dwellingcoverage:36"
+          ]
         },
         {
           "key": "SpecialComputerCoverageInput.Indicator",
@@ -1262,7 +2050,10 @@
           "group": "Risk Options",
           "hint": "misc: forced False if FormIsHO15",
           "source": "SpecialComputerCoverageInput.Indicator",
-          "default": false
+          "default": false,
+          "sourceRefs": [
+            "dwellingcoverage:37"
+          ]
         },
         {
           "key": "SpecialPersonalPropertyCoverageInput.Indicator",
@@ -1278,7 +2069,10 @@
             "values": [
               "HO6"
             ]
-          }
+          },
+          "sourceRefs": [
+            "dwellingcoverage:38"
+          ]
         },
         {
           "key": "CoverageELiabilityInput.Limit",
@@ -1287,7 +2081,10 @@
           "required": false,
           "readOnly": true,
           "default": "300000",
-          "group": "Base coverages"
+          "group": "Base coverages",
+          "sourceRefs": [
+            "dwellingcoverage:9"
+          ]
         },
         {
           "key": "CoverageFMedicalInput.Limit",
@@ -1296,7 +2093,168 @@
           "required": false,
           "readOnly": true,
           "default": "3000",
-          "group": "Base coverages"
+          "group": "Base coverages",
+          "sourceRefs": [
+            "dwellingcoverage:10"
+          ]
+        },
+        {
+          "key": "CoverageBOtherStructuresOutput.IncludedLimit",
+          "label": "Cov B Included Limit",
+          "type": "integer",
+          "required": false,
+          "group": "Core Coverages",
+          "readOnly": true,
+          "unavailable": "Awaiting carrier included-factor table",
+          "sourceRefs": [
+            "dwellingcoverage:3"
+          ]
+        },
+        {
+          "key": "CoverageCPersonalPropertyHO3Output.IncludedLimit",
+          "label": "Cov C Included Limit",
+          "type": "integer",
+          "required": false,
+          "group": "Core Coverages",
+          "readOnly": true,
+          "unavailable": "Awaiting carrier included-factor table",
+          "sourceRefs": [
+            "dwellingcoverage:6"
+          ]
+        },
+        {
+          "key": "CoverageDLossOfUseOutput.IncludedLimit",
+          "label": "Cov D Included Limit",
+          "type": "integer",
+          "required": false,
+          "group": "Core Coverages",
+          "readOnly": true,
+          "derive": "lossOfUseIncluded",
+          "sourceRefs": [
+            "dwellingcoverage:8"
+          ]
+        },
+        {
+          "key": "WaterBackupAndSumpOverflowInput.Limit",
+          "label": "Water Backup Limit",
+          "type": "integer",
+          "required": false,
+          "group": "Section I Endorsements",
+          "readOnly": true,
+          "derive": "constant",
+          "default": 10000,
+          "sourceRefs": [
+            "dwellingcoverage:18"
+          ]
+        },
+        {
+          "key": "IdentityFraudExpenseCoverageInput.Limit",
+          "label": "Identity Fraud Limit",
+          "type": "integer",
+          "required": false,
+          "group": "Section I Endorsements",
+          "readOnly": true,
+          "derive": "constant",
+          "default": 15000,
+          "sourceRefs": [
+            "dwellingcoverage:25"
+          ]
+        },
+        {
+          "key": "CoverageAOutput.Premium",
+          "label": "Coverage A Premium (display)",
+          "type": "number",
+          "required": false,
+          "group": "Premium Display",
+          "readOnly": true,
+          "unavailable": "Awaiting carrier rating service",
+          "sourceRefs": [
+            "dwellingcoverage:39"
+          ]
+        },
+        {
+          "key": "CoverageBOtherStructuresOutput.Premium",
+          "label": "Coverage B Premium",
+          "type": "number",
+          "required": false,
+          "group": "Premium Display",
+          "readOnly": true,
+          "unavailable": "Awaiting carrier rating service",
+          "sourceRefs": [
+            "dwellingcoverage:40"
+          ]
+        },
+        {
+          "key": "CoverageCPersonalPropertyHO3Output.Amount",
+          "label": "Coverage C Premium",
+          "type": "number",
+          "required": false,
+          "group": "Premium Display",
+          "readOnly": true,
+          "unavailable": "Awaiting carrier rating service",
+          "sourceRefs": [
+            "dwellingcoverage:41"
+          ]
+        },
+        {
+          "key": "CoverageDLossOfUseOutput.Premium",
+          "label": "Coverage D Premium",
+          "type": "number",
+          "required": false,
+          "group": "Premium Display",
+          "readOnly": true,
+          "unavailable": "Awaiting carrier rating service",
+          "sourceRefs": [
+            "dwellingcoverage:42"
+          ]
+        },
+        {
+          "key": "WaterBackupOfSewersOrDrainsInput.Limit",
+          "label": "Water backup of sewers or drains limit",
+          "type": "number",
+          "required": false,
+          "readOnly": true,
+          "default": 10000,
+          "derive": "constant",
+          "group": "Additional coverage limits",
+          "min": 0,
+          "narrativeSource": "Water backup of sewers or drains limit"
+        },
+        {
+          "key": "PersonalInjuryInput.Limit",
+          "label": "Personal injury limit",
+          "type": "number",
+          "required": false,
+          "readOnly": true,
+          "default": 5000,
+          "derive": "constant",
+          "group": "Additional coverage limits",
+          "min": 0,
+          "narrativeSource": "Personal injury limit"
+        },
+        {
+          "key": "IncidentalFarmingPersonalLiabilityInput.Limit",
+          "label": "Incidental farming liability limit",
+          "type": "number",
+          "required": false,
+          "readOnly": true,
+          "default": 10000,
+          "derive": "constant",
+          "group": "Additional coverage limits",
+          "min": 0,
+          "narrativeSource": "Incidental farming liability limit"
+        },
+        {
+          "key": "SpecialComputerCoverageInput.Limit",
+          "label": "Special computer coverage limit",
+          "type": "number",
+          "required": false,
+          "readOnly": true,
+          "default": 3000,
+          "derive": "constant",
+          "group": "Additional coverage limits",
+          "min": 0,
+          "narrativeSource": "Special computer coverage limit"
         }
       ]
     },
@@ -1390,6 +2348,123 @@
           "type": "textarea",
           "required": false,
           "group": "Additional details"
+        },
+        {
+          "key": "Underwriting.SwimmingPool",
+          "label": "Swimming pool on premises?",
+          "type": "boolean",
+          "required": false,
+          "group": "Additional underwriting details",
+          "narrativeSource": "Swimming pool on premises?"
+        },
+        {
+          "key": "Underwriting.HotTub",
+          "label": "Hot tub on premises?",
+          "type": "boolean",
+          "required": false,
+          "group": "Additional underwriting details",
+          "narrativeSource": "Hot tub on premises?"
+        },
+        {
+          "key": "Underwriting.ForSale",
+          "label": "Property for sale?",
+          "type": "boolean",
+          "required": false,
+          "group": "Additional underwriting details",
+          "narrativeSource": "Property for sale?"
+        },
+        {
+          "key": "Underwriting.Disrepair",
+          "label": "Property in disrepair?",
+          "type": "boolean",
+          "required": false,
+          "group": "Additional underwriting details",
+          "narrativeSource": "Property in disrepair?"
+        },
+        {
+          "key": "Underwriting.DayCare",
+          "label": "Day care use?",
+          "type": "boolean",
+          "required": false,
+          "group": "Additional underwriting details",
+          "narrativeSource": "Day care use?"
+        },
+        {
+          "key": "Underwriting.Farming",
+          "label": "Farming use?",
+          "type": "boolean",
+          "required": false,
+          "group": "Additional underwriting details",
+          "narrativeSource": "Farming use?"
+        },
+        {
+          "key": "Underwriting.IncidentalOccupancy",
+          "label": "Incidental occupancy?",
+          "type": "boolean",
+          "required": false,
+          "group": "Additional underwriting details",
+          "narrativeSource": "Incidental occupancy?"
+        },
+        {
+          "key": "Underwriting.Foreclosure",
+          "label": "Foreclosure history?",
+          "type": "boolean",
+          "required": false,
+          "group": "Additional underwriting details",
+          "narrativeSource": "Foreclosure history?"
+        },
+        {
+          "key": "Underwriting.Bankruptcy",
+          "label": "Bankruptcy history?",
+          "type": "boolean",
+          "required": false,
+          "group": "Additional underwriting details",
+          "narrativeSource": "Bankruptcy history?"
+        },
+        {
+          "key": "Underwriting.LeadPaint",
+          "label": "Known lead paint?",
+          "type": "boolean",
+          "required": false,
+          "group": "Additional underwriting details",
+          "narrativeSource": "Known lead paint?"
+        },
+        {
+          "key": "Underwriting.Landfill",
+          "label": "Landfill exposure?",
+          "type": "boolean",
+          "required": false,
+          "group": "Additional underwriting details",
+          "narrativeSource": "Landfill exposure?"
+        },
+        {
+          "key": "Underwriting.RenovationCompletionDate",
+          "label": "Renovation completion date",
+          "type": "date",
+          "required": false,
+          "group": "Additional underwriting details",
+          "showWhen": {
+            "key": "Underwriting.renovation",
+            "values": [
+              true
+            ]
+          },
+          "narrativeSource": "Renovation completion date"
+        },
+        {
+          "key": "Underwriting.RenovationValue",
+          "label": "Renovation dollar value",
+          "type": "number",
+          "required": false,
+          "group": "Additional underwriting details",
+          "showWhen": {
+            "key": "Underwriting.renovation",
+            "values": [
+              true
+            ]
+          },
+          "min": 0,
+          "narrativeSource": "Renovation dollar value"
         }
       ],
       "notice": "These declarations capture the topics in the source document. Carrier underwriting rules and the full questionnaire still require integration."
@@ -1403,6 +2478,14 @@
           "label": "Prior insurance to disclose?",
           "type": "boolean",
           "required": true
+        },
+        {
+          "key": "History.InsuredPast30Days",
+          "label": "Insurance within the past 30 days?",
+          "type": "boolean",
+          "required": false,
+          "group": "Prior insurance",
+          "narrativeSource": "Insurance within the past 30 days?"
         }
       ],
       "collection": {
@@ -1416,7 +2499,10 @@
             "required": true,
             "group": "Insurance History",
             "hint": "",
-            "source": "PriorInsurance.CarrierName"
+            "source": "PriorInsurance.CarrierName",
+            "sourceRefs": [
+              "insurancehistory:1"
+            ]
           },
           {
             "key": "PriorInsurance.EffectiveDate",
@@ -1425,7 +2511,10 @@
             "required": true,
             "group": "Insurance History",
             "hint": "FormatMask: Date",
-            "source": "PriorInsurance.EffectiveDate"
+            "source": "PriorInsurance.EffectiveDate",
+            "sourceRefs": [
+              "insurancehistory:2"
+            ]
           },
           {
             "key": "PriorInsurance.ExpirationDate",
@@ -1434,7 +2523,10 @@
             "required": true,
             "group": "Insurance History",
             "hint": "FormatMask: Date",
-            "source": "PriorInsurance.ExpirationDate"
+            "source": "PriorInsurance.ExpirationDate",
+            "sourceRefs": [
+              "insurancehistory:3"
+            ]
           },
           {
             "key": "PriorInsurance.Limit",
@@ -1444,7 +2536,10 @@
             "group": "Insurance History",
             "hint": "FormatMask: $###,###.##",
             "source": "PriorInsurance.Limit",
-            "min": 0
+            "min": 0,
+            "sourceRefs": [
+              "insurancehistory:4"
+            ]
           },
           {
             "key": "PriorInsurance.Deductible",
@@ -1454,7 +2549,17 @@
             "group": "Insurance History",
             "hint": "FormatMask: $###,###.##",
             "source": "PriorInsurance.Deductible",
-            "min": 0
+            "min": 0,
+            "sourceRefs": [
+              "insurancehistory:5"
+            ]
+          },
+          {
+            "key": "PriorInsurance.PolicyNumber",
+            "label": "Prior policy number",
+            "type": "text",
+            "required": false,
+            "narrativeSource": "Prior policy number"
           }
         ],
         "when": {
@@ -1462,6 +2567,10 @@
           "values": [
             true
           ]
+        },
+        "sourceControls": {
+          "collection-remove": "insurancehistory:6",
+          "collection-add": "insurancehistory:7"
         }
       }
     },
@@ -1474,6 +2583,58 @@
           "label": "Prior losses to disclose?",
           "type": "boolean",
           "required": true
+        },
+        {
+          "key": "Reports.InsuranceScore",
+          "label": "Insurance score",
+          "type": "text",
+          "required": false,
+          "readOnly": true,
+          "unavailable": "Not available \u2014 report provider and authorized-role service are not connected",
+          "group": "Reports",
+          "narrativeSource": "Insurance score"
+        },
+        {
+          "key": "Reports.InsuranceScoreOverride",
+          "label": "Insurance score override",
+          "type": "text",
+          "required": false,
+          "readOnly": true,
+          "unavailable": "Not available \u2014 report provider and authorized-role service are not connected",
+          "group": "Reports",
+          "narrativeSource": "Insurance score override"
+        },
+        {
+          "key": "Reports.AdverseActionReasons",
+          "label": "Adverse action reasons",
+          "type": "text",
+          "required": false,
+          "readOnly": true,
+          "unavailable": "Not available \u2014 report provider and authorized-role service are not connected",
+          "group": "Reports",
+          "narrativeSource": "Adverse action reasons"
+        },
+        {
+          "key": "Reports.CLUEStatus",
+          "label": "CLUE report status",
+          "type": "text",
+          "required": false,
+          "readOnly": true,
+          "unavailable": "Not available \u2014 report provider and authorized-role service are not connected",
+          "group": "Reports",
+          "narrativeSource": "CLUE report status"
+        },
+        {
+          "key": "Spacer/Static Text",
+          "label": "Prior Losses Header",
+          "type": "text",
+          "required": false,
+          "readOnly": true,
+          "default": "Prior losses",
+          "group": "Loss History",
+          "sourceRefs": [
+            "claimshistory:1"
+          ]
         }
       ],
       "collection": {
@@ -1488,7 +2649,10 @@
             "group": "Loss History",
             "hint": "MaxLength: 100; Required",
             "source": "LossInput.LossType",
-            "maxLength": 100
+            "maxLength": 100,
+            "sourceRefs": [
+              "claimshistory:3"
+            ]
           },
           {
             "key": "LossInput.DateOfLoss",
@@ -1497,7 +2661,10 @@
             "required": true,
             "group": "Loss History",
             "hint": "FormatMask: Date; Required",
-            "source": "LossInput.DateOfLoss"
+            "source": "LossInput.DateOfLoss",
+            "sourceRefs": [
+              "claimshistory:4"
+            ]
           },
           {
             "key": "LossInput.AmountPaid",
@@ -1507,7 +2674,10 @@
             "group": "Loss History",
             "hint": "FormatMask: PremiumInput; Required",
             "source": "LossInput.AmountPaid",
-            "min": 0
+            "min": 0,
+            "sourceRefs": [
+              "claimshistory:5"
+            ]
           },
           {
             "key": "LossInput.Description",
@@ -1516,7 +2686,30 @@
             "required": true,
             "group": "Loss History",
             "hint": "MaxLength: Description",
-            "source": "LossInput.Description"
+            "source": "LossInput.Description",
+            "sourceRefs": [
+              "claimshistory:6"
+            ]
+          },
+          {
+            "key": "LossInput.Source",
+            "label": "Loss source",
+            "type": "text",
+            "required": false,
+            "default": "Applicant disclosure",
+            "narrativeSource": "Loss source"
+          },
+          {
+            "key": "LossOutputNonShredded.NumberDisplay",
+            "label": "Loss Number",
+            "type": "text",
+            "required": false,
+            "group": "Loss History",
+            "readOnly": true,
+            "derive": "rowNumber",
+            "sourceRefs": [
+              "claimshistory:2"
+            ]
           }
         ],
         "when": {
@@ -1524,15 +2717,252 @@
           "values": [
             true
           ]
+        },
+        "sourceControls": {
+          "collection-remove": "claimshistory:7",
+          "collection-add": "claimshistory:8"
         }
       },
-      "notice": "Enter known losses manually. CLUE and insurance-score reports are not ordered by this application."
+      "notice": "Enter known losses manually. CLUE and insurance-score reports are not ordered by this application.",
+      "actions": [
+        {
+          "key": "Reports.Order CLUE report",
+          "label": "Order CLUE report",
+          "kind": "unavailable",
+          "reason": "Report provider, disclosure text and authorized-role service are not connected."
+        },
+        {
+          "key": "Reports.Order insurance score",
+          "label": "Order insurance score",
+          "kind": "unavailable",
+          "reason": "Report provider, disclosure text and authorized-role service are not connected."
+        },
+        {
+          "key": "Reports.FCRA disclosure",
+          "label": "FCRA disclosure",
+          "kind": "unavailable",
+          "reason": "Report provider, disclosure text and authorized-role service are not connected."
+        },
+        {
+          "key": "Reports.FCRA NCF disclosure",
+          "label": "FCRA NCF disclosure",
+          "kind": "unavailable",
+          "reason": "Report provider, disclosure text and authorized-role service are not connected."
+        },
+        {
+          "key": "Reports.Run eligibility check",
+          "label": "Run eligibility check",
+          "kind": "unavailable",
+          "reason": "Report provider, disclosure text and authorized-role service are not connected."
+        }
+      ],
+      "servicePanels": [
+        {
+          "title": "CLUE loss history report",
+          "text": "Appears after a successful CLUE response with at least one claim. No report has been ordered.",
+          "fields": [
+            "Claim date",
+            "Cause of loss",
+            "Individual payment amounts",
+            "Claim detail"
+          ],
+          "actions": [
+            "Detail",
+            "Delete CLUE claim",
+            "Supplement CLUE claim",
+            "OK",
+            "Cancel"
+          ]
+        },
+        {
+          "title": "Insurance score detail",
+          "text": "Available only after a provider response. Score overrides require an authorized underwriter or manager.",
+          "fields": [
+            "Insurance score",
+            "Adverse action reasons"
+          ],
+          "actions": [
+            "Override score"
+          ]
+        }
+      ]
     },
     {
       "id": "summary",
       "title": "Coverage summary",
-      "fields": [],
-      "notice": "Coverage selections are saved. Premium calculation and carrier eligibility require the rating integration; this is not a priced or bindable quote."
+      "fields": [
+        {
+          "key": "Rating.DeclineMessages",
+          "label": "Decline messages",
+          "type": "text",
+          "required": false,
+          "readOnly": true,
+          "unavailable": "Not evaluated \u2014 carrier service is not connected",
+          "group": "Carrier review",
+          "narrativeSource": "Decline messages"
+        },
+        {
+          "key": "Rating.ReferralMessages",
+          "label": "Referral messages",
+          "type": "text",
+          "required": false,
+          "readOnly": true,
+          "unavailable": "Not evaluated \u2014 carrier service is not connected",
+          "group": "Carrier review",
+          "narrativeSource": "Referral messages"
+        },
+        {
+          "key": "Rating.SubscriberAgreement",
+          "label": "Subscriber agreement and LPOA",
+          "type": "text",
+          "required": false,
+          "readOnly": true,
+          "unavailable": "Not evaluated \u2014 carrier service is not connected",
+          "group": "Carrier review",
+          "narrativeSource": "Subscriber agreement and LPOA"
+        },
+        {
+          "key": "PolicyAdmin.UseDCTFormsAndMessages",
+          "label": "Include Forms",
+          "type": "boolean",
+          "required": false,
+          "group": "Forms",
+          "default": true,
+          "sourceRefs": [
+            "pricing:4"
+          ]
+        },
+        {
+          "key": "PolicyPremiums.Premium",
+          "label": "Premium",
+          "type": "number",
+          "required": false,
+          "group": "Premium Display",
+          "readOnly": true,
+          "unavailable": "Awaiting carrier rating service",
+          "sourceRefs": [
+            "pricing:6"
+          ]
+        },
+        {
+          "key": "PolicyPremiums.PremiumChange",
+          "label": "Premium Change",
+          "type": "number",
+          "required": false,
+          "group": "Premium Display",
+          "readOnly": true,
+          "unavailable": "Awaiting carrier rating service",
+          "sourceRefs": [
+            "pricing:7"
+          ]
+        },
+        {
+          "key": "PolicyPremiums.PremiumPrior",
+          "label": "Premium Prior",
+          "type": "number",
+          "required": false,
+          "group": "Premium Display",
+          "readOnly": true,
+          "unavailable": "Awaiting carrier rating service",
+          "sourceRefs": [
+            "pricing:8"
+          ]
+        },
+        {
+          "key": "PolicyPremiums.PremiumWritten",
+          "label": "Premium Written",
+          "type": "number",
+          "required": false,
+          "group": "Premium Display",
+          "readOnly": true,
+          "unavailable": "Awaiting carrier rating service",
+          "sourceRefs": [
+            "pricing:9"
+          ]
+        }
+      ],
+      "notice": "Coverage selections are saved. Premium calculation and carrier eligibility require the rating integration; this is not a priced or bindable quote.",
+      "actions": [
+        {
+          "key": "Rating.Premium detail",
+          "label": "Premium detail",
+          "kind": "unavailable",
+          "reason": "Requires carrier rating, approved documents, e-signature or binding integration."
+        },
+        {
+          "key": "Rating.Coverage calculator",
+          "label": "Coverage calculator",
+          "kind": "unavailable",
+          "reason": "Requires carrier rating, approved documents, e-signature or binding integration."
+        },
+        {
+          "key": "Rating.Quote sheet",
+          "label": "Quote sheet",
+          "kind": "unavailable",
+          "reason": "Requires carrier rating, approved documents, e-signature or binding integration."
+        },
+        {
+          "key": "Rating.Sign subscriber agreement and LPOA",
+          "label": "Sign subscriber agreement and LPOA",
+          "kind": "unavailable",
+          "reason": "Requires carrier rating, approved documents, e-signature or binding integration."
+        },
+        {
+          "key": "Rating.Bind",
+          "label": "Bind",
+          "kind": "unavailable",
+          "reason": "Requires carrier rating, approved documents, e-signature or binding integration."
+        },
+        {
+          "key": "Action \u2013 printjob:Worksheet",
+          "label": "Rating Worksheet Button",
+          "kind": "unavailable",
+          "reason": "Carrier rating and document-generation services are not connected.",
+          "sourceRefs": [
+            "pricing:1"
+          ]
+        },
+        {
+          "key": "Action \u2013 printjob:Quote",
+          "label": "Quote Letter Button",
+          "kind": "unavailable",
+          "reason": "Carrier rating and document-generation services are not connected.",
+          "sourceRefs": [
+            "pricing:2"
+          ]
+        },
+        {
+          "key": "Action \u2013 printjob:Application",
+          "label": "Application Button",
+          "kind": "unavailable",
+          "reason": "Carrier rating and document-generation services are not connected.",
+          "sourceRefs": [
+            "pricing:3"
+          ]
+        },
+        {
+          "key": "Action \u2013 previewAsyncPrintJob",
+          "label": "View Forms Button",
+          "kind": "unavailable",
+          "reason": "Carrier rating and document-generation services are not connected.",
+          "sourceRefs": [
+            "pricing:5"
+          ]
+        }
+      ],
+      "servicePanels": [
+        {
+          "title": "Subscriber agreement and LPOA",
+          "text": "Approved agreement text and e-signature service are not connected. No acknowledgement or signature has been recorded.",
+          "fields": [
+            "Insured email address",
+            "Agreement acknowledgement"
+          ],
+          "actions": [
+            "Acknowledge and send for signature"
+          ]
+        }
+      ]
     },
     {
       "id": "additionalinterests",
@@ -1558,7 +2988,10 @@
             "key": "name",
             "label": "Name",
             "type": "text",
-            "required": true
+            "required": true,
+            "sourceRefs": [
+              "additionalinterests:5"
+            ]
           },
           {
             "key": "address",
@@ -1579,8 +3012,25 @@
             "label": "Loan / reference number",
             "type": "text",
             "required": false
+          },
+          {
+            "key": "AdditionalOtherInterestInput.Description",
+            "label": "AOI Description",
+            "type": "text",
+            "required": false,
+            "group": "AOI",
+            "readOnly": true,
+            "derive": "interestDescription",
+            "sourceRefs": [
+              "additionalinterests:1"
+            ]
           }
-        ]
+        ],
+        "sourceControls": {
+          "collection-details": "additionalinterests:2",
+          "collection-remove": "additionalinterests:3",
+          "collection-add": "additionalinterests:4"
+        }
       }
     },
     {
@@ -1615,6 +3065,59 @@
           "type": "boolean",
           "required": false,
           "default": false
+        },
+        {
+          "key": "Billing.InitialPaymentMethod",
+          "label": "Initial payment method",
+          "type": "text",
+          "required": false,
+          "options": [
+            "EFT",
+            "Credit card"
+          ],
+          "group": "Initial payment",
+          "note": "Preference only. No bank or card details are collected and no payment is processed.",
+          "narrativeSource": "Initial payment method"
+        },
+        {
+          "key": "Billing.InitialPaymentAmount",
+          "label": "Initial payment amount",
+          "type": "text",
+          "required": false,
+          "readOnly": true,
+          "unavailable": "Awaiting billing provider",
+          "group": "Billing summary",
+          "narrativeSource": "Initial payment amount"
+        },
+        {
+          "key": "Billing.PaymentStatus",
+          "label": "Payment status",
+          "type": "text",
+          "required": false,
+          "readOnly": true,
+          "unavailable": "Awaiting billing provider",
+          "group": "Billing summary",
+          "narrativeSource": "Payment status"
+        },
+        {
+          "key": "Billing.InstallmentDueDates",
+          "label": "Installment due dates",
+          "type": "text",
+          "required": false,
+          "readOnly": true,
+          "unavailable": "Awaiting billing provider",
+          "group": "Billing summary",
+          "narrativeSource": "Installment due dates"
+        },
+        {
+          "key": "Billing.InstallmentAmounts",
+          "label": "Installment amounts",
+          "type": "text",
+          "required": false,
+          "readOnly": true,
+          "unavailable": "Awaiting billing provider",
+          "group": "Billing summary",
+          "narrativeSource": "Installment amounts"
         }
       ],
       "when": {
@@ -1623,7 +3126,15 @@
           true
         ]
       },
-      "notice": "Save billing preferences only. No payment is collected and no installment schedule is generated."
+      "notice": "Save billing preferences only. No payment is collected and no installment schedule is generated.",
+      "actions": [
+        {
+          "key": "Billing.Pay",
+          "label": "Make a payment",
+          "kind": "unavailable",
+          "reason": "Billing provider is not connected. No payment will be taken."
+        }
+      ]
     },
     {
       "id": "review",

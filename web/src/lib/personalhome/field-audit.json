@@ -1,0 +1,1820 @@
+{
+  "source": "Manatee_PersonalHome_Page&Field.html",
+  "sha256": "ea47f49fe8c759c88e47067892e318a9d96f154065fd981c4afac103d7ecc296",
+  "entries": [
+    {
+      "sourcePage": "account",
+      "sourceID": 1,
+      "sourceKey": "AccountOutputNonShredded.PrimaryInsuredText",
+      "label": "Primary Insured Text",
+      "targetPage": "account",
+      "status": "read-only",
+      "target": "AccountOutputNonShredded.PrimaryInsuredText"
+    },
+    {
+      "sourcePage": "account",
+      "sourceID": 2,
+      "sourceKey": "AccountInput.FirstName",
+      "label": "First Name",
+      "targetPage": "account",
+      "status": "editable",
+      "target": "AccountInput.FirstName"
+    },
+    {
+      "sourcePage": "account",
+      "sourceID": 3,
+      "sourceKey": "AccountInput.MiddleName",
+      "label": "Middle Initial (MI)",
+      "targetPage": "account",
+      "status": "editable",
+      "target": "AccountInput.MiddleName"
+    },
+    {
+      "sourcePage": "account",
+      "sourceID": 4,
+      "sourceKey": "AccountInput.LastName",
+      "label": "Last Name",
+      "targetPage": "account",
+      "status": "editable",
+      "target": "AccountInput.LastName"
+    },
+    {
+      "sourcePage": "account",
+      "sourceID": 5,
+      "sourceKey": "AccountInput.Name",
+      "label": "Name (Calculated)",
+      "targetPage": "account",
+      "status": "internal",
+      "target": "AccountInput.Name"
+    },
+    {
+      "sourcePage": "account",
+      "sourceID": 6,
+      "sourceKey": "Action \u2013 partyStart:partySearch",
+      "label": "Party Search (Manual)",
+      "targetPage": "account",
+      "status": "unavailable service action",
+      "target": "Action \u2013 partyStart:partySearch"
+    },
+    {
+      "sourcePage": "account",
+      "sourceID": 7,
+      "sourceKey": "Action \u2013 partyStart:searchResults",
+      "label": "Auto Search",
+      "targetPage": "account",
+      "status": "unavailable service action",
+      "target": "Action \u2013 partyStart:searchResults"
+    },
+    {
+      "sourcePage": "account",
+      "sourceID": 8,
+      "sourceKey": "Action \u2013 addObjectRecordRq (Person)",
+      "label": "Add Co-Applicant",
+      "targetPage": "account",
+      "status": "local action",
+      "target": "collection-add"
+    },
+    {
+      "sourcePage": "account",
+      "sourceID": 9,
+      "sourceKey": "PersonOutputNonShredded.CoapplicantLabel",
+      "label": "Co-Applicant Label",
+      "targetPage": "account",
+      "status": "read-only",
+      "target": "PersonOutputNonShredded.CoapplicantLabel"
+    },
+    {
+      "sourcePage": "account",
+      "sourceID": 10,
+      "sourceKey": "PersonInput.FirstName",
+      "label": "Co-Applicant First Name",
+      "targetPage": "account",
+      "status": "editable",
+      "target": "PersonInput.FirstName"
+    },
+    {
+      "sourcePage": "account",
+      "sourceID": 11,
+      "sourceKey": "PersonInput.MiddleName",
+      "label": "Co-Applicant MI",
+      "targetPage": "account",
+      "status": "editable",
+      "target": "PersonInput.MiddleName"
+    },
+    {
+      "sourcePage": "account",
+      "sourceID": 12,
+      "sourceKey": "PersonInput.LastName",
+      "label": "Co-Applicant Last Name",
+      "targetPage": "account",
+      "status": "editable",
+      "target": "PersonInput.LastName"
+    },
+    {
+      "sourcePage": "account",
+      "sourceID": 13,
+      "sourceKey": "Action \u2013 delete Person",
+      "label": "Delete Co-Applicant",
+      "targetPage": "account",
+      "status": "local action",
+      "target": "collection-remove"
+    },
+    {
+      "sourcePage": "account",
+      "sourceID": 14,
+      "sourceKey": "AccountInput.PrimaryPhone",
+      "label": "Phone Number",
+      "targetPage": "account",
+      "status": "editable",
+      "target": "AccountInput.PrimaryPhone"
+    },
+    {
+      "sourcePage": "account",
+      "sourceID": 15,
+      "sourceKey": "AccountInput.Email",
+      "label": "E-mail Address",
+      "targetPage": "account",
+      "status": "editable",
+      "target": "AccountInput.Email"
+    },
+    {
+      "sourcePage": "account",
+      "sourceID": 16,
+      "sourceKey": "AccountInput.Address1",
+      "label": "Address 1",
+      "targetPage": "account",
+      "status": "editable",
+      "target": "AccountInput.Address1"
+    },
+    {
+      "sourcePage": "account",
+      "sourceID": 17,
+      "sourceKey": "AccountInput.Address2",
+      "label": "Address 2",
+      "targetPage": "account",
+      "status": "editable",
+      "target": "AccountInput.Address2"
+    },
+    {
+      "sourcePage": "account",
+      "sourceID": 18,
+      "sourceKey": "AccountInput.City",
+      "label": "City",
+      "targetPage": "account",
+      "status": "editable",
+      "target": "AccountInput.City"
+    },
+    {
+      "sourcePage": "account",
+      "sourceID": 19,
+      "sourceKey": "AccountInput.State",
+      "label": "State",
+      "targetPage": "account",
+      "status": "editable",
+      "target": "AccountInput.State"
+    },
+    {
+      "sourcePage": "account",
+      "sourceID": 20,
+      "sourceKey": "AccountInput.ZipCode",
+      "label": "Zip Code",
+      "targetPage": "account",
+      "status": "editable",
+      "target": "AccountInput.ZipCode"
+    },
+    {
+      "sourcePage": "account",
+      "sourceID": 21,
+      "sourceKey": "AccountInput.County",
+      "label": "County",
+      "targetPage": "account",
+      "status": "editable",
+      "target": "AccountInput.County"
+    },
+    {
+      "sourcePage": "account",
+      "sourceID": 22,
+      "sourceKey": "Geocode.GeocodeStatusDisplay",
+      "label": "Geocoding Status",
+      "targetPage": "account",
+      "status": "read-only",
+      "target": "Geocode.GeocodeStatusDisplay"
+    },
+    {
+      "sourcePage": "account",
+      "sourceID": 23,
+      "sourceKey": "Action \u2013 PBBI Geocode",
+      "label": "Verify Address",
+      "targetPage": "account",
+      "status": "unavailable service action",
+      "target": "Action \u2013 PBBI Geocode"
+    },
+    {
+      "sourcePage": "account",
+      "sourceID": 24,
+      "sourceKey": "Action \u2013 ClearLastVerified",
+      "label": "Edit Verified Address",
+      "targetPage": "account",
+      "status": "unavailable service action",
+      "target": "Action \u2013 ClearLastVerified"
+    },
+    {
+      "sourcePage": "account",
+      "sourceID": 25,
+      "sourceKey": "Action \u2013 PBBI Interactive Map",
+      "label": "View Map",
+      "targetPage": "account",
+      "status": "unavailable service action",
+      "target": "Action \u2013 PBBI Interactive Map"
+    },
+    {
+      "sourcePage": "account",
+      "sourceID": 26,
+      "sourceKey": "AccountPrivate.XHTMLMapsBing",
+      "label": "Bing Map Link",
+      "targetPage": "account",
+      "status": "read-only",
+      "target": "AccountPrivate.XHTMLMapsBing"
+    },
+    {
+      "sourcePage": "account",
+      "sourceID": 27,
+      "sourceKey": "AccountPrivate.XHTMLMapsGoogle",
+      "label": "Google Map Link",
+      "targetPage": "account",
+      "status": "read-only",
+      "target": "AccountPrivate.XHTMLMapsGoogle"
+    },
+    {
+      "sourcePage": "account",
+      "sourceID": 28,
+      "sourceKey": "AccountPBBI.Latitude / AccountPBBI.Longitude",
+      "label": "Latitude / Longitude",
+      "targetPage": "account",
+      "status": "internal",
+      "target": "AccountPBBI.Latitude / AccountPBBI.Longitude"
+    },
+    {
+      "sourcePage": "policydetail",
+      "sourceID": 1,
+      "sourceKey": "PolicyInput.Description",
+      "label": "Description",
+      "targetPage": "newquote",
+      "status": "editable",
+      "target": "PolicyInput.Description"
+    },
+    {
+      "sourcePage": "policydetail",
+      "sourceID": 2,
+      "sourceKey": "PolicyInput.EffectiveDate",
+      "label": "Effective Date",
+      "targetPage": "newquote",
+      "status": "editable",
+      "target": "PolicyInput.EffectiveDate"
+    },
+    {
+      "sourcePage": "policydetail",
+      "sourceID": 3,
+      "sourceKey": "GetLatestRates (Spacer + Action)",
+      "label": "Get Latest Rates Notice",
+      "targetPage": "newquote",
+      "status": "unavailable service action",
+      "target": "GetLatestRates (Spacer + Action)"
+    },
+    {
+      "sourcePage": "policydetail",
+      "sourceID": 4,
+      "sourceKey": "Action \u2013 GetLatestRates.Value",
+      "label": "Get Latest Rates Button",
+      "targetPage": "newquote",
+      "status": "unavailable service action",
+      "target": "Action \u2013 GetLatestRates.Value"
+    },
+    {
+      "sourcePage": "policydetail",
+      "sourceID": 5,
+      "sourceKey": "PolicyInput.Term",
+      "label": "Term",
+      "targetPage": "newquote",
+      "status": "read-only",
+      "target": "PolicyInput.Term"
+    },
+    {
+      "sourcePage": "policydetail",
+      "sourceID": 6,
+      "sourceKey": "PolicyInput.ExpirationDate",
+      "label": "Expiration Date",
+      "targetPage": "newquote",
+      "status": "read-only",
+      "target": "PolicyInput.ExpirationDate"
+    },
+    {
+      "sourcePage": "locationdetail",
+      "sourceID": 1,
+      "sourceKey": "LocationInput.Address1",
+      "label": "Address 1",
+      "targetPage": "dwellinginfo",
+      "status": "editable",
+      "target": "LocationInput.Address1"
+    },
+    {
+      "sourcePage": "locationdetail",
+      "sourceID": 2,
+      "sourceKey": "LocationInput.Address2",
+      "label": "Address 2",
+      "targetPage": "dwellinginfo",
+      "status": "editable",
+      "target": "LocationInput.Address2"
+    },
+    {
+      "sourcePage": "locationdetail",
+      "sourceID": 3,
+      "sourceKey": "LocationInput.City",
+      "label": "City",
+      "targetPage": "dwellinginfo",
+      "status": "editable",
+      "target": "LocationInput.City"
+    },
+    {
+      "sourcePage": "locationdetail",
+      "sourceID": 4,
+      "sourceKey": "LocationInput.State",
+      "label": "State",
+      "targetPage": "dwellinginfo",
+      "status": "editable",
+      "target": "LocationInput.State"
+    },
+    {
+      "sourcePage": "locationdetail",
+      "sourceID": 5,
+      "sourceKey": "LocationInput.ZipCode",
+      "label": "ZIP Code",
+      "targetPage": "dwellinginfo",
+      "status": "editable",
+      "target": "LocationInput.ZipCode"
+    },
+    {
+      "sourcePage": "locationdetail",
+      "sourceID": 6,
+      "sourceKey": "LocationInput.County",
+      "label": "County",
+      "targetPage": "dwellinginfo",
+      "status": "editable",
+      "target": "LocationInput.County"
+    },
+    {
+      "sourcePage": "locationdetail",
+      "sourceID": 7,
+      "sourceKey": "LocationGeocode.GeocodeStatusDisplay",
+      "label": "Geocoding Status",
+      "targetPage": "dwellinginfo",
+      "status": "read-only",
+      "target": "LocationGeocode.GeocodeStatusDisplay"
+    },
+    {
+      "sourcePage": "locationdetail",
+      "sourceID": 8,
+      "sourceKey": "Action \u2013 PBBI Location Geocoding",
+      "label": "Verify Location",
+      "targetPage": "dwellinginfo",
+      "status": "unavailable service action",
+      "target": "Action \u2013 PBBI Location Geocoding"
+    },
+    {
+      "sourcePage": "locationdetail",
+      "sourceID": 9,
+      "sourceKey": "Action \u2013 ClearLastVerified (Location)",
+      "label": "Edit Verified Address",
+      "targetPage": "dwellinginfo",
+      "status": "unavailable service action",
+      "target": "Action \u2013 ClearLastVerified (Location)"
+    },
+    {
+      "sourcePage": "locationdetail",
+      "sourceID": 10,
+      "sourceKey": "Action \u2013 Interactive Map (Location)",
+      "label": "View Map",
+      "targetPage": "dwellinginfo",
+      "status": "unavailable service action",
+      "target": "Action \u2013 Interactive Map (Location)"
+    },
+    {
+      "sourcePage": "locationdetail",
+      "sourceID": 11,
+      "sourceKey": "Action \u2013 close/return",
+      "label": "OK",
+      "targetPage": "dwellinginfo",
+      "status": "local action",
+      "target": "Action \u2013 close/return"
+    },
+    {
+      "sourcePage": "locationdetail",
+      "sourceID": 12,
+      "sourceKey": "Action \u2013 cancelChanges",
+      "label": "Cancel",
+      "targetPage": "dwellinginfo",
+      "status": "local action",
+      "target": "Action \u2013 cancelChanges"
+    },
+    {
+      "sourcePage": "locationdetail",
+      "sourceID": 13,
+      "sourceKey": "Action \u2013 delete (add mode)",
+      "label": "Delete Location",
+      "targetPage": "dwellinginfo",
+      "status": "local action",
+      "target": "Action \u2013 delete (add mode)"
+    },
+    {
+      "sourcePage": "locationdetail",
+      "sourceID": 14,
+      "sourceKey": "Action \u2013 LocationPrivate.ResetToApplicantAddress",
+      "label": "Reset to Applicant Address",
+      "targetPage": "dwellinginfo",
+      "status": "local action",
+      "target": "Action \u2013 LocationPrivate.ResetToApplicantAddress"
+    },
+    {
+      "sourcePage": "claimshistory",
+      "sourceID": 1,
+      "sourceKey": "Spacer/Static Text",
+      "label": "Prior Losses Header",
+      "targetPage": "claimshistory",
+      "status": "read-only",
+      "target": "Spacer/Static Text"
+    },
+    {
+      "sourcePage": "claimshistory",
+      "sourceID": 2,
+      "sourceKey": "LossOutputNonShredded.NumberDisplay",
+      "label": "Loss Number",
+      "targetPage": "claimshistory",
+      "status": "read-only",
+      "target": "LossOutputNonShredded.NumberDisplay"
+    },
+    {
+      "sourcePage": "claimshistory",
+      "sourceID": 3,
+      "sourceKey": "LossInput.LossType",
+      "label": "Loss Type",
+      "targetPage": "claimshistory",
+      "status": "editable",
+      "target": "LossInput.LossType"
+    },
+    {
+      "sourcePage": "claimshistory",
+      "sourceID": 4,
+      "sourceKey": "LossInput.DateOfLoss",
+      "label": "Date Of Loss",
+      "targetPage": "claimshistory",
+      "status": "editable",
+      "target": "LossInput.DateOfLoss"
+    },
+    {
+      "sourcePage": "claimshistory",
+      "sourceID": 5,
+      "sourceKey": "LossInput.AmountPaid",
+      "label": "Amount Paid",
+      "targetPage": "claimshistory",
+      "status": "editable",
+      "target": "LossInput.AmountPaid"
+    },
+    {
+      "sourcePage": "claimshistory",
+      "sourceID": 6,
+      "sourceKey": "LossInput.Description",
+      "label": "Description",
+      "targetPage": "claimshistory",
+      "status": "editable",
+      "target": "LossInput.Description"
+    },
+    {
+      "sourcePage": "claimshistory",
+      "sourceID": 7,
+      "sourceKey": "Action \u2013 delete (Loss row)",
+      "label": "Delete Loss",
+      "targetPage": "claimshistory",
+      "status": "local action",
+      "target": "collection-remove"
+    },
+    {
+      "sourcePage": "claimshistory",
+      "sourceID": 8,
+      "sourceKey": "Action \u2013 add (Loss)",
+      "label": "Add Loss",
+      "targetPage": "claimshistory",
+      "status": "local action",
+      "target": "collection-add"
+    },
+    {
+      "sourcePage": "insurancehistory",
+      "sourceID": 1,
+      "sourceKey": "PriorInsurance.CarrierName",
+      "label": "Carrier Name",
+      "targetPage": "insurancehistory",
+      "status": "editable",
+      "target": "PriorInsurance.CarrierName"
+    },
+    {
+      "sourcePage": "insurancehistory",
+      "sourceID": 2,
+      "sourceKey": "PriorInsurance.EffectiveDate",
+      "label": "Effective Date",
+      "targetPage": "insurancehistory",
+      "status": "editable",
+      "target": "PriorInsurance.EffectiveDate"
+    },
+    {
+      "sourcePage": "insurancehistory",
+      "sourceID": 3,
+      "sourceKey": "PriorInsurance.ExpirationDate",
+      "label": "Expiration Date",
+      "targetPage": "insurancehistory",
+      "status": "editable",
+      "target": "PriorInsurance.ExpirationDate"
+    },
+    {
+      "sourcePage": "insurancehistory",
+      "sourceID": 4,
+      "sourceKey": "PriorInsurance.Limit",
+      "label": "Limit",
+      "targetPage": "insurancehistory",
+      "status": "editable",
+      "target": "PriorInsurance.Limit"
+    },
+    {
+      "sourcePage": "insurancehistory",
+      "sourceID": 5,
+      "sourceKey": "PriorInsurance.Deductible",
+      "label": "Deductible",
+      "targetPage": "insurancehistory",
+      "status": "editable",
+      "target": "PriorInsurance.Deductible"
+    },
+    {
+      "sourcePage": "insurancehistory",
+      "sourceID": 6,
+      "sourceKey": "Action \u2013 delete (PriorInsurance row)",
+      "label": "Delete Carrier",
+      "targetPage": "insurancehistory",
+      "status": "local action",
+      "target": "collection-remove"
+    },
+    {
+      "sourcePage": "insurancehistory",
+      "sourceID": 7,
+      "sourceKey": "Action \u2013 add (PriorInsurance)",
+      "label": "Add Carrier",
+      "targetPage": "insurancehistory",
+      "status": "local action",
+      "target": "collection-add"
+    },
+    {
+      "sourcePage": "additionalinterests",
+      "sourceID": 1,
+      "sourceKey": "AdditionalOtherInterestInput.Description",
+      "label": "AOI Description",
+      "targetPage": "additionalinterests",
+      "status": "read-only",
+      "target": "AdditionalOtherInterestInput.Description"
+    },
+    {
+      "sourcePage": "additionalinterests",
+      "sourceID": 2,
+      "sourceKey": "Action \u2013 specificIter (AdditionalOtherInterestDetail)",
+      "label": "Details Popup",
+      "targetPage": "additionalinterests",
+      "status": "local action",
+      "target": "collection-details"
+    },
+    {
+      "sourcePage": "additionalinterests",
+      "sourceID": 3,
+      "sourceKey": "Action \u2013 delete",
+      "label": "Delete AOI",
+      "targetPage": "additionalinterests",
+      "status": "local action",
+      "target": "collection-remove"
+    },
+    {
+      "sourcePage": "additionalinterests",
+      "sourceID": 4,
+      "sourceKey": "Action \u2013 add (AOI popup)",
+      "label": "Add Additional Other Interest",
+      "targetPage": "additionalinterests",
+      "status": "local action",
+      "target": "collection-add"
+    },
+    {
+      "sourcePage": "additionalinterests",
+      "sourceID": 5,
+      "sourceKey": "AdditionalOtherInterestInput.Name",
+      "label": "AOI Name",
+      "targetPage": "additionalinterests",
+      "status": "editable",
+      "target": "name"
+    },
+    {
+      "sourcePage": "pricing",
+      "sourceID": 1,
+      "sourceKey": "Action \u2013 printjob:Worksheet",
+      "label": "Rating Worksheet Button",
+      "targetPage": "summary",
+      "status": "unavailable service action",
+      "target": "Action \u2013 printjob:Worksheet"
+    },
+    {
+      "sourcePage": "pricing",
+      "sourceID": 2,
+      "sourceKey": "Action \u2013 printjob:Quote",
+      "label": "Quote Letter Button",
+      "targetPage": "summary",
+      "status": "unavailable service action",
+      "target": "Action \u2013 printjob:Quote"
+    },
+    {
+      "sourcePage": "pricing",
+      "sourceID": 3,
+      "sourceKey": "Action \u2013 printjob:Application",
+      "label": "Application Button",
+      "targetPage": "summary",
+      "status": "unavailable service action",
+      "target": "Action \u2013 printjob:Application"
+    },
+    {
+      "sourcePage": "pricing",
+      "sourceID": 4,
+      "sourceKey": "PolicyAdmin.UseDCTFormsAndMessages",
+      "label": "Include Forms",
+      "targetPage": "summary",
+      "status": "editable",
+      "target": "PolicyAdmin.UseDCTFormsAndMessages"
+    },
+    {
+      "sourcePage": "pricing",
+      "sourceID": 5,
+      "sourceKey": "Action \u2013 previewAsyncPrintJob",
+      "label": "View Forms Button",
+      "targetPage": "summary",
+      "status": "unavailable service action",
+      "target": "Action \u2013 previewAsyncPrintJob"
+    },
+    {
+      "sourcePage": "pricing",
+      "sourceID": 6,
+      "sourceKey": "PolicyPremiums.Premium",
+      "label": "Premium",
+      "targetPage": "summary",
+      "status": "unavailable service value",
+      "target": "PolicyPremiums.Premium"
+    },
+    {
+      "sourcePage": "pricing",
+      "sourceID": 7,
+      "sourceKey": "PolicyPremiums.PremiumChange",
+      "label": "Premium Change",
+      "targetPage": "summary",
+      "status": "unavailable service value",
+      "target": "PolicyPremiums.PremiumChange"
+    },
+    {
+      "sourcePage": "pricing",
+      "sourceID": 8,
+      "sourceKey": "PolicyPremiums.PremiumPrior",
+      "label": "Premium Prior",
+      "targetPage": "summary",
+      "status": "unavailable service value",
+      "target": "PolicyPremiums.PremiumPrior"
+    },
+    {
+      "sourcePage": "pricing",
+      "sourceID": 9,
+      "sourceKey": "PolicyPremiums.PremiumWritten",
+      "label": "Premium Written",
+      "targetPage": "summary",
+      "status": "unavailable service value",
+      "target": "PolicyPremiums.PremiumWritten"
+    },
+    {
+      "sourcePage": "dwellinginfo",
+      "sourceID": 1,
+      "sourceKey": "DwellingInput.Form",
+      "label": "Policy Form",
+      "targetPage": "dwellinginfo",
+      "status": "read-only",
+      "target": "DwellingInput.Form"
+    },
+    {
+      "sourcePage": "dwellinginfo",
+      "sourceID": 2,
+      "sourceKey": "DwellingInput.UseType",
+      "label": "Usage",
+      "targetPage": "dwellinginfo",
+      "status": "editable",
+      "target": "DwellingInput.UseType"
+    },
+    {
+      "sourcePage": "dwellinginfo",
+      "sourceID": 3,
+      "sourceKey": "DwellingInput.OccupancyType",
+      "label": "Occupancy",
+      "targetPage": "dwellinginfo",
+      "status": "editable",
+      "target": "DwellingInput.OccupancyType"
+    },
+    {
+      "sourcePage": "dwellinginfo",
+      "sourceID": 4,
+      "sourceKey": "DwellingInput.MonthsUnoccupied",
+      "label": "# of Months Unoccupied",
+      "targetPage": "dwellinginfo",
+      "status": "editable",
+      "target": "DwellingInput.MonthsUnoccupied"
+    },
+    {
+      "sourcePage": "dwellinginfo",
+      "sourceID": 5,
+      "sourceKey": "DwellingInput.BuildingType",
+      "label": "Structure",
+      "targetPage": "dwellinginfo",
+      "status": "editable",
+      "target": "DwellingInput.BuildingType"
+    },
+    {
+      "sourcePage": "dwellinginfo",
+      "sourceID": 6,
+      "sourceKey": "DwellingInput.YearBuilt",
+      "label": "Year Built",
+      "targetPage": "dwellinginfo",
+      "status": "editable",
+      "target": "DwellingInput.YearBuilt"
+    },
+    {
+      "sourcePage": "dwellinginfo",
+      "sourceID": 7,
+      "sourceKey": "DwellingInput.Construction",
+      "label": "Construction",
+      "targetPage": "dwellinginfo",
+      "status": "editable",
+      "target": "DwellingInput.Construction"
+    },
+    {
+      "sourcePage": "dwellinginfo",
+      "sourceID": 8,
+      "sourceKey": "DwellingInput.RatedProtectionClass",
+      "label": "Protection Class",
+      "targetPage": "dwellinginfo",
+      "status": "editable",
+      "target": "DwellingInput.RatedProtectionClass"
+    },
+    {
+      "sourcePage": "dwellinginfo",
+      "sourceID": 9,
+      "sourceKey": "DwellingInput.NumberOfFamilies",
+      "label": "# of Families",
+      "targetPage": "dwellinginfo",
+      "status": "editable",
+      "target": "DwellingInput.NumberOfFamilies"
+    },
+    {
+      "sourcePage": "dwellinginfo",
+      "sourceID": 10,
+      "sourceKey": "DwellingInput.NumberOfUnits",
+      "label": "# of Units in Fire Division",
+      "targetPage": "dwellinginfo",
+      "status": "editable",
+      "target": "DwellingInput.NumberOfUnits"
+    },
+    {
+      "sourcePage": "dwellinginfo",
+      "sourceID": 11,
+      "sourceKey": "DwellingInput.NumberOfFloor",
+      "label": "Floor Unit (Floor #)",
+      "targetPage": "dwellinginfo",
+      "status": "editable",
+      "target": "DwellingInput.NumberOfFloor"
+    },
+    {
+      "sourcePage": "dwellinginfo",
+      "sourceID": 12,
+      "sourceKey": "DwellingInput.FoundationType",
+      "label": "Foundation Type",
+      "targetPage": "dwellinginfo",
+      "status": "editable",
+      "target": "DwellingInput.FoundationType"
+    },
+    {
+      "sourcePage": "dwellinginfo",
+      "sourceID": 13,
+      "sourceKey": "DwellingInput.SquareFeet",
+      "label": "Square Feet",
+      "targetPage": "dwellinginfo",
+      "status": "editable",
+      "target": "DwellingInput.SquareFeet"
+    },
+    {
+      "sourcePage": "dwellinginfo",
+      "sourceID": 14,
+      "sourceKey": "DwellingInput.SwimmingPool",
+      "label": "Pool on Premises?",
+      "targetPage": "dwellinginfo",
+      "status": "editable",
+      "target": "DwellingInput.SwimmingPool"
+    },
+    {
+      "sourcePage": "dwellinginfo",
+      "sourceID": 15,
+      "sourceKey": "DwellingInput.PoolSlide",
+      "label": "Slide (Pool)",
+      "targetPage": "dwellinginfo",
+      "status": "editable",
+      "target": "DwellingInput.PoolSlide"
+    },
+    {
+      "sourcePage": "dwellinginfo",
+      "sourceID": 16,
+      "sourceKey": "DwellingInput.PoolApprovedFence",
+      "label": "Is pool surrounded by fence?",
+      "targetPage": "dwellinginfo",
+      "status": "editable",
+      "target": "DwellingInput.PoolApprovedFence"
+    },
+    {
+      "sourcePage": "dwellinginfo",
+      "sourceID": 17,
+      "sourceKey": "DwellingInput.PoolDivingBoard",
+      "label": "Diving Board (Pool)",
+      "targetPage": "dwellinginfo",
+      "status": "editable",
+      "target": "DwellingInput.PoolDivingBoard"
+    },
+    {
+      "sourcePage": "dwellinginfo",
+      "sourceID": 18,
+      "sourceKey": "DwellingInput.NumberOfStories",
+      "label": "Number of Stories",
+      "targetPage": "dwellinginfo",
+      "status": "editable",
+      "target": "DwellingInput.NumberOfStories"
+    },
+    {
+      "sourcePage": "dwellinginfo",
+      "sourceID": 19,
+      "sourceKey": "DwellingInput.PrimaryHeatType",
+      "label": "Primary Heat Type",
+      "targetPage": "dwellinginfo",
+      "status": "editable",
+      "target": "DwellingInput.PrimaryHeatType"
+    },
+    {
+      "sourcePage": "dwellinginfo",
+      "sourceID": 20,
+      "sourceKey": "DwellingInput.SupplementalHeatType",
+      "label": "Supplemental Heat Type",
+      "targetPage": "dwellinginfo",
+      "status": "editable",
+      "target": "DwellingInput.SupplementalHeatType"
+    },
+    {
+      "sourcePage": "dwellinginfo",
+      "sourceID": 21,
+      "sourceKey": "DwellingInput.BuildingCodeEffectivenessGrading",
+      "label": "Building Code Grade (BCEG)",
+      "targetPage": "dwellinginfo",
+      "status": "editable",
+      "target": "DwellingInput.BuildingCodeEffectivenessGrading"
+    },
+    {
+      "sourcePage": "dwellinginfo",
+      "sourceID": 22,
+      "sourceKey": "DwellingInput.ElectricalSystem",
+      "label": "Electrical System",
+      "targetPage": "dwellinginfo",
+      "status": "editable",
+      "target": "DwellingInput.ElectricalSystem"
+    },
+    {
+      "sourcePage": "dwellinginfo",
+      "sourceID": 23,
+      "sourceKey": "DwellingInput.OpeningProtection",
+      "label": "Opening Protection",
+      "targetPage": "dwellinginfo",
+      "status": "editable",
+      "target": "DwellingInput.OpeningProtection"
+    },
+    {
+      "sourcePage": "dwellinginfo",
+      "sourceID": 24,
+      "sourceKey": "DwellingInput.RoofType",
+      "label": "Roof Type",
+      "targetPage": "dwellinginfo",
+      "status": "editable",
+      "target": "DwellingInput.RoofType"
+    },
+    {
+      "sourcePage": "dwellinginfo",
+      "sourceID": 25,
+      "sourceKey": "DwellingInput.Sprinkler",
+      "label": "Sprinkler System",
+      "targetPage": "dwellinginfo",
+      "status": "editable",
+      "target": "DwellingInput.Sprinkler"
+    },
+    {
+      "sourcePage": "dwellinginfo",
+      "sourceID": 26,
+      "sourceKey": "DwellingInput.LockedSecurityGate",
+      "label": "Locked Security Gate",
+      "targetPage": "dwellinginfo",
+      "status": "editable",
+      "target": "DwellingInput.LockedSecurityGate"
+    },
+    {
+      "sourcePage": "dwellinginfo",
+      "sourceID": 27,
+      "sourceKey": "DwellingInput.SecurityAttendant",
+      "label": "Security Guard",
+      "targetPage": "dwellinginfo",
+      "status": "editable",
+      "target": "DwellingInput.SecurityAttendant"
+    },
+    {
+      "sourcePage": "dwellinginfo",
+      "sourceID": 28,
+      "sourceKey": "DwellingInput.Wiring",
+      "label": "Wiring",
+      "targetPage": "dwellinginfo",
+      "status": "editable",
+      "target": "DwellingInput.Wiring"
+    },
+    {
+      "sourcePage": "dwellinginfo",
+      "sourceID": 29,
+      "sourceKey": "DwellingInput.NumberOfAmps",
+      "label": "# of Amps",
+      "targetPage": "dwellinginfo",
+      "status": "editable",
+      "target": "DwellingInput.NumberOfAmps"
+    },
+    {
+      "sourcePage": "dwellinginfo",
+      "sourceID": 30,
+      "sourceKey": "DwellingInput.PlumbingType",
+      "label": "Plumbing Pipe Material",
+      "targetPage": "dwellinginfo",
+      "status": "editable",
+      "target": "DwellingInput.PlumbingType"
+    },
+    {
+      "sourcePage": "dwellinginfo",
+      "sourceID": 31,
+      "sourceKey": "DwellingInput.RoofGeometry",
+      "label": "Roof Shape",
+      "targetPage": "dwellinginfo",
+      "status": "editable",
+      "target": "DwellingInput.RoofGeometry"
+    },
+    {
+      "sourcePage": "dwellinginfo",
+      "sourceID": 32,
+      "sourceKey": "DwellingInput.DistanceToFireStation",
+      "label": "Miles To Fire Station",
+      "targetPage": "dwellinginfo",
+      "status": "editable",
+      "target": "DwellingInput.DistanceToFireStation"
+    },
+    {
+      "sourcePage": "dwellinginfo",
+      "sourceID": 33,
+      "sourceKey": "DwellingInput.DistanceToHydrant",
+      "label": "Feet To Hydrant",
+      "targetPage": "dwellinginfo",
+      "status": "editable",
+      "target": "DwellingInput.DistanceToHydrant"
+    },
+    {
+      "sourcePage": "dwellinginfo",
+      "sourceID": 34,
+      "sourceKey": "DwellingInput.RespondingFireDepartment",
+      "label": "Responding Fire Department",
+      "targetPage": "dwellinginfo",
+      "status": "editable",
+      "target": "DwellingInput.RespondingFireDepartment"
+    },
+    {
+      "sourcePage": "dwellinginfo",
+      "sourceID": 35,
+      "sourceKey": "UpdatedServicesInfo.RemainingRoofLife",
+      "label": "Remaining Useful Life of Roof",
+      "targetPage": "dwellinginfo",
+      "status": "editable",
+      "target": "UpdatedServicesInfo.RemainingRoofLife"
+    },
+    {
+      "sourcePage": "dwellinginfo",
+      "sourceID": 36,
+      "sourceKey": "UpdatedServicesInfo.ElectricSystemUpdateYear",
+      "label": "Year Electrical Updated",
+      "targetPage": "dwellinginfo",
+      "status": "editable",
+      "target": "UpdatedServicesInfo.ElectricSystemUpdateYear"
+    },
+    {
+      "sourcePage": "dwellinginfo",
+      "sourceID": 37,
+      "sourceKey": "UpdatedServicesInfo.HeatingUpdateYear",
+      "label": "Year Heating Updated",
+      "targetPage": "dwellinginfo",
+      "status": "editable",
+      "target": "UpdatedServicesInfo.HeatingUpdateYear"
+    },
+    {
+      "sourcePage": "dwellinginfo",
+      "sourceID": 38,
+      "sourceKey": "UpdatedServicesInfo.PlumbingUpdateYear",
+      "label": "Year Plumbing Updated",
+      "targetPage": "dwellinginfo",
+      "status": "editable",
+      "target": "UpdatedServicesInfo.PlumbingUpdateYear"
+    },
+    {
+      "sourcePage": "dwellinginfo",
+      "sourceID": 39,
+      "sourceKey": "UpdatedServicesInfo.RoofUpdateYear",
+      "label": "Year Roof Updated",
+      "targetPage": "dwellinginfo",
+      "status": "editable",
+      "target": "UpdatedServicesInfo.RoofUpdateYear"
+    },
+    {
+      "sourcePage": "dwellinginfo",
+      "sourceID": 40,
+      "sourceKey": "DwellingInput.SecondaryWaterResistance",
+      "label": "Secondary Water Resistance",
+      "targetPage": "dwellinginfo",
+      "status": "editable",
+      "target": "DwellingInput.SecondaryWaterResistance"
+    },
+    {
+      "sourcePage": "dwellinginfo",
+      "sourceID": 41,
+      "sourceKey": "DwellingInput.DwellingAccessibleToFireEquipment",
+      "label": "Accessible all year",
+      "targetPage": "dwellinginfo",
+      "status": "editable",
+      "target": "DwellingInput.DwellingAccessibleToFireEquipment"
+    },
+    {
+      "sourcePage": "dwellinginfo",
+      "sourceID": 42,
+      "sourceKey": "DwellingInput.RoofToWallAttachment",
+      "label": "Roof to Wall Attachment",
+      "targetPage": "dwellinginfo",
+      "status": "editable",
+      "target": "DwellingInput.RoofToWallAttachment"
+    },
+    {
+      "sourcePage": "dwellinginfo",
+      "sourceID": 43,
+      "sourceKey": "DwellingInput.RoofCover",
+      "label": "Roof Cover",
+      "targetPage": "dwellinginfo",
+      "status": "editable",
+      "target": "DwellingInput.RoofCover"
+    },
+    {
+      "sourcePage": "dwellinginfo",
+      "sourceID": 44,
+      "sourceKey": "DwellingInput.Terrain",
+      "label": "Terrain",
+      "targetPage": "dwellinginfo",
+      "status": "editable",
+      "target": "DwellingInput.Terrain"
+    },
+    {
+      "sourcePage": "dwellinginfo",
+      "sourceID": 45,
+      "sourceKey": "DwellingInput.FloorToFoundationAttachment",
+      "label": "Floor to Foundation Attachment",
+      "targetPage": "dwellinginfo",
+      "status": "editable",
+      "target": "DwellingInput.FloorToFoundationAttachment"
+    },
+    {
+      "sourcePage": "dwellinginfo",
+      "sourceID": 46,
+      "sourceKey": "DwellingInput.WindSpeedDesign",
+      "label": "Wind Speed Design",
+      "targetPage": "dwellinginfo",
+      "status": "editable",
+      "target": "DwellingInput.WindSpeedDesign"
+    },
+    {
+      "sourcePage": "dwellinginfo",
+      "sourceID": 47,
+      "sourceKey": "DwellingInput.WindSpeedLocation",
+      "label": "Wind Speed Location",
+      "targetPage": "dwellinginfo",
+      "status": "editable",
+      "target": "DwellingInput.WindSpeedLocation"
+    },
+    {
+      "sourcePage": "dwellinginfo",
+      "sourceID": 48,
+      "sourceKey": "DwellingInput.RoofDeckAttachment",
+      "label": "Roof Deck Attachment",
+      "targetPage": "dwellinginfo",
+      "status": "editable",
+      "target": "DwellingInput.RoofDeckAttachment"
+    },
+    {
+      "sourcePage": "dwellinginfo",
+      "sourceID": 49,
+      "sourceKey": "DwellingInput.HurricaneDeductible",
+      "label": "Hurricane Deductible",
+      "targetPage": "dwellinginfo",
+      "status": "read-only",
+      "target": "DwellingInput.HurricaneDeductible"
+    },
+    {
+      "sourcePage": "dwellinginfo",
+      "sourceID": 50,
+      "sourceKey": "DwellingInput.Deductible",
+      "label": "All-Peril Deductible",
+      "targetPage": "dwellinginfo",
+      "status": "read-only",
+      "target": "DwellingInput.Deductible"
+    },
+    {
+      "sourcePage": "dwellinginfo",
+      "sourceID": 51,
+      "sourceKey": "DwellingInput.NumberOfBathrooms",
+      "label": "Number Of Bathrooms",
+      "targetPage": "dwellinginfo",
+      "status": "editable",
+      "target": "DwellingInput.NumberOfBathrooms"
+    },
+    {
+      "sourcePage": "dwellingcoverage",
+      "sourceID": 1,
+      "sourceKey": "CoverageADwellingInput.Limit",
+      "label": "Dwelling Limit (A)",
+      "targetPage": "dwellingcoverage",
+      "status": "editable",
+      "target": "CoverageADwellingInput.Limit"
+    },
+    {
+      "sourcePage": "dwellingcoverage",
+      "sourceID": 2,
+      "sourceKey": "CoverageBOtherStructuresInput.Limit",
+      "label": "Other Structures Limit (B)",
+      "targetPage": "dwellingcoverage",
+      "status": "editable",
+      "target": "CoverageBOtherStructuresInput.Limit"
+    },
+    {
+      "sourcePage": "dwellingcoverage",
+      "sourceID": 3,
+      "sourceKey": "CoverageBOtherStructuresOutput.IncludedLimit",
+      "label": "Cov B Included Limit",
+      "targetPage": "dwellingcoverage",
+      "status": "unavailable service value",
+      "target": "CoverageBOtherStructuresOutput.IncludedLimit"
+    },
+    {
+      "sourcePage": "dwellingcoverage",
+      "sourceID": 4,
+      "sourceKey": "CoverageCPersonalPropertyHO3Input.Limit",
+      "label": "Personal Property Limit (C) \u2013 HO3",
+      "targetPage": "dwellingcoverage",
+      "status": "editable",
+      "target": "CoverageCPersonalPropertyHO3Input.Limit"
+    },
+    {
+      "sourcePage": "dwellingcoverage",
+      "sourceID": 5,
+      "sourceKey": "CoverageCPersonalPropertyHO46Input.Limit",
+      "label": "Personal Property Limit (C) \u2013 HO6",
+      "targetPage": "dwellingcoverage",
+      "status": "editable",
+      "target": "CoverageCPersonalPropertyHO46Input.Limit"
+    },
+    {
+      "sourcePage": "dwellingcoverage",
+      "sourceID": 6,
+      "sourceKey": "CoverageCPersonalPropertyHO3Output.IncludedLimit",
+      "label": "Cov C Included Limit",
+      "targetPage": "dwellingcoverage",
+      "status": "unavailable service value",
+      "target": "CoverageCPersonalPropertyHO3Output.IncludedLimit"
+    },
+    {
+      "sourcePage": "dwellingcoverage",
+      "sourceID": 7,
+      "sourceKey": "CoverageDLossOfUseInput.Limit",
+      "label": "Loss of Use Limit (D)",
+      "targetPage": "dwellingcoverage",
+      "status": "editable",
+      "target": "CoverageDLossOfUseInput.Limit"
+    },
+    {
+      "sourcePage": "dwellingcoverage",
+      "sourceID": 8,
+      "sourceKey": "CoverageDLossOfUseOutput.IncludedLimit",
+      "label": "Cov D Included Limit",
+      "targetPage": "dwellingcoverage",
+      "status": "read-only",
+      "target": "CoverageDLossOfUseOutput.IncludedLimit"
+    },
+    {
+      "sourcePage": "dwellingcoverage",
+      "sourceID": 9,
+      "sourceKey": "CoverageELiabilityInput.Limit",
+      "label": "Personal Liability Limit (E)",
+      "targetPage": "dwellingcoverage",
+      "status": "read-only",
+      "target": "CoverageELiabilityInput.Limit"
+    },
+    {
+      "sourcePage": "dwellingcoverage",
+      "sourceID": 10,
+      "sourceKey": "CoverageFMedicalInput.Limit",
+      "label": "Medical Payments Limit (F)",
+      "targetPage": "dwellingcoverage",
+      "status": "read-only",
+      "target": "CoverageFMedicalInput.Limit"
+    },
+    {
+      "sourcePage": "dwellingcoverage",
+      "sourceID": 11,
+      "sourceKey": "DwellingInput.Deductible",
+      "label": "All-Peril Deductible",
+      "targetPage": "dwellingcoverage",
+      "status": "editable",
+      "target": "DwellingInput.Deductible"
+    },
+    {
+      "sourcePage": "dwellingcoverage",
+      "sourceID": 12,
+      "sourceKey": "DwellingInput.HurricaneDeductible",
+      "label": "Hurricane Deductible",
+      "targetPage": "dwellingcoverage",
+      "status": "editable",
+      "target": "DwellingInput.HurricaneDeductible"
+    },
+    {
+      "sourcePage": "dwellingcoverage",
+      "sourceID": 13,
+      "sourceKey": "ReplacementCostDwellingInput.Indicator",
+      "label": "Replacement Cost \u2013 Dwelling",
+      "targetPage": "dwellingcoverage",
+      "status": "editable",
+      "target": "ReplacementCostDwellingInput.Indicator"
+    },
+    {
+      "sourcePage": "dwellingcoverage",
+      "sourceID": 14,
+      "sourceKey": "ReplacementCostDwellingInput.ReplacementCostValue",
+      "label": "Replacement Cost Value",
+      "targetPage": "dwellingcoverage",
+      "status": "editable",
+      "target": "ReplacementCostDwellingInput.ReplacementCostValue"
+    },
+    {
+      "sourcePage": "dwellingcoverage",
+      "sourceID": 15,
+      "sourceKey": "SinkholeInput.Indicator",
+      "label": "Sinkhole Indicator",
+      "targetPage": "dwellingcoverage",
+      "status": "editable",
+      "target": "SinkholeInput.Indicator"
+    },
+    {
+      "sourcePage": "dwellingcoverage",
+      "sourceID": 16,
+      "sourceKey": "OrdinanceOrLawInput.Limit",
+      "label": "Ordinance Or Law",
+      "targetPage": "dwellingcoverage",
+      "status": "editable",
+      "target": "OrdinanceOrLawInput.Limit"
+    },
+    {
+      "sourcePage": "dwellingcoverage",
+      "sourceID": 17,
+      "sourceKey": "WaterBackupAndSumpOverflowInput.Indicator",
+      "label": "Water Back Up and Sump Overflow",
+      "targetPage": "dwellingcoverage",
+      "status": "editable",
+      "target": "WaterBackupAndSumpOverflowInput.Indicator"
+    },
+    {
+      "sourcePage": "dwellingcoverage",
+      "sourceID": 18,
+      "sourceKey": "WaterBackupAndSumpOverflowInput.Limit",
+      "label": "Water Backup Limit",
+      "targetPage": "dwellingcoverage",
+      "status": "read-only",
+      "target": "WaterBackupAndSumpOverflowInput.Limit"
+    },
+    {
+      "sourcePage": "dwellingcoverage",
+      "sourceID": 19,
+      "sourceKey": "LimitedFungiBacteriaInput.Limit",
+      "label": "Limited Fungi or Bacteria",
+      "targetPage": "dwellingcoverage",
+      "status": "editable",
+      "target": "LimitedFungiBacteriaInput.Limit"
+    },
+    {
+      "sourcePage": "dwellingcoverage",
+      "sourceID": 20,
+      "sourceKey": "LossAssessmentInput.Indicator",
+      "label": "Loss Assessment Coverage",
+      "targetPage": "dwellingcoverage",
+      "status": "editable",
+      "target": "LossAssessmentInput.Indicator"
+    },
+    {
+      "sourcePage": "dwellingcoverage",
+      "sourceID": 21,
+      "sourceKey": "LossAssessmentInput.Limit",
+      "label": "Loss Assessment Limit",
+      "targetPage": "dwellingcoverage",
+      "status": "editable",
+      "target": "LossAssessmentInput.Limit"
+    },
+    {
+      "sourcePage": "dwellingcoverage",
+      "sourceID": 22,
+      "sourceKey": "CarportsPoolCagesInput.Limit",
+      "label": "Carports, Pool Cages & Screen Enclosures",
+      "targetPage": "dwellingcoverage",
+      "status": "editable",
+      "target": "CarportsPoolCagesInput.Limit"
+    },
+    {
+      "sourcePage": "dwellingcoverage",
+      "sourceID": 23,
+      "sourceKey": "ReplacementCostContentsInput.Indicator",
+      "label": "Replacement Cost \u2013 Contents",
+      "targetPage": "dwellingcoverage",
+      "status": "editable",
+      "target": "ReplacementCostContentsInput.Indicator"
+    },
+    {
+      "sourcePage": "dwellingcoverage",
+      "sourceID": 24,
+      "sourceKey": "IdentityFraudExpenseCoverageInput.Indicator",
+      "label": "Identity Fraud Expense",
+      "targetPage": "dwellingcoverage",
+      "status": "editable",
+      "target": "IdentityFraudExpenseCoverageInput.Indicator"
+    },
+    {
+      "sourcePage": "dwellingcoverage",
+      "sourceID": 25,
+      "sourceKey": "IdentityFraudExpenseCoverageInput.Limit",
+      "label": "Identity Fraud Limit",
+      "targetPage": "dwellingcoverage",
+      "status": "read-only",
+      "target": "IdentityFraudExpenseCoverageInput.Limit"
+    },
+    {
+      "sourcePage": "dwellingcoverage",
+      "sourceID": 26,
+      "sourceKey": "UnscheduledJewelryInput.Indicator",
+      "label": "Unscheduled Jewelry Indicator",
+      "targetPage": "dwellingcoverage",
+      "status": "editable",
+      "target": "UnscheduledJewelryInput.Indicator"
+    },
+    {
+      "sourcePage": "dwellingcoverage",
+      "sourceID": 27,
+      "sourceKey": "UnscheduledJewelryInput.Limit",
+      "label": "Unscheduled Jewelry Limit",
+      "targetPage": "dwellingcoverage",
+      "status": "editable",
+      "target": "UnscheduledJewelryInput.Limit"
+    },
+    {
+      "sourcePage": "dwellingcoverage",
+      "sourceID": 28,
+      "sourceKey": "WaterBackupOfSewersOrDrainsInput.Indicator",
+      "label": "Water Backup of Sewers or Drains",
+      "targetPage": "dwellingcoverage",
+      "status": "editable",
+      "target": "WaterBackupOfSewersOrDrainsInput.Indicator"
+    },
+    {
+      "sourcePage": "dwellingcoverage",
+      "sourceID": 29,
+      "sourceKey": "PersonalPropertyOtherResidenceInput.Indicator",
+      "label": "Personal Property Other Residence",
+      "targetPage": "dwellingcoverage",
+      "status": "editable",
+      "target": "PersonalPropertyOtherResidenceInput.Indicator"
+    },
+    {
+      "sourcePage": "dwellingcoverage",
+      "sourceID": 30,
+      "sourceKey": "PersonalInjuryInput.Indicator",
+      "label": "Personal Injury",
+      "targetPage": "dwellingcoverage",
+      "status": "editable",
+      "target": "PersonalInjuryInput.Indicator"
+    },
+    {
+      "sourcePage": "dwellingcoverage",
+      "sourceID": 31,
+      "sourceKey": "UnitsRegularlyRentedToOthersInput.Indicator",
+      "label": "Unit-Owners Rental to Others",
+      "targetPage": "dwellingcoverage",
+      "status": "editable",
+      "target": "UnitsRegularlyRentedToOthersInput.Indicator"
+    },
+    {
+      "sourcePage": "dwellingcoverage",
+      "sourceID": 32,
+      "sourceKey": "IncidentalFarmingPersonalLiabilityInput.Indicator",
+      "label": "Incidental Farming Personal Liability",
+      "targetPage": "dwellingcoverage",
+      "status": "editable",
+      "target": "IncidentalFarmingPersonalLiabilityInput.Indicator"
+    },
+    {
+      "sourcePage": "dwellingcoverage",
+      "sourceID": 33,
+      "sourceKey": "RiskInput.UseDeductibleByPeril",
+      "label": "Choose Deductibles by Peril",
+      "targetPage": "dwellingcoverage",
+      "status": "editable",
+      "target": "RiskInput.UseDeductibleByPeril"
+    },
+    {
+      "sourcePage": "dwellingcoverage",
+      "sourceID": 34,
+      "sourceKey": "LineInput.CoveragePackage",
+      "label": "Coverage Tier / Package",
+      "targetPage": "dwellingcoverage",
+      "status": "editable",
+      "target": "LineInput.CoveragePackage"
+    },
+    {
+      "sourcePage": "dwellingcoverage",
+      "sourceID": 35,
+      "sourceKey": "RiskInput.EquipmentBreakdown",
+      "label": "Equipment Breakdown",
+      "targetPage": "dwellingcoverage",
+      "status": "editable",
+      "target": "RiskInput.EquipmentBreakdown"
+    },
+    {
+      "sourcePage": "dwellingcoverage",
+      "sourceID": 36,
+      "sourceKey": "RiskInput.PermittedIncidentalOccupancy",
+      "label": "Permitted Incidental Occupancy",
+      "targetPage": "dwellingcoverage",
+      "status": "editable",
+      "target": "RiskInput.PermittedIncidentalOccupancy"
+    },
+    {
+      "sourcePage": "dwellingcoverage",
+      "sourceID": 37,
+      "sourceKey": "SpecialComputerCoverageInput.Indicator",
+      "label": "Special Computer Coverage",
+      "targetPage": "dwellingcoverage",
+      "status": "editable",
+      "target": "SpecialComputerCoverageInput.Indicator"
+    },
+    {
+      "sourcePage": "dwellingcoverage",
+      "sourceID": 38,
+      "sourceKey": "SpecialPersonalPropertyCoverageInput.Indicator",
+      "label": "Unit-Owners Special Coverage C",
+      "targetPage": "dwellingcoverage",
+      "status": "editable",
+      "target": "SpecialPersonalPropertyCoverageInput.Indicator"
+    },
+    {
+      "sourcePage": "dwellingcoverage",
+      "sourceID": 39,
+      "sourceKey": "CoverageAOutput.Premium",
+      "label": "Coverage A Premium (display)",
+      "targetPage": "dwellingcoverage",
+      "status": "unavailable service value",
+      "target": "CoverageAOutput.Premium"
+    },
+    {
+      "sourcePage": "dwellingcoverage",
+      "sourceID": 40,
+      "sourceKey": "CoverageBOtherStructuresOutput.Premium",
+      "label": "Coverage B Premium",
+      "targetPage": "dwellingcoverage",
+      "status": "unavailable service value",
+      "target": "CoverageBOtherStructuresOutput.Premium"
+    },
+    {
+      "sourcePage": "dwellingcoverage",
+      "sourceID": 41,
+      "sourceKey": "CoverageCPersonalPropertyHO3Output.Amount",
+      "label": "Coverage C Premium",
+      "targetPage": "dwellingcoverage",
+      "status": "unavailable service value",
+      "target": "CoverageCPersonalPropertyHO3Output.Amount"
+    },
+    {
+      "sourcePage": "dwellingcoverage",
+      "sourceID": 42,
+      "sourceKey": "CoverageDLossOfUseOutput.Premium",
+      "label": "Coverage D Premium",
+      "targetPage": "dwellingcoverage",
+      "status": "unavailable service value",
+      "target": "CoverageDLossOfUseOutput.Premium"
+    }
+  ],
+  "narrative": [
+    {
+      "page": "account",
+      "key": "Applicant.EntityType",
+      "label": "Entity type",
+      "status": "editable"
+    },
+    {
+      "page": "account",
+      "key": "Applicant.DateOfBirth",
+      "label": "Date of birth",
+      "status": "editable"
+    },
+    {
+      "page": "account",
+      "key": "Applicant.Producer",
+      "label": "Producer",
+      "status": "editable"
+    },
+    {
+      "page": "account",
+      "key": "Applicant.Territory",
+      "label": "Territory",
+      "status": "read-only"
+    },
+    {
+      "page": "account",
+      "key": "Applicant.FireDistrict",
+      "label": "Fire district",
+      "status": "read-only"
+    },
+    {
+      "page": "newquote",
+      "key": "PolicyDetails.PriorPolicyNumber",
+      "label": "Prior policy number",
+      "status": "editable"
+    },
+    {
+      "page": "newquote",
+      "key": "PolicyDetails.PriorCarrier",
+      "label": "Prior carrier",
+      "status": "editable"
+    },
+    {
+      "page": "newquote",
+      "key": "PolicyDetails.EPolicyDiscount",
+      "label": "E-policy discount",
+      "status": "editable"
+    },
+    {
+      "page": "newquote",
+      "key": "PolicyDetails.SubscriptionAgreement",
+      "label": "Subscription agreement flag",
+      "status": "read-only"
+    },
+    {
+      "page": "newquote",
+      "key": "PolicyDetails.WritingCompany",
+      "label": "Writing company",
+      "status": "editable"
+    },
+    {
+      "page": "newquote",
+      "key": "PolicyDetails.ConsentToRate",
+      "label": "Consent to rate",
+      "status": "editable"
+    },
+    {
+      "page": "newquote",
+      "key": "PolicyDetails.CTRFactor",
+      "label": "Consent-to-rate factor",
+      "status": "editable"
+    },
+    {
+      "page": "newquote",
+      "key": "PolicyDetails.CitizensLegacyPremium",
+      "label": "Citizens conversion legacy premium",
+      "status": "editable"
+    },
+    {
+      "page": "newquote",
+      "key": "PolicyDetails.CitizensCapping",
+      "label": "Citizens conversion capping details",
+      "status": "editable"
+    },
+    {
+      "page": "newquote",
+      "key": "PolicyDetails.RiskOrigin",
+      "label": "Risk origin",
+      "status": "editable"
+    },
+    {
+      "page": "underwriting",
+      "key": "Underwriting.SwimmingPool",
+      "label": "Swimming pool on premises?",
+      "status": "editable"
+    },
+    {
+      "page": "underwriting",
+      "key": "Underwriting.HotTub",
+      "label": "Hot tub on premises?",
+      "status": "editable"
+    },
+    {
+      "page": "underwriting",
+      "key": "Underwriting.ForSale",
+      "label": "Property for sale?",
+      "status": "editable"
+    },
+    {
+      "page": "underwriting",
+      "key": "Underwriting.Disrepair",
+      "label": "Property in disrepair?",
+      "status": "editable"
+    },
+    {
+      "page": "underwriting",
+      "key": "Underwriting.DayCare",
+      "label": "Day care use?",
+      "status": "editable"
+    },
+    {
+      "page": "underwriting",
+      "key": "Underwriting.Farming",
+      "label": "Farming use?",
+      "status": "editable"
+    },
+    {
+      "page": "underwriting",
+      "key": "Underwriting.IncidentalOccupancy",
+      "label": "Incidental occupancy?",
+      "status": "editable"
+    },
+    {
+      "page": "underwriting",
+      "key": "Underwriting.Foreclosure",
+      "label": "Foreclosure history?",
+      "status": "editable"
+    },
+    {
+      "page": "underwriting",
+      "key": "Underwriting.Bankruptcy",
+      "label": "Bankruptcy history?",
+      "status": "editable"
+    },
+    {
+      "page": "underwriting",
+      "key": "Underwriting.LeadPaint",
+      "label": "Known lead paint?",
+      "status": "editable"
+    },
+    {
+      "page": "underwriting",
+      "key": "Underwriting.Landfill",
+      "label": "Landfill exposure?",
+      "status": "editable"
+    },
+    {
+      "page": "underwriting",
+      "key": "Underwriting.RenovationCompletionDate",
+      "label": "Renovation completion date",
+      "status": "editable"
+    },
+    {
+      "page": "underwriting",
+      "key": "Underwriting.RenovationValue",
+      "label": "Renovation dollar value",
+      "status": "editable"
+    },
+    {
+      "page": "insurancehistory",
+      "key": "History.InsuredPast30Days",
+      "label": "Insurance within the past 30 days?",
+      "status": "editable"
+    },
+    {
+      "page": "insurancehistory",
+      "key": "PriorInsurance.PolicyNumber",
+      "label": "Prior policy number",
+      "status": "editable collection"
+    },
+    {
+      "page": "claimshistory",
+      "key": "LossInput.Source",
+      "label": "Loss source",
+      "status": "editable collection"
+    },
+    {
+      "page": "claimshistory",
+      "key": "Reports.InsuranceScore",
+      "label": "Insurance score",
+      "status": "read-only"
+    },
+    {
+      "page": "claimshistory",
+      "key": "Reports.InsuranceScoreOverride",
+      "label": "Insurance score override",
+      "status": "read-only"
+    },
+    {
+      "page": "claimshistory",
+      "key": "Reports.AdverseActionReasons",
+      "label": "Adverse action reasons",
+      "status": "read-only"
+    },
+    {
+      "page": "claimshistory",
+      "key": "Reports.CLUEStatus",
+      "label": "CLUE report status",
+      "status": "read-only"
+    },
+    {
+      "page": "summary",
+      "key": "Rating.DeclineMessages",
+      "label": "Decline messages",
+      "status": "read-only"
+    },
+    {
+      "page": "summary",
+      "key": "Rating.ReferralMessages",
+      "label": "Referral messages",
+      "status": "read-only"
+    },
+    {
+      "page": "summary",
+      "key": "Rating.SubscriberAgreement",
+      "label": "Subscriber agreement and LPOA",
+      "status": "read-only"
+    },
+    {
+      "page": "billing",
+      "key": "Billing.InitialPaymentMethod",
+      "label": "Initial payment method",
+      "status": "editable"
+    },
+    {
+      "page": "billing",
+      "key": "Billing.InitialPaymentAmount",
+      "label": "Initial payment amount",
+      "status": "read-only"
+    },
+    {
+      "page": "billing",
+      "key": "Billing.PaymentStatus",
+      "label": "Payment status",
+      "status": "read-only"
+    },
+    {
+      "page": "billing",
+      "key": "Billing.InstallmentDueDates",
+      "label": "Installment due dates",
+      "status": "read-only"
+    },
+    {
+      "page": "billing",
+      "key": "Billing.InstallmentAmounts",
+      "label": "Installment amounts",
+      "status": "read-only"
+    },
+    {
+      "page": "dwellingcoverage",
+      "key": "WaterBackupOfSewersOrDrainsInput.Limit",
+      "label": "Water backup of sewers or drains limit",
+      "status": "read-only"
+    },
+    {
+      "page": "dwellingcoverage",
+      "key": "PersonalInjuryInput.Limit",
+      "label": "Personal injury limit",
+      "status": "read-only"
+    },
+    {
+      "page": "dwellingcoverage",
+      "key": "IncidentalFarmingPersonalLiabilityInput.Limit",
+      "label": "Incidental farming liability limit",
+      "status": "read-only"
+    },
+    {
+      "page": "dwellingcoverage",
+      "key": "SpecialComputerCoverageInput.Limit",
+      "label": "Special computer coverage limit",
+      "status": "read-only"
+    }
+  ]
+}

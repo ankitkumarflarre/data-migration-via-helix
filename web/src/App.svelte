@@ -7,6 +7,7 @@
   import Run from './lib/Run.svelte';
   import ThemeToggle from './lib/ThemeToggle.svelte';
   import Browse from './lib/Browse.svelte';
+  import WorkspaceIcon from './lib/personalhome/WorkspaceIcon.svelte';
   import QuoteApplication from './lib/personalhome/QuoteApplication.svelte';
 
   type View = 'migrate' | 'browse' | 'personalhome';
@@ -57,26 +58,21 @@
   function restart() { job = null; step = 'upload'; }
 </script>
 
-<header class="topbar">
-  <div class="brand">
-    <span class="logo" aria-hidden="true">⇄</span>
-    <div>
-      <div class="title">Manatee · Policy workspace</div>
-      <div class="xs muted">Quote applications · Helix migration</div>
-    </div>
-  </div>
-  <nav class="views" aria-label="Sections">
-    <button class:on={view === 'migrate'} aria-current={view === 'migrate' ? 'page' : undefined} onclick={() => switchView('migrate')}>Migrate</button>
-    <button class:on={view === 'browse'} aria-current={view === 'browse' ? 'page' : undefined} onclick={() => switchView('browse')}>Browse data</button>
-    <button class:on={view === 'personalhome'} aria-current={view === 'personalhome' ? 'page' : undefined} onclick={() => switchView('personalhome')}>Quote application</button>
+<div class="workspace-shell">
+<aside class="app-rail">
+  <div class="rail-brand" title="Manatee">M<span>⌁</span></div>
+  <nav aria-label="Sections">
+    <button class:on={view === 'personalhome'} aria-current={view === 'personalhome' ? 'page' : undefined} onclick={() => switchView('personalhome')}><WorkspaceIcon name="grid"/>Quotes</button>
+    <button class:on={view === 'browse'} aria-current={view === 'browse' ? 'page' : undefined} onclick={() => switchView('browse')}><WorkspaceIcon name="database"/>Browse data</button>
+    <button class:on={view === 'migrate'} aria-current={view === 'migrate' ? 'page' : undefined} onclick={() => switchView('migrate')}><WorkspaceIcon name="transfer"/>Migrate</button>
   </nav>
+  <div class="rail-bottom"><span class="avatar" title="Local workspace">MW</span></div>
+</aside>
+<div class="workspace-content">
+<header class="topbar">
+  <div class="workspace-label"><span class="experience">Daily workspace</span><span class="workspace-name">Manatee · Personal Home</span></div>
   <div class="spacer"></div>
-  {#if health}
-    <span class="badge {health.helix_reachable || health.offline ? 'ok' : 'bad'}" title={health.helix_error ?? health.helix_url}>
-      {health.offline ? '● Local quote storage' : health.helix_reachable ? '● Helix connected' : '✕ Helix unreachable'}
-    </span>
-    <span class="xs muted mono host">{health.helix_url.replace('https://', '')}</span>
-  {/if}
+  {#if health}<span class="badge {health.helix_reachable || health.offline ? 'ok' : 'bad'}">{health.offline ? '● Local workspace' : health.helix_reachable ? '● Helix connected' : '✕ Helix unreachable'}</span>{/if}
   <ThemeToggle />
 </header>
 
@@ -119,27 +115,19 @@
 </main>
 {/if}
 
+</div>
+</div>
+
 <style>
-  .topbar {
-    display: flex; align-items: center; gap: var(--space-3);
-    padding: var(--space-3) var(--space-5); background: var(--surface);
-    border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 10;
-  }
-  .brand { display: flex; align-items: center; gap: var(--space-3); }
-  .logo {
-    width: 34px; height: 34px; border-radius: 9px; display: grid; place-items: center;
-    background: var(--accent); color: var(--accent-text); font-size: 18px; font-weight: 700;
-  }
-  .title { font-weight: 650; font-size: var(--fs-lg); }
-  .views { display: flex; gap: 2px; margin-left: var(--space-5); }
-  .views button {
-    border: none; background: none; color: var(--text-muted); font: 500 var(--fs) var(--font);
-    padding: 7px 12px; border-radius: var(--radius-sm); cursor: pointer; white-space: nowrap;
-  }
-  .views button:hover { background: var(--surface-2); color: var(--text); }
-  .views button.on { background: var(--accent-soft); color: var(--text); }
-  .spacer { flex: 1; }
-  .host { max-width: 240px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .workspace-shell{min-height:100vh;padding-left:76px}
+  .app-rail{width:76px;position:fixed;inset:0 auto 0 0;z-index:20;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column}
+  .rail-brand{height:64px;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:800;color:var(--accent);position:relative;letter-spacing:-3px}
+  .rail-brand span{font-size:25px;color:var(--success);position:absolute;top:0;left:27px}
+  .app-rail nav{display:grid;gap:6px;padding-top:12px}.app-rail button{display:flex;flex-direction:column;align-items:center;gap:7px;padding:15px 3px;border:0;border-left:3px solid transparent;background:none;color:var(--text-muted);font:500 10px var(--font);cursor:pointer}
+  .app-rail button.on{background:var(--accent-soft);border-left-color:var(--accent);color:var(--accent)}.app-rail button:hover{background:var(--surface-2)}
+  .rail-bottom{margin-top:auto;padding:18px;text-align:center;border-top:1px solid var(--border)}.avatar{display:grid;place-items:center;background:var(--surface-3);width:34px;height:34px;border-radius:50%;font-size:11px;font-weight:600}
+  .workspace-content{min-width:0}.topbar{height:64px;display:flex;align-items:center;gap:16px;padding:0 26px;background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:10}
+  .workspace-label{display:flex;align-items:center;gap:14px}.workspace-name{color:var(--text-muted);font-size:12px}.experience{background:var(--experience-bg);color:var(--experience-text);padding:6px 10px;border-radius:5px;font-size:12px;font-weight:600}.spacer{flex:1}
   .stepper {
     display: flex; align-items: center; gap: var(--space-2); flex-wrap: wrap;
     padding: var(--space-3) var(--space-5); border-bottom: 1px solid var(--border); background: var(--surface);
@@ -159,12 +147,8 @@
   .step.done .num { background: var(--success-soft); color: var(--success); }
   .sep { width: 28px; height: 1px; background: var(--border-strong); }
   .file { max-width: 340px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  main { padding: var(--space-5); max-width: 1440px; margin: 0 auto; }
+  main { padding: var(--space-5); max-width: 1800px; margin: 0 auto; }
   @media (max-width: 720px) {
-    .topbar { flex-wrap: wrap; }
-    .topbar, .stepper { padding: var(--space-3) var(--space-4); }
-    main { padding: var(--space-4); }
-    .sep, .host { display: none; }
-    .views { margin-left: 0; }
+    .workspace-shell{padding-left:60px}.app-rail{width:60px}.rail-bottom{padding:12px}.workspace-name{display:none}.topbar{padding:0 14px;gap:8px}.topbar .badge{display:none}main{padding:16px}.sep{display:none}.stepper{padding:12px}
   }
 </style>

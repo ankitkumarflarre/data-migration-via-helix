@@ -272,3 +272,93 @@ func TestBillingEscrowNeedsMortgagee(t *testing.T) {
 		t.Fatal(err)
 	}
 }
+
+func TestSourceFieldsPersistAndReadOnlyCalculations(t *testing.T) {
+	s, q := newQuote(t)
+	q, err := s.Save(q.ID, Input{Version: q.Version, Page: "account", Values: map[string]any{"AccountInput.FirstName": "Avery", "AccountInput.LastName": "Demo", "Applicant.EntityType": "Individual", "Applicant.DateOfBirth": "1985-04-12", "Applicant.Producer": "Demo agency"}, Rows: []map[string]any{{"PersonInput.FirstName": "Casey", "PersonInput.LastName": "Demo"}}})
+	if err != nil {
+		t.Fatal(err)
+	}
+	q, err = s.Get(q.ID)
+	if err != nil || q.Values["AccountInput.Name"] != "Avery Demo" || q.Values["Applicant.Producer"] != "Demo agency" || q.Collections["coapplicants"][0]["PersonOutputNonShredded.CoapplicantLabel"] != "Co-applicant #1" {
+		t.Fatal(q, err)
+	}
+	if q.Values["PolicyInput.Term"] != float64(12) || q.Values["PolicyInput.ExpirationDate"] != "2028-01-01" {
+		t.Fatal(q.Values)
+	}
+	_, err = s.Save(q.ID, Input{Version: q.Version, Page: "account", Values: map[string]any{"AccountInput.Name": "Forged"}})
+	var validation *ValidationError
+	if !errors.As(err, &validation) {
+		t.Fatal("computed name accepted", err)
+	}
+	_, err = s.Save(q.ID, Input{Version: q.Version, Page: "account", Rows: []map[string]any{{"PersonOutputNonShredded.CoapplicantLabel": "Forged"}}})
+	if !errors.As(err, &validation) {
+		t.Fatal("computed collection field accepted", err)
+	}
+}
+func TestNewCoverageSelectionsAndDisabledDeductible(t *testing.T) {
+	s, q := newQuote(t)
+	q = advance(t, s, q)
+	q = advance(t, s, q)
+	values := map[string]any{"CoverageADwellingInput.Limit": float64(400000), "LineInput.CoveragePackage": "Deluxe", "UnscheduledJewelryInput.Indicator": true, "IncidentalFarmingPersonalLiabilityInput.Indicator": true, "RiskInput.UseDeductibleByPeril": true}
+	q, err := s.Save(q.ID, Input{Version: q.Version, Page: "dwellingcoverage", Values: values})
+	if err != nil {
+		t.Fatal(err)
+	}
+	got, err := s.Get(q.ID)
+	if err != nil {
+		t.Fatal(err)
+	}
+	for key, value := range values {
+		if got.Values[key] != value {
+			t.Fatalf("%s did not persist", key)
+		}
+	}
+	if got.Values["CoverageDLossOfUseOutput.IncludedLimit"] != float64(80000) || got.Values["WaterBackupAndSumpOverflowInput.Limit"] != float64(10000) {
+		t.Fatal(got.Values)
+	}
+	if got.Values["CoverageAOutput.Premium"] != nil || got.Values["CoverageBOtherStructuresOutput.IncludedLimit"] != nil {
+		t.Fatal("unavailable rating output fabricated")
+	}
+	_, err = s.Save(q.ID, Input{Version: q.Version, Page: "dwellingcoverage", Values: map[string]any{"DwellingInput.Deductible": "2500"}})
+	var validation *ValidationError
+	if !errors.As(err, &validation) {
+		t.Fatal("disabled deductible accepted", err)
+	}
+}
+func TestExpirationClampsLeapDayAndOldDraftHydrates(t *testing.T) {
+	s, err := Open(t.TempDir())
+	if err != nil {
+		t.Fatal(err)
+	}
+	q, err := s.Create(map[string]any{"PolicyInput.EffectiveDate": "2028-02-29"})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if q.Values["PolicyInput.ExpirationDate"] != "2029-02-28" {
+		t.Fatal(q.Values)
+	}
+	// Missing new optional fields do not invalidate old saved applications.
+	for q.CurrentPage != "review" {
+		q = advance(t, s, q)
+	}
+	if _, err = s.Submit(q.ID, q.Version); err != nil {
+		t.Fatal(err)
+	}
+}
+
+func TestEmptyCollectionRowCannotPanicDerivedFields(t *testing.T) {
+	s, q := newQuote(t)
+	saved, err := s.Save(q.ID, Input{Version: q.Version, Page: "account", Rows: []map[string]any{nil}})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if saved.Collections["coapplicants"][0]["PersonOutputNonShredded.CoapplicantLabel"] != "Co-applicant #1" {
+		t.Fatal(saved)
+	}
+	_, err = s.Save(saved.ID, Input{Version: saved.Version, Page: "account", Values: completeValues(saved, Schema.Pages[1]), Rows: []map[string]any{nil}, Advance: true})
+	var v *ValidationError
+	if !errors.As(err, &v) || v.Fields["coapplicants.0.PersonInput.FirstName"] == "" {
+		t.Fatal(err)
+	}
+}

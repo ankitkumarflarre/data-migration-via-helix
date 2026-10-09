@@ -2,7 +2,7 @@
   import { onMount } from 'svelte';
 
   type Mode = 'system' | 'light' | 'dark';
-  let mode = $state<Mode>('system');
+  let mode = $state<Mode>('light');
 
   function apply(m: Mode) {
     const root = document.documentElement;

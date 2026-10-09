@@ -81,7 +81,7 @@ The **Browse data** page (header) reads Helix back:
 
 ## Working PersonalHome quote application
 
-Open **Quote application** in the header, or `/#personalhome/newquote`.
+Open **Quotes** in the navigation rail, or `/#personalhome/newquote`.
 
 Create a quote → Applicant → Risk schedule → Dwelling coverage → Underwriting → Insurance history → Claims history → Coverage summary → Additional interests → optional Billing instructions → Review.
 
@@ -97,7 +97,9 @@ For development, `go run ./cmd/migrator serve -offline -web-dir web/dist` starts
 
 The source inventory and mapping reference files remain in the repository. The Flow reference tab has been removed; old `#reference` links open the quote application. The [implementation plan](docs/PERSONALHOME_IMPLEMENTATION_PLAN.md) records source discrepancies and the implemented application scope.
 
-Regenerate source-derived definitions and run frontend tests:
+The [page-by-page field audit](docs/PERSONALHOME_FIELD_AUDIT.md) accounts for all 170 detailed HTML inventory rows plus narrative-only additions. The shared schema includes 192 scalar definitions and 22 repeated-entry definitions. Calculated/internal fields remain protected; missing carrier outputs and actions are displayed as unavailable. Policy Information is incorporated into New quote, Location Detail into Risk schedule, and Pricing into Coverage summary. Billing preferences and the unavailable installment outputs share Billing instructions.
+
+Regenerate source-derived definitions, the field audit, and run frontend tests:
 
 ```bash
 python3 scripts/extract_personalhome.py

@@ -90,3 +90,11 @@ go run ./cmd/migrator serve -offline -web-dir web/dist -quote-dir data/quotes
 ```
 
 Validation covers durable reopen, partial draft saves, required fields, malformed requests, type/range rules, server-side progression, version conflicts, repeated-record dates, conditional forms/billing, calculated coverage defaults, invalidating earlier completion and final submission. A browser walkthrough using synthetic Alex Example data verified quote creation, required-field blocking, applicant save/refresh, property and coverage entry, underwriting, a prior-policy row, claim declaration, review and persisted local submission. Rating, payment, external report ordering and real binding were not exercised because those services are not present.
+
+## Field-completeness audit — 2026-10-09
+
+The [field audit](PERSONALHOME_FIELD_AUDIT.md) supersedes the earlier 115-field subset. The schema now contains 192 scalar definitions and 22 collection definitions, including narrative-only fields and explicitly unavailable outputs. All 170 detailed inventory rows resolve to an application field/control: 112 editable, 19 read-only, 2 internal, 13 local actions, 10 unavailable service values and 14 unavailable service actions.
+
+Browser verification visited all ten editable journey pages on the saved HO3 demo and the conditional risk/coverage/claims branches on HO6. The union contained all 168 UI-bound source references; the remaining two are intentionally internal (computed full name and provider coordinates). The removed Flow reference tab has not been restored.
+
+Regression coverage checks the actual source HTML against the catalog, resolves each inventory row to the real form schema, exercises visibility branches, checks derived outputs and excludes protected values from save payloads. Go tests cover new-field persistence, calculated-field protection, collection labels, disabled deductible behavior and leap-year expiration. Carrier workflows remain pending as itemized in the audit.

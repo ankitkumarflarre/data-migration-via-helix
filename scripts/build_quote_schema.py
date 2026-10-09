@@ -60,7 +60,7 @@ for k in ['PoolSlide','PoolApprovedFence','PoolDivingBoard']:patch(risk,'Dwellin
 patch(risk,'DwellingInput.NumberOfFloor',showWhen=cond('DwellingInput.Form','HO6'))
 coverage=extract('dwellingcoverage')
 # Fields whose calculation depends on unavailable lookup tables are not editable inputs.
-coverage=[f for f in coverage if f['key'] not in ['UnscheduledJewelryInput.Indicator','IncidentalFarmingPersonalLiabilityInput.Indicator','RiskInput.UseDeductibleByPeril','LineInput.CoveragePackage']]
+# Visible controls are retained; unavailable calculations are explained in the UI.
 patch(coverage,'CoverageADwellingInput.Limit',showWhen=cond('DwellingInput.Form','HO3'),required=True,min=40000)
 patch(coverage,'CoverageCPersonalPropertyHO3Input.Limit',showWhen=cond('DwellingInput.Form','HO3'))
 patch(coverage,'CoverageCPersonalPropertyHO46Input.Limit',showWhen=cond('DwellingInput.Form','HO6'),required=True,min=10000)
@@ -96,6 +96,8 @@ pages=[
  page('additionalinterests','Additional interests',[],collection=dict(key='interests',label='Additional interests',fields=interests)),
  page('billing','Billing instructions',[field('Billing.BillClass','Bill class',required=True,options=['Direct Bill','Mortgagee Escrow','Agency Bill']),field('Billing.PaymentPlan','Payment plan',required=True,options=['Annual','Semi-Annual','Quarterly']),field('Billing.Paperless','Paperless invoices','boolean',default=False)],when=cond('Quote.DCTBilling',True),notice='Save billing preferences only. No payment is collected and no installment schedule is generated.'),
  page('review','Review application',[],notice='Review and submit the captured application for rating. Submission records a local workflow status; it does not bind insurance or send data to a carrier.')]
-schema=dict(version=1,pages=pages)
+from complete_quote_schema import complete
+complete(pages, cat, ROOT)
+schema=dict(version=2,pages=pages)
 (ROOT/'internal/quote/schema.json').write_text(json.dumps(schema,indent=2)+'\n')
 print('Created quote form schema:',sum(len(p['fields']) for p in pages),'fields')
