@@ -6,7 +6,9 @@
 // unless the pin gives a reason for a target outside the report ("outside_report",
 // e.g. a Helix-native field found when cross-checking the UI field inventory).
 // A pin can also exclude a confirmed row, limit a rule to some rows ("when"), or
-// add further rules for the same column ("also", ids get a suffix).
+// add further rules for the same column ("also", ids get a suffix). Rules for
+// columns that are not confirmed report rows (e.g. added in the Rules tab and
+// exported) come from "additional_rules". The pin types live in internal/rules.
 //
 //	go run ./cmd/rulegen -report <report.html> -ddl <ddl.sql> \
 //	   -pins internal/rules/rulesets/<name>.pins.json -out internal/rules/rulesets/<name>.json
@@ -31,31 +33,6 @@ import (
 	"github.com/ankitkumarflarre/datamigration/internal/rules"
 )
 
-type pin struct {
-	Target        rules.Target     `json:"target"`
-	Transform     rules.Transform  `json:"transform"`
-	When          *rules.Condition `json:"when,omitempty"`
-	OutsideReport string           `json:"outside_report,omitempty"` // why the target is not a report location
-	Attention     string           `json:"attention,omitempty"`
-	Note          string           `json:"note,omitempty"`
-	Exclude       string           `json:"exclude,omitempty"` // why the confirmed row gets no rule
-	Also          []extraPin       `json:"also,omitempty"`
-}
-
-type extraPin struct {
-	Suffix string `json:"suffix"`
-	pin
-}
-
-type pinsFile struct {
-	RuleSet       string            `json:"rule_set"`
-	Version       string            `json:"version"`
-	IDPrefix      string            `json:"id_prefix"`
-	Sheet         string            `json:"sheet"`
-	SchemaRenames map[string]string `json:"schema_renames"`
-	Pins          map[string]pin    `json:"pins"` // by report "#"
-}
-
 func main() {
 	report := flag.String("report", "", "schema validation report (HTML)")
 	ddl := flag.String("ddl", "", "ddl.sql of the current Helix bundle")
@@ -76,7 +53,7 @@ func main() {
 		fmt.Fprintln(os.Stderr, "rulegen:", err)
 		os.Exit(1)
 	}
-	fmt.Printf("rulegen: %d rules, %d excluded confirmed columns → %s\n", len(rs.Rules), len(rs.Excluded), *out)
+	fmt.Printf("rulegen: %d rules, %d excluded columns → %s\n", len(rs.Rules), len(rs.Excluded), *out)
 }
 
 // Generate builds the rule set deterministically from its three inputs.
@@ -85,7 +62,7 @@ func Generate(reportPath, ddlPath, pinsPath string) (*rules.RuleSet, error) {
 	if err != nil {
 		return nil, err
 	}
-	var pins pinsFile
+	var pins rules.Pins
 	pb, err := os.ReadFile(pinsPath)
 	if err != nil {
 		return nil, err
@@ -130,10 +107,10 @@ func Generate(reportPath, ddlPath, pinsPath string) (*rules.RuleSet, error) {
 			}
 		}
 		sort.Strings(locs)
-		all := []extraPin{{pin: p}}
+		all := []rules.ExtraPin{{Pin: p}}
 		all = append(all, p.Also...)
 		for _, ep := range all {
-			if err := reg.check(ep.pin, cands); err != nil {
+			if err := reg.check(ep.Pin, cands); err != nil {
 				return nil, fmt.Errorf("rule #%s%s: %w", row.no, ep.Suffix, err)
 			}
 			alts := []rules.Target{}
@@ -147,6 +124,7 @@ func Generate(reportPath, ddlPath, pinsPath string) (*rules.RuleSet, error) {
 				ID: fmt.Sprintf("%s-%02d%s", pins.IDPrefix, n, ep.Suffix), ReportNo: n, Column: row.column, Header: row.header,
 				ReportStatus: row.status, Confidence: row.confidence, When: ep.When, Target: ep.Target, TargetBasis: ep.OutsideReport,
 				Alternatives: alts, ReportLocations: locs, Transform: ep.Transform, Attention: ep.Attention, Note: ep.Note,
+				Disabled: ep.Disabled,
 			})
 		}
 	}
@@ -155,8 +133,46 @@ func Generate(reportPath, ddlPath, pinsPath string) (*rules.RuleSet, error) {
 			return nil, fmt.Errorf("pin #%s does not match a confirmed row", no)
 		}
 	}
-	sort.SliceStable(rs.Rules, func(i, j int) bool { return rs.Rules[i].ReportNo < rs.Rules[j].ReportNo })
-	sort.Slice(rs.Excluded, func(i, j int) bool { return rs.Excluded[i].ReportNo < rs.Excluded[j].ReportNo })
+	byColumn := map[string]resultRow{}
+	for _, row := range results {
+		byColumn[row.column] = row
+	}
+	ids := map[string]bool{}
+	for _, r := range rs.Rules {
+		ids[r.ID] = true
+	}
+	for _, a := range pins.Additional {
+		if a.Exclude != "" {
+			if a.Column == "" {
+				return nil, fmt.Errorf("an excluded additional column needs a column letter")
+			}
+			no := 0
+			if row, ok := byColumn[a.Column]; ok {
+				no, _ = strconv.Atoi(row.no)
+			}
+			rs.Excluded = append(rs.Excluded, rules.Excluded{ReportNo: no, Column: a.Column, Header: a.Header, Reason: a.Exclude})
+			continue
+		}
+		if a.ID == "" || a.Column == "" || a.Header == "" || ids[a.ID] {
+			return nil, fmt.Errorf("additional rule %q needs a unique id, a column and a header", a.ID)
+		}
+		ids[a.ID] = true
+		if v, ok := reg.variants[a.Target.Variant]; !ok || !v.leaf {
+			return nil, fmt.Errorf("additional rule %s: target %s is not a leaf variant in the ddl", a.ID, a.Target)
+		}
+		status, confidence, no := "Not in the report", "", 0
+		if row, ok := byColumn[a.Column]; ok {
+			status, confidence = row.status, row.confidence
+			no, _ = strconv.Atoi(row.no)
+		}
+		rs.Rules = append(rs.Rules, rules.Rule{
+			ID: a.ID, ReportNo: no, Column: a.Column, Header: a.Header, ReportStatus: status, Confidence: confidence,
+			When: a.When, Target: a.Target, TargetBasis: a.OutsideReport, Alternatives: []rules.Target{}, ReportLocations: []string{},
+			Transform: a.Transform, Attention: a.Attention, Note: a.Note, Disabled: a.Disabled,
+		})
+	}
+	sort.SliceStable(rs.Rules, func(i, j int) bool { return colNumber(rs.Rules[i].Column) < colNumber(rs.Rules[j].Column) })
+	sort.SliceStable(rs.Excluded, func(i, j int) bool { return colNumber(rs.Excluded[i].Column) < colNumber(rs.Excluded[j].Column) })
 	return rs, nil
 }
 
@@ -334,7 +350,7 @@ func (r *registry) candidates(l location, renames map[string]string) []rules.Tar
 
 // check accepts a pinned target that is one of the report's candidates, or a
 // leaf variant outside the report when the pin says why.
-func (r *registry) check(p pin, cands map[rules.Target]bool) error {
+func (r *registry) check(p rules.Pin, cands map[rules.Target]bool) error {
 	if cands[p.Target] {
 		if p.OutsideReport != "" {
 			return fmt.Errorf("target %s is a report location; drop outside_report", p.Target)
@@ -348,4 +364,12 @@ func (r *registry) check(p pin, cands map[rules.Target]bool) error {
 		return fmt.Errorf("target %s is not a leaf variant in the ddl", p.Target)
 	}
 	return nil
+}
+
+func colNumber(c string) int {
+	n := 0
+	for _, ch := range c {
+		n = n*26 + int(ch-'A'+1)
+	}
+	return n
 }

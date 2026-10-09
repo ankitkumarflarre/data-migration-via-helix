@@ -371,6 +371,14 @@ The only list API known so far is `GET /api/entities/list/{entity}?limit=&after=
 | D11 | **Single user, local, demo-only.** No authentication. The server listens on `127.0.0.1` only. Target: a working demo **by end of day 2026-10-07** (§14) |
 | D12 | Re-runs **update** existing records with the sheet-sourced fields only (§6.2, item 8) |
 | D13 | (2026-10-09) The rules were cross-checked against the UI page field inventory. Prefer Helix's own tables over the Duck Creek copy. Column M splits by form. Number of Units is HO6 only, stored as the range's lower bound. Territory moves to `dwelling.rated_territory`. Column BU is excluded. See §2 |
+| D15 | (2026-10-09) **Review / Not found columns added** (34 rules), following the under-review analysis workbook and using the Policy Data headers.
+
+- **Engine.** A rule or template can write one of several records of a variant in a row ("instance", record id `variant#instance`). References use record ids. Conditions can be "is not" (`not_in`). A value map to "" leaves the field empty, with a warning per row. A template date can be a column plus N years.
+- **New records.** The policy term → revision → contract wording → version chain (lifts D10/S14 partly). 16 product coverages and one product version, written once per upload. Per row: coverage instances, the AOP and hurricane deductibles, and five dwelling features. Burglar Alarm moves from the Duck Creek copy to a feature row.
+- **Switched off, with their reason.** Premiums (`rating_record`), FIGA and the surplus contribution (`premium_transaction`), and the Citizens placement (`residual_market_placement`).
+- **Excluded.** 33 more columns, each with its reason |
+| D16 | (2026-10-09) **Plan-time check of Helix rules.** A first real run failed: Helix refused `policy_term.in_force_status = in_force`, because a new term must start as `bound`. The row was rolled back. The planner now reads each variant's `transitions` (start states) and `enforced_rules` (`required_when`, `compare`) from `/describe` and blocks violating records before writing. New terms start as `bound`. Percentage hurricane deductibles also write `deductible_percentage` (rule HO-34c) |
+| D14 | (2026-10-09) **Rules tab.** Rules are viewed in plain words and edited in the UI. Edits are a local layer (`data/rules/*.edits.json`) on top of the reviewed rule set, each with a reason and kept in a history that can be restored. They are checked against the live model and apply to new uploads; open uploads re-plan on request. Pins/templates can be exported for review and `make rules`. Rules switched off there are defaults, not per-file attention items. Template links (`ref`) and multi-record rules are not editable yet |
 
 ### Still open (non-blocking)
 
@@ -417,6 +425,10 @@ D2 means iteration 1 works with the Helix schema as it is. These are the gaps fo
 | S14 | No `policy_term` / `policy_revision` / `policy_version` written, although `Risk Term` and `Effective Date` imply them | Deferred (D10) | Build the full chain; attach coverages and dwelling to `policy_version` |
 | S15 | No authentication or audit of who approved | Demo-only (D11) | SSO, per-user approval audit, roles |
 | S16 | No Helix-native home for stories, building floors, units, BCEG, roof deck attachment, wind speed design/location, burglar alarm or territory. They exist only on the Duck Creek copy `dwelling.property.us.personal` | Written to the copy table; burglar alarm is planned as a `dwelling_feature` row | Add these to `dwelling_asset` or `wind_mitigation_verification`, or confirm `dwelling_feature` rows for them |
+| S18 | Coverage codes for the 12 optional coverages (BUSINESS_USE, ORD_LAW, …) are proposed by the migrator; COA/COB/COC/COE follow the analysis workbook | Flagged at approval | Agree the coverage code list with the product owner |
+| S19 | `product_version.coverage_set_reference` points at one coverage, but a product version offers a set of coverages | Coverage A is used, flagged | Model a coverage set (or many-to-many) on the product version |
+| S20 | `policy_term.effective_end_date`, `policy_revision.bound_datetime`, `contract_wording.document_reference` and the coverages' `statutory_status_code` are not in the rater | Effective Date + 1 year, Effective Date, placeholders (flagged) | Source them from the policy system, or make them optional |
+| S21 | A new `policy_term` must start as `bound`; migrated in-force terms therefore stay `bound` | Flagged at approval | Allow migration to create terms in force, or add a bound → in force step to the migrator |
 | S17 | The UI inventory and the rater disagree on allowed values. BCEG: UI 1–10, rater "Ungraded". Roof deck attachment: UI A–D labels against the rater's OIR levels. Opening protection: UI Basic/Hurricane Rated against the rater's Class A/B. Form: the UI also offers HO-4 | Kept as text, or mapped with an attention flag | The inventory authors and underwriting to confirm the value lists |
 
 ---

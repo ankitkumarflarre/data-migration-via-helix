@@ -248,3 +248,17 @@ func Canonical(v any) string {
 	}
 	return fmt.Sprint(v)
 }
+
+// AddYears reads v as a date and returns it plus n whole years as YYYY-MM-DD,
+// or "" when v is not a date.
+func AddYears(v string, n int, date1904 bool) string {
+	d, err := Coerce(FieldType{Kind: Date}, v, date1904)
+	if err != nil || d == nil {
+		return ""
+	}
+	t, err := time.Parse("2006-01-02", fmt.Sprint(d))
+	if err != nil {
+		return ""
+	}
+	return t.AddDate(n, 0, 0).Format("2006-01-02")
+}

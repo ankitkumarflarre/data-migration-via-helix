@@ -1,6 +1,7 @@
 {
   "row_key_column": "A",
   "row_date_column": "F",
+  "headers": { "B": "Form", "AP": "Sinkhole Coverage" },
   "records": [
     {
       "variant": "organization", "scope": "job", "key": "party_reference",
@@ -19,6 +20,240 @@
         "product_category": { "generate": true },
         "product_status": { "const": "active" },
         "effective_date": { "min_col": "F" }
+      }
+    },
+    {
+      "variant": "coverage.property.us.personal", "instance": "coverage_a", "scope": "job", "key": "coverage_code",
+      "fields": {
+        "coverage_code": {"const": "COA"},
+        "coverage_name": {"const": "Coverage A - Dwelling"},
+        "coverage_status": {"const": "active"},
+        "coverage_type": {"const": "base"},
+        "effective_date": {"min_col": "F"},
+        "homeowners_coverage_section": {"const": "coverage_a_dwelling"},
+        "peril_basis": {"const": "open_perils"},
+        "trigger_basis": {"const": "occurrence"},
+        "statutory_status_code": {"generate": true, "attention": "Statutory status code is not in the rater; generated placeholder (D6, S11)."}
+      }
+    },
+    {
+      "variant": "coverage.property.us.personal", "instance": "coverage_b", "scope": "job", "key": "coverage_code",
+      "fields": {
+        "coverage_code": {"const": "COB"},
+        "coverage_name": {"const": "Coverage B - Other Structures"},
+        "coverage_status": {"const": "active"},
+        "coverage_type": {"const": "base"},
+        "effective_date": {"min_col": "F"},
+        "homeowners_coverage_section": {"const": "coverage_b_other_structures"},
+        "peril_basis": {"const": "open_perils"},
+        "trigger_basis": {"const": "occurrence"},
+        "statutory_status_code": {"generate": true, "attention": "Statutory status code is not in the rater; generated placeholder (D6, S11)."}
+      }
+    },
+    {
+      "variant": "coverage.property.us.personal", "instance": "coverage_c", "scope": "job", "key": "coverage_code",
+      "fields": {
+        "coverage_code": {"const": "COC"},
+        "coverage_name": {"const": "Coverage C - Personal Property"},
+        "coverage_status": {"const": "active"},
+        "coverage_type": {"const": "base"},
+        "effective_date": {"min_col": "F"},
+        "homeowners_coverage_section": {"const": "coverage_c_personal_property"},
+        "peril_basis": {"const": "named_perils"},
+        "trigger_basis": {"const": "occurrence"},
+        "statutory_status_code": {"generate": true, "attention": "Statutory status code is not in the rater; generated placeholder (D6, S11)."}
+      }
+    },
+    {
+      "variant": "coverage.property.us.personal", "instance": "coverage_e", "scope": "job", "key": "coverage_code",
+      "fields": {
+        "coverage_code": {"const": "COE"},
+        "coverage_name": {"const": "Coverage E - Personal Liability"},
+        "coverage_status": {"const": "active"},
+        "coverage_type": {"const": "base"},
+        "effective_date": {"min_col": "F"},
+        "homeowners_coverage_section": {"const": "coverage_e_personal_liability"},
+        "peril_basis": {"const": "not_applicable"},
+        "trigger_basis": {"const": "occurrence"},
+        "statutory_status_code": {"generate": true, "attention": "Statutory status code is not in the rater; generated placeholder (D6, S11)."}
+      }
+    },
+    {
+      "variant": "coverage.property.us.personal", "instance": "business_use", "scope": "job", "key": "coverage_code",
+      "fields": {
+        "coverage_code": {"const": "BUSINESS_USE", "attention": "Coverage code BUSINESS_USE is proposed by the migrator; agree it with the product owner (S18)."},
+        "coverage_name": {"const": "Permitted Incidental Occupancy (Business Use)"},
+        "coverage_status": {"const": "active"},
+        "coverage_type": {"const": "optional"},
+        "effective_date": {"min_col": "F"},
+        "homeowners_coverage_section": {"const": "optional"},
+        "peril_basis": {"const": "not_applicable"},
+        "trigger_basis": {"const": "occurrence"},
+        "statutory_status_code": {"generate": true, "attention": "Statutory status code is not in the rater; generated placeholder (D6, S11)."}
+      }
+    },
+    {
+      "variant": "coverage.property.us.personal", "instance": "other_structures_rented", "scope": "job", "key": "coverage_code",
+      "fields": {
+        "coverage_code": {"const": "OS_RENTED", "attention": "Coverage code OS_RENTED is proposed by the migrator; agree it with the product owner (S18)."},
+        "coverage_name": {"const": "Specific Other Structures - Rented to Others"},
+        "coverage_status": {"const": "active"},
+        "coverage_type": {"const": "optional"},
+        "effective_date": {"min_col": "F"},
+        "homeowners_coverage_section": {"const": "optional"},
+        "peril_basis": {"const": "not_applicable"},
+        "trigger_basis": {"const": "occurrence"},
+        "statutory_status_code": {"generate": true, "attention": "Statutory status code is not in the rater; generated placeholder (D6, S11)."}
+      }
+    },
+    {
+      "variant": "coverage.property.us.personal", "instance": "ordinance_or_law", "scope": "job", "key": "coverage_code",
+      "fields": {
+        "coverage_code": {"const": "ORD_LAW", "attention": "Coverage code ORD_LAW is proposed by the migrator; agree it with the product owner (S18)."},
+        "coverage_name": {"const": "Ordinance or Law"},
+        "coverage_status": {"const": "active"},
+        "coverage_type": {"const": "optional"},
+        "effective_date": {"min_col": "F"},
+        "homeowners_coverage_section": {"const": "optional"},
+        "peril_basis": {"const": "not_applicable"},
+        "trigger_basis": {"const": "occurrence"},
+        "statutory_status_code": {"generate": true, "attention": "Statutory status code is not in the rater; generated placeholder (D6, S11)."}
+      }
+    },
+    {
+      "variant": "coverage.property.us.personal", "instance": "loss_assessment", "scope": "job", "key": "coverage_code",
+      "fields": {
+        "coverage_code": {"const": "LOSS_ASSESS", "attention": "Coverage code LOSS_ASSESS is proposed by the migrator; agree it with the product owner (S18)."},
+        "coverage_name": {"const": "Loss Assessment"},
+        "coverage_status": {"const": "active"},
+        "coverage_type": {"const": "optional"},
+        "effective_date": {"min_col": "F"},
+        "homeowners_coverage_section": {"const": "optional"},
+        "peril_basis": {"const": "not_applicable"},
+        "trigger_basis": {"const": "occurrence"},
+        "statutory_status_code": {"generate": true, "attention": "Statutory status code is not in the rater; generated placeholder (D6, S11)."}
+      }
+    },
+    {
+      "variant": "coverage.property.us.personal", "instance": "screened_enclosure", "scope": "job", "key": "coverage_code",
+      "fields": {
+        "coverage_code": {"const": "SCREEN_ENCL", "attention": "Coverage code SCREEN_ENCL is proposed by the migrator; agree it with the product owner (S18)."},
+        "coverage_name": {"const": "Screened Enclosure"},
+        "coverage_status": {"const": "active"},
+        "coverage_type": {"const": "optional"},
+        "effective_date": {"min_col": "F"},
+        "homeowners_coverage_section": {"const": "optional"},
+        "peril_basis": {"const": "not_applicable"},
+        "trigger_basis": {"const": "occurrence"},
+        "statutory_status_code": {"generate": true, "attention": "Statutory status code is not in the rater; generated placeholder (D6, S11)."}
+      }
+    },
+    {
+      "variant": "coverage.property.us.personal", "instance": "replacement_cost_contents", "scope": "job", "key": "coverage_code",
+      "fields": {
+        "coverage_code": {"const": "RC_CONTENTS", "attention": "Coverage code RC_CONTENTS is proposed by the migrator; agree it with the product owner (S18)."},
+        "coverage_name": {"const": "Replacement Cost on Contents"},
+        "coverage_status": {"const": "active"},
+        "coverage_type": {"const": "optional"},
+        "effective_date": {"min_col": "F"},
+        "homeowners_coverage_section": {"const": "optional"},
+        "peril_basis": {"const": "not_applicable"},
+        "trigger_basis": {"const": "occurrence"},
+        "statutory_status_code": {"generate": true, "attention": "Statutory status code is not in the rater; generated placeholder (D6, S11)."}
+      }
+    },
+    {
+      "variant": "coverage.property.us.personal", "instance": "water_back_up", "scope": "job", "key": "coverage_code",
+      "fields": {
+        "coverage_code": {"const": "WATER_BACKUP", "attention": "Coverage code WATER_BACKUP is proposed by the migrator; agree it with the product owner (S18)."},
+        "coverage_name": {"const": "Water Back Up"},
+        "coverage_status": {"const": "active"},
+        "coverage_type": {"const": "optional"},
+        "effective_date": {"min_col": "F"},
+        "homeowners_coverage_section": {"const": "optional"},
+        "peril_basis": {"const": "not_applicable"},
+        "trigger_basis": {"const": "occurrence"},
+        "statutory_status_code": {"generate": true, "attention": "Statutory status code is not in the rater; generated placeholder (D6, S11)."}
+      }
+    },
+    {
+      "variant": "coverage.property.us.personal", "instance": "limited_fungi_section_1", "scope": "job", "key": "coverage_code",
+      "fields": {
+        "coverage_code": {"const": "FUNGI_S1", "attention": "Coverage code FUNGI_S1 is proposed by the migrator; agree it with the product owner (S18)."},
+        "coverage_name": {"const": "Limited Fungi, Wet or Dry Rot, Yeast or Bacteria - Section I"},
+        "coverage_status": {"const": "active"},
+        "coverage_type": {"const": "optional"},
+        "effective_date": {"min_col": "F"},
+        "homeowners_coverage_section": {"const": "optional"},
+        "peril_basis": {"const": "not_applicable"},
+        "trigger_basis": {"const": "occurrence"},
+        "statutory_status_code": {"generate": true, "attention": "Statutory status code is not in the rater; generated placeholder (D6, S11)."}
+      }
+    },
+    {
+      "variant": "coverage.property.us.personal", "instance": "limited_fungi_section_2", "scope": "job", "key": "coverage_code",
+      "fields": {
+        "coverage_code": {"const": "FUNGI_S2", "attention": "Coverage code FUNGI_S2 is proposed by the migrator; agree it with the product owner (S18)."},
+        "coverage_name": {"const": "Limited Fungi, Wet or Dry Rot, Yeast or Bacteria - Section II"},
+        "coverage_status": {"const": "active"},
+        "coverage_type": {"const": "optional"},
+        "effective_date": {"min_col": "F"},
+        "homeowners_coverage_section": {"const": "optional"},
+        "peril_basis": {"const": "not_applicable"},
+        "trigger_basis": {"const": "occurrence"},
+        "statutory_status_code": {"generate": true, "attention": "Statutory status code is not in the rater; generated placeholder (D6, S11)."}
+      }
+    },
+    {
+      "variant": "coverage.property.us.personal", "instance": "ho6_units_rented", "scope": "job", "key": "coverage_code",
+      "fields": {
+        "coverage_code": {"const": "HO6_RENTED", "attention": "Coverage code HO6_RENTED is proposed by the migrator; agree it with the product owner (S18)."},
+        "coverage_name": {"const": "HO-6 Units Regularly Rented to Others"},
+        "coverage_status": {"const": "active"},
+        "coverage_type": {"const": "optional"},
+        "effective_date": {"min_col": "F"},
+        "homeowners_coverage_section": {"const": "optional"},
+        "peril_basis": {"const": "not_applicable"},
+        "trigger_basis": {"const": "occurrence"},
+        "statutory_status_code": {"generate": true, "attention": "Statutory status code is not in the rater; generated placeholder (D6, S11)."}
+      }
+    },
+    {
+      "variant": "coverage.property.us.personal", "instance": "ho6_special_coverage_a", "scope": "job", "key": "coverage_code",
+      "fields": {
+        "coverage_code": {"const": "HO6_SPECIAL_A", "attention": "Coverage code HO6_SPECIAL_A is proposed by the migrator; agree it with the product owner (S18)."},
+        "coverage_name": {"const": "HO-6 Special Coverage A"},
+        "coverage_status": {"const": "active"},
+        "coverage_type": {"const": "optional"},
+        "effective_date": {"min_col": "F"},
+        "homeowners_coverage_section": {"const": "optional"},
+        "peril_basis": {"const": "not_applicable"},
+        "trigger_basis": {"const": "occurrence"},
+        "statutory_status_code": {"generate": true, "attention": "Statutory status code is not in the rater; generated placeholder (D6, S11)."}
+      }
+    },
+    {
+      "variant": "coverage.property.us.personal", "instance": "other_structures_increased", "scope": "job", "key": "coverage_code",
+      "fields": {
+        "coverage_code": {"const": "OS_INCREASED", "attention": "Coverage code OS_INCREASED is proposed by the migrator; agree it with the product owner (S18)."},
+        "coverage_name": {"const": "Other Structures - Increased Limits - Not Rented"},
+        "coverage_status": {"const": "active"},
+        "coverage_type": {"const": "optional"},
+        "effective_date": {"min_col": "F"},
+        "homeowners_coverage_section": {"const": "optional"},
+        "peril_basis": {"const": "not_applicable"},
+        "trigger_basis": {"const": "occurrence"},
+        "statutory_status_code": {"generate": true, "attention": "Statutory status code is not in the rater; generated placeholder (D6, S11)."}
+      }
+    },
+    {
+      "variant": "product_version", "scope": "job", "key": "version_number",
+      "fields": {
+        "version_number": {"generate": true, "attention": "Product version number is a generated placeholder (D6, S11)."},
+        "version_status": {"const": "current"},
+        "effective_date": {"min_col": "F"},
+        "product_reference": {"ref": "product"},
+        "coverage_set_reference": {"ref": "coverage.property.us.personal#coverage_a", "attention": "The model links a product version to one coverage; Coverage A is used (S19)."}
       }
     },
     {
@@ -69,6 +304,330 @@
         "verification_status": { "const": "submitted" },
         "inspection_date": { "col": "F", "attention": "Inspection date is not in the sheet; the Effective Date is used (D9, S13)." },
         "oir_b1_1802_form_revision": { "generate": true, "attention": "OIR-B1-1802 form revision is a generated placeholder (D9, S13)." }
+      }
+    },
+    {
+      "variant": "policy_term", "scope": "row", "key": "policy_term_reference",
+      "fields": {
+        "policy_term_reference": {"format": "PT-{PN}"},
+        "policy_reference": {"ref": "policy.property.us-fl.personal.safepoint"},
+        "product_version_reference": {"ref": "product_version"},
+        "effective_start_date": {"col": "F"},
+        "effective_end_date": {"col": "F", "plus_years": 1, "attention": "The term end is not in the sheet; Effective Date + 1 year is used."},
+        "in_force_status": {"const": "bound", "attention": "Helix only lets a new term start as bound (then bound → in force). Migrated terms are written as bound; moving them to in force is not done by the migrator (S21)."}
+      }
+    },
+    {
+      "variant": "policy_revision", "scope": "row", "key": "policy_revision_reference",
+      "fields": {
+        "policy_revision_reference": {"format": "PR-{PN}"},
+        "policy_term_reference": {"ref": "policy_term"},
+        "bound_datetime": {"generate": true, "attention": "Bind time is not in the sheet; the Effective Date at 00:00 is used (D6)."},
+        "model_sequence": {"const": "1"},
+        "revision_reason_code": {"const": "migration"}
+      }
+    },
+    {
+      "variant": "contract_wording", "scope": "row", "key": "wording_id",
+      "fields": {
+        "wording_id": {"format": "CW-{PN}"},
+        "wording_version": {"const": "1"},
+        "policy_revision_reference": {"ref": "policy_revision"},
+        "effective_date": {"col": "F"},
+        "status": {"const": "active"},
+        "document_reference": {"generate": true, "attention": "Policy wording document is not in the rater; generated placeholder (D6, S11)."}
+      }
+    },
+    {
+      "variant": "policy_version", "scope": "row", "key": "policy_version_reference",
+      "fields": {
+        "policy_version_reference": {"format": "PV-{PN}"},
+        "policy_reference": {"ref": "policy.property.us-fl.personal.safepoint"},
+        "policy_revision_reference": {"ref": "policy_revision"},
+        "contract_wording_reference": {"ref": "contract_wording"},
+        "effective_start_date": {"col": "F"},
+        "effective_end_date": {"col": "F", "plus_years": 1}
+      }
+    },
+    {
+      "variant": "coverage_instance.property.us.personal", "instance": "coverage_a", "scope": "row", "key": "coverage_instance_reference",
+      "fields": {
+        "coverage_instance_reference": {"format": "CI-{PN}-COA"},
+        "coverage_identity_key": {"format": "{PN}-COA"},
+        "coverage_section_code": {"const": "COA"},
+        "coverage_status": {"const": "active"},
+        "product_coverage_reference": {"ref": "coverage.property.us.personal#coverage_a"},
+        "policy_version_reference": {"ref": "policy_version"}
+      }
+    },
+    {
+      "variant": "coverage_instance.property.us.personal", "instance": "coverage_b", "scope": "row", "key": "coverage_instance_reference",
+      "fields": {
+        "coverage_instance_reference": {"format": "CI-{PN}-COB"},
+        "coverage_identity_key": {"format": "{PN}-COB"},
+        "coverage_section_code": {"const": "COB"},
+        "coverage_status": {"const": "active"},
+        "product_coverage_reference": {"ref": "coverage.property.us.personal#coverage_b"},
+        "policy_version_reference": {"ref": "policy_version"}
+      }
+    },
+    {
+      "variant": "coverage_instance.property.us.personal", "instance": "coverage_c", "scope": "row", "key": "coverage_instance_reference",
+      "fields": {
+        "coverage_instance_reference": {"format": "CI-{PN}-COC"},
+        "coverage_identity_key": {"format": "{PN}-COC"},
+        "coverage_section_code": {"const": "COC"},
+        "coverage_status": {"const": "active"},
+        "product_coverage_reference": {"ref": "coverage.property.us.personal#coverage_c"},
+        "policy_version_reference": {"ref": "policy_version"}
+      }
+    },
+    {
+      "variant": "coverage_instance.property.us.personal", "instance": "coverage_e", "scope": "row", "key": "coverage_instance_reference",
+      "fields": {
+        "coverage_instance_reference": {"format": "CI-{PN}-COE"},
+        "coverage_identity_key": {"format": "{PN}-COE"},
+        "coverage_section_code": {"const": "COE"},
+        "coverage_status": {"const": "active"},
+        "product_coverage_reference": {"ref": "coverage.property.us.personal#coverage_e"},
+        "policy_version_reference": {"ref": "policy_version"}
+      }
+    },
+    {
+      "variant": "coverage_instance.property.us.personal", "instance": "business_use", "scope": "row", "key": "coverage_instance_reference",
+      "fields": {
+        "coverage_instance_reference": {"format": "CI-{PN}-BUSINESS_USE"},
+        "coverage_identity_key": {"format": "{PN}-BUSINESS_USE"},
+        "coverage_section_code": {"const": "BUSINESS_USE"},
+        "coverage_status": {"const": "active"},
+        "product_coverage_reference": {"ref": "coverage.property.us.personal#business_use"},
+        "policy_version_reference": {"ref": "policy_version"}
+      }
+    },
+    {
+      "variant": "coverage_instance.property.us.personal", "instance": "other_structures_rented", "scope": "row", "key": "coverage_instance_reference",
+      "fields": {
+        "coverage_instance_reference": {"format": "CI-{PN}-OS_RENTED"},
+        "coverage_identity_key": {"format": "{PN}-OS_RENTED"},
+        "coverage_section_code": {"const": "OS_RENTED"},
+        "coverage_status": {"const": "active"},
+        "product_coverage_reference": {"ref": "coverage.property.us.personal#other_structures_rented"},
+        "policy_version_reference": {"ref": "policy_version"}
+      }
+    },
+    {
+      "variant": "coverage_instance.property.us.personal", "instance": "ordinance_or_law", "scope": "row", "key": "coverage_instance_reference",
+      "fields": {
+        "coverage_instance_reference": {"format": "CI-{PN}-ORD_LAW"},
+        "coverage_identity_key": {"format": "{PN}-ORD_LAW"},
+        "coverage_section_code": {"const": "ORD_LAW"},
+        "coverage_status": {"const": "active"},
+        "product_coverage_reference": {"ref": "coverage.property.us.personal#ordinance_or_law"},
+        "policy_version_reference": {"ref": "policy_version"}
+      }
+    },
+    {
+      "variant": "coverage_instance.property.us.personal", "instance": "loss_assessment", "scope": "row", "key": "coverage_instance_reference",
+      "fields": {
+        "coverage_instance_reference": {"format": "CI-{PN}-LOSS_ASSESS"},
+        "coverage_identity_key": {"format": "{PN}-LOSS_ASSESS"},
+        "coverage_section_code": {"const": "LOSS_ASSESS"},
+        "coverage_status": {"const": "active"},
+        "product_coverage_reference": {"ref": "coverage.property.us.personal#loss_assessment"},
+        "policy_version_reference": {"ref": "policy_version"}
+      }
+    },
+    {
+      "variant": "coverage_instance.property.us.personal", "instance": "screened_enclosure", "scope": "row", "key": "coverage_instance_reference",
+      "fields": {
+        "coverage_instance_reference": {"format": "CI-{PN}-SCREEN_ENCL"},
+        "coverage_identity_key": {"format": "{PN}-SCREEN_ENCL"},
+        "coverage_section_code": {"const": "SCREEN_ENCL"},
+        "coverage_status": {"const": "active"},
+        "product_coverage_reference": {"ref": "coverage.property.us.personal#screened_enclosure"},
+        "policy_version_reference": {"ref": "policy_version"}
+      }
+    },
+    {
+      "variant": "coverage_instance.property.us.personal", "instance": "replacement_cost_contents", "scope": "row", "key": "coverage_instance_reference",
+      "fields": {
+        "coverage_instance_reference": {"format": "CI-{PN}-RC_CONTENTS"},
+        "coverage_identity_key": {"format": "{PN}-RC_CONTENTS"},
+        "coverage_section_code": {"const": "RC_CONTENTS"},
+        "coverage_status": {"const": "active"},
+        "product_coverage_reference": {"ref": "coverage.property.us.personal#replacement_cost_contents"},
+        "policy_version_reference": {"ref": "policy_version"}
+      }
+    },
+    {
+      "variant": "coverage_instance.property.us.personal", "instance": "water_back_up", "scope": "row", "key": "coverage_instance_reference",
+      "fields": {
+        "coverage_instance_reference": {"format": "CI-{PN}-WATER_BACKUP"},
+        "coverage_identity_key": {"format": "{PN}-WATER_BACKUP"},
+        "coverage_section_code": {"const": "WATER_BACKUP"},
+        "coverage_status": {"const": "active"},
+        "product_coverage_reference": {"ref": "coverage.property.us.personal#water_back_up"},
+        "policy_version_reference": {"ref": "policy_version"}
+      }
+    },
+    {
+      "variant": "coverage_instance.property.us.personal", "instance": "limited_fungi_section_1", "scope": "row", "key": "coverage_instance_reference",
+      "fields": {
+        "coverage_instance_reference": {"format": "CI-{PN}-FUNGI_S1"},
+        "coverage_identity_key": {"format": "{PN}-FUNGI_S1"},
+        "coverage_section_code": {"const": "FUNGI_S1"},
+        "coverage_status": {"const": "active"},
+        "product_coverage_reference": {"ref": "coverage.property.us.personal#limited_fungi_section_1"},
+        "policy_version_reference": {"ref": "policy_version"}
+      }
+    },
+    {
+      "variant": "coverage_instance.property.us.personal", "instance": "limited_fungi_section_2", "scope": "row", "key": "coverage_instance_reference",
+      "fields": {
+        "coverage_instance_reference": {"format": "CI-{PN}-FUNGI_S2"},
+        "coverage_identity_key": {"format": "{PN}-FUNGI_S2"},
+        "coverage_section_code": {"const": "FUNGI_S2"},
+        "coverage_status": {"const": "active"},
+        "product_coverage_reference": {"ref": "coverage.property.us.personal#limited_fungi_section_2"},
+        "policy_version_reference": {"ref": "policy_version"}
+      }
+    },
+    {
+      "variant": "coverage_instance.property.us.personal", "instance": "ho6_units_rented", "scope": "row", "key": "coverage_instance_reference",
+      "fields": {
+        "coverage_instance_reference": {"format": "CI-{PN}-HO6_RENTED"},
+        "coverage_identity_key": {"format": "{PN}-HO6_RENTED"},
+        "coverage_section_code": {"const": "HO6_RENTED"},
+        "coverage_status": {"const": "active"},
+        "product_coverage_reference": {"ref": "coverage.property.us.personal#ho6_units_rented"},
+        "policy_version_reference": {"ref": "policy_version"}
+      }
+    },
+    {
+      "variant": "coverage_instance.property.us.personal", "instance": "ho6_special_coverage_a", "scope": "row", "key": "coverage_instance_reference",
+      "fields": {
+        "coverage_instance_reference": {"format": "CI-{PN}-HO6_SPECIAL_A"},
+        "coverage_identity_key": {"format": "{PN}-HO6_SPECIAL_A"},
+        "coverage_section_code": {"const": "HO6_SPECIAL_A"},
+        "coverage_status": {"const": "active"},
+        "product_coverage_reference": {"ref": "coverage.property.us.personal#ho6_special_coverage_a"},
+        "policy_version_reference": {"ref": "policy_version"}
+      }
+    },
+    {
+      "variant": "coverage_instance.property.us.personal", "instance": "other_structures_increased", "scope": "row", "key": "coverage_instance_reference",
+      "fields": {
+        "coverage_instance_reference": {"format": "CI-{PN}-OS_INCREASED"},
+        "coverage_identity_key": {"format": "{PN}-OS_INCREASED"},
+        "coverage_section_code": {"const": "OS_INCREASED"},
+        "coverage_status": {"const": "active"},
+        "product_coverage_reference": {"ref": "coverage.property.us.personal#other_structures_increased"},
+        "policy_version_reference": {"ref": "policy_version"}
+      }
+    },
+    {
+      "variant": "coverage_deductible.property.us-fl.personal.safepoint", "instance": "all_other_perils", "scope": "row", "key": "coverage_deductible_reference",
+      "fields": {
+        "coverage_deductible_reference": {"format": "CD-{PN}-AOP"},
+        "deductible_kind": {"const": "all_other_perils"},
+        "deductible_basis": {"const": "flat_amount"},
+        "policy_term_reference": {"ref": "policy_term"}
+      }
+    },
+    {
+      "variant": "coverage_deductible.property.us-fl.personal.safepoint", "instance": "hurricane", "scope": "row", "key": "coverage_deductible_reference",
+      "fields": {
+        "coverage_deductible_reference": {"format": "CD-{PN}-HUR"},
+        "deductible_kind": {"const": "hurricane"},
+        "policy_term_reference": {"ref": "policy_term"}
+      }
+    },
+    {
+      "variant": "dwelling_feature.property.personal", "instance": "units_in_fire_division", "scope": "row", "key": "dwelling_feature_reference",
+      "fields": {
+        "dwelling_feature_reference": {"format": "DF-{PN}-units_in_fire_division"},
+        "dwelling_asset_reference": {"ref": "dwelling_asset.property.personal"},
+        "feature_category": {"const": "construction"},
+        "feature_code": {"const": "units_in_fire_division"},
+        "value_type": {"const": "count"},
+        "verification_status": {"const": "declared"},
+        "effective_start_date": {"col": "F"}
+      }
+    },
+    {
+      "variant": "dwelling_feature.property.personal", "instance": "burglar_alarm", "scope": "row", "key": "dwelling_feature_reference",
+      "fields": {
+        "dwelling_feature_reference": {"format": "DF-{PN}-burglar_alarm"},
+        "dwelling_asset_reference": {"ref": "dwelling_asset.property.personal"},
+        "feature_category": {"const": "protection"},
+        "feature_code": {"const": "burglar_alarm"},
+        "value_type": {"const": "yes_no"},
+        "verification_status": {"const": "declared"},
+        "effective_start_date": {"col": "F"}
+      }
+    },
+    {
+      "variant": "dwelling_feature.property.personal", "instance": "fire_alarm", "scope": "row", "key": "dwelling_feature_reference",
+      "fields": {
+        "dwelling_feature_reference": {"format": "DF-{PN}-fire_alarm"},
+        "dwelling_asset_reference": {"ref": "dwelling_asset.property.personal"},
+        "feature_category": {"const": "protection"},
+        "feature_code": {"const": "fire_alarm"},
+        "value_type": {"const": "yes_no"},
+        "verification_status": {"const": "declared"},
+        "effective_start_date": {"col": "F"}
+      }
+    },
+    {
+      "variant": "dwelling_feature.property.personal", "instance": "sprinkler_system", "scope": "row", "key": "dwelling_feature_reference",
+      "fields": {
+        "dwelling_feature_reference": {"format": "DF-{PN}-sprinkler_system"},
+        "dwelling_asset_reference": {"ref": "dwelling_asset.property.personal"},
+        "feature_category": {"const": "protection"},
+        "feature_code": {"const": "sprinkler_system"},
+        "value_type": {"const": "sprinkler_class"},
+        "verification_status": {"const": "declared"},
+        "effective_start_date": {"col": "F"}
+      }
+    },
+    {
+      "variant": "dwelling_feature.property.personal", "instance": "terrain_exposure", "scope": "row", "key": "dwelling_feature_reference",
+      "fields": {
+        "dwelling_feature_reference": {"format": "DF-{PN}-terrain_exposure"},
+        "dwelling_asset_reference": {"ref": "dwelling_asset.property.personal"},
+        "feature_category": {"const": "mitigation"},
+        "feature_code": {"const": "terrain_exposure"},
+        "value_type": {"const": "exposure_category"},
+        "verification_status": {"const": "declared"},
+        "effective_start_date": {"col": "F"}
+      }
+    },
+    {
+      "variant": "premium_transaction", "instance": "surplus_contribution", "scope": "row", "key": "premium_transaction_reference",
+      "fields": {
+        "premium_transaction_reference": {"format": "PX-{PN}-SURPLUS"},
+        "contract_term_reference": {"ref": "policy_term"},
+        "transaction_type_code": {"const": "surplus_contribution"},
+        "transaction_group_reference": {"format": "MIG-{PN}"},
+        "source_transaction_reference": {"format": "{PN}"},
+        "status_code": {"const": "posted"},
+        "effective_from": {"col": "F"},
+        "effective_to": {"col": "F", "plus_years": 1},
+        "calculated_datetime": {"generate": true, "attention": "Calculation time is not in the sheet; the Effective Date at 00:00 is used (D6)."}
+      }
+    },
+    {
+      "variant": "premium_transaction", "instance": "figa", "scope": "row", "key": "premium_transaction_reference",
+      "fields": {
+        "premium_transaction_reference": {"format": "PX-{PN}-FIGA"},
+        "contract_term_reference": {"ref": "policy_term"},
+        "transaction_type_code": {"const": "figa"},
+        "transaction_group_reference": {"format": "MIG-{PN}"},
+        "source_transaction_reference": {"format": "{PN}"},
+        "status_code": {"const": "posted"},
+        "effective_from": {"col": "F"},
+        "effective_to": {"col": "F", "plus_years": 1},
+        "calculated_datetime": {"generate": true, "attention": "Calculation time is not in the sheet; the Effective Date at 00:00 is used (D6)."}
       }
     },
     { "variant": "dwelling.property.us.personal", "scope": "row" },

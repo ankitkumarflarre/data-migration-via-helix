@@ -244,7 +244,7 @@ type patchUndo struct {
 type rowWriter struct {
 	x        *Executor
 	o        Options
-	ids      map[string]string // variant → record id resolved so far
+	ids      map[string]string // plan record id → Helix record id resolved so far
 	policy   string
 	sheetRow int
 	created  []ledger.Entry
@@ -300,6 +300,15 @@ func (w *rowWriter) existing(ctx context.Context, rec plan.Record) (*helix.Recor
 	return &got, err
 }
 
+// recordID is the plan's id of a record; plans made before instances existed
+// have only the variant.
+func recordID(rec plan.Record) string {
+	if rec.ID != "" {
+		return rec.ID
+	}
+	return rec.Variant
+}
+
 func checkVariant(rec plan.Record, variant string) error {
 	if variant != "" && variant != rec.Variant {
 		return fmt.Errorf("%s=%q already exists as variant %s, not %s", rec.KeyField, rec.KeyValue, variant, rec.Variant)
@@ -323,8 +332,9 @@ func (w *rowWriter) record(ctx context.Context, rec plan.Record, row int) (Actio
 	if err != nil {
 		return Action{}, err
 	}
+	rid := recordID(rec)
 	if cur != nil {
-		w.ids[rec.Variant] = cur.ID
+		w.ids[rid] = cur.ID
 		if rec.Scope == "job" {
 			return Action{Variant: rec.Variant, Action: Reused, RecordID: cur.ID}, nil
 		}
@@ -355,14 +365,14 @@ func (w *rowWriter) record(ctx context.Context, rec plan.Record, row int) (Actio
 		return Action{Variant: rec.Variant, Action: Updated, RecordID: cur.ID}, nil
 	}
 	if w.o.DryRun {
-		w.ids[rec.Variant] = "dry-run:" + rec.Variant
+		w.ids[rid] = "dry-run:" + rid
 		return Action{Variant: rec.Variant, Action: Created}, nil
 	}
-	got, err := w.x.API.Create(ctx, rec.Variant, fields, idemKey(w.o.RunID, row, rec.Variant))
+	got, err := w.x.API.Create(ctx, rec.Variant, fields, idemKey(w.o.RunID, row, rid))
 	if err != nil {
 		return Action{}, err
 	}
-	w.ids[rec.Variant] = got.ID
+	w.ids[rid] = got.ID
 	e := ledger.Entry{RecordID: got.ID, Variant: rec.Variant, Entity: rec.Entity, KeyField: rec.KeyField, KeyValue: rec.KeyValue,
 		JobID: w.o.JobID, RunID: w.o.RunID, Generated: rec.Generated}
 	if rec.Scope == "row" {

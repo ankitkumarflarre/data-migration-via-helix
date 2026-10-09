@@ -3,9 +3,11 @@ package plan
 import (
 	"bytes"
 	"context"
+	"fmt"
 	"os"
 	"path/filepath"
 	"runtime"
+	"strings"
 	"testing"
 
 	"github.com/xuri/excelize/v2"
@@ -89,6 +91,118 @@ func find(recs []Record, variant string) *Record {
 	return nil
 }
 
+func findID(recs []Record, id string) *Record {
+	for i := range recs {
+		if recs[i].ID == id {
+			return &recs[i]
+		}
+	}
+	return nil
+}
+
+const (
+	ci = "coverage_instance.property.us.personal#"
+	cd = "coverage_deductible.property.us-fl.personal.safepoint#"
+	df = "dwelling_feature.property.personal#"
+)
+
+// TestPlanWritesUnderReviewColumns covers the rules added for the Review and
+// Not found columns: term chain, coverage rows, deductibles, features, occupancy.
+func TestPlanWritesUnderReviewColumns(t *testing.T) {
+	extra := []any{"D", 2, "H", "Primary", "I", "T", "O", 1, "P", "Yes", "Q", "No", "R", "Neither", "T", "Reinforced Concrete Roof Deck",
+		"U", "ToeNails", "X", "C", "AC", 220500, "AD", 0, "AE", 66150, "AF", "Increase to $300,000", "AG", 2500, "AH", "Ex-Wind",
+		"AI", "No", "AK", 0.25, "AL", "$1,000 Included", "AM", 0, "AN", "Yes", "AQ", "$10,000 Included", "AV", 0, "BT", 464}
+	p := build(t, workbook(t, [][]any{row("TEST0001", extra...), row("TEST0002", "AH", 0.05, "H", "Seasonal", "I", "O")}), Overrides{})
+	if p.BlockingCount != 0 {
+		t.Fatalf("unexpected blocking issues: %+v", p.Issues)
+	}
+	r := p.Rows[0].Records
+	pol := find(r, "policy.property.us-fl.personal.safepoint")
+	if pol.Fields["residence_occupancy"] != "tenant_occupied" {
+		t.Fatalf("occupancy: %+v", pol.Fields)
+	}
+	if pt := findID(r, "policy_term"); pt == nil || pt.Fields["term_number"] != int64(2) || pt.KeyValue != "PT-TEST0001" ||
+		pt.Fields["effective_start_date"] != "2026-05-07" || pt.Fields["effective_end_date"] != "2027-05-07" || pt.Refs["product_version_reference"] != "product_version" {
+		t.Fatalf("policy term: %+v", pt)
+	}
+	if pt := findID(r, "policy_term"); pt.Fields["in_force_status"] != "bound" {
+		t.Fatalf("a new term must start as bound: %+v", pt.Fields)
+	}
+	pv := findID(r, "policy_version")
+	if pv == nil || pv.Refs["contract_wording_reference"] != "contract_wording" || pv.Refs["policy_revision_reference"] != "policy_revision" {
+		t.Fatalf("policy version: %+v", pv)
+	}
+	a := findID(r, ci+"coverage_a")
+	if a == nil || a.Fields["limit_amount"] != "220500" || a.KeyValue != "CI-TEST0001-COA" ||
+		a.Refs["product_coverage_reference"] != "coverage.property.us.personal#coverage_a" || a.Refs["policy_version_reference"] != "policy_version" {
+		t.Fatalf("coverage A: %+v", a)
+	}
+	if e := findID(r, ci+"coverage_e"); e == nil || e.Fields["limit_amount"] != "300000" {
+		t.Fatalf("coverage E: %+v", e)
+	}
+	if o := findID(r, ci+"ordinance_or_law"); o == nil || o.Fields["percentage_of_dwelling_limit"] != "25" {
+		t.Fatalf("ordinance or law: %+v", o)
+	}
+	if rc := findID(r, ci+"replacement_cost_contents"); rc == nil || rc.Fields["coverage_status"] != "active" {
+		t.Fatalf("replacement cost on contents: %+v", rc)
+	}
+	// Coverage B = 0, business use = No, screened enclosure = 0: no coverage row.
+	for _, id := range []string{ci + "coverage_b", ci + "business_use", ci + "screened_enclosure", ci + "water_back_up"} {
+		if findID(r, id) != nil {
+			t.Errorf("%s written although the sheet has no cover", id)
+		}
+	}
+	if aop := findID(r, cd+"all_other_perils"); aop == nil || aop.Fields["deductible_amount"] != "2500" || aop.Refs["policy_term_reference"] != "policy_term" {
+		t.Fatalf("AOP deductible: %+v", aop)
+	}
+	if findID(r, cd+"hurricane") != nil {
+		t.Fatal("Ex-Wind must not write a hurricane deductible")
+	}
+	if h := findID(p.Rows[1].Records, cd+"hurricane"); h == nil || h.Fields["florida_hurricane_deductible_option"] != "percent_5" ||
+		h.Fields["deductible_basis"] != "percentage_of_dwelling_limit" || h.Fields["deductible_percentage"] != "5" {
+		t.Fatalf("hurricane deductible: %+v", h)
+	}
+	if occ := find(p.Rows[1].Records, "policy.property.us-fl.personal.safepoint"); occ.Fields["residence_occupancy"] != "seasonal" {
+		t.Fatalf("seasonal occupancy: %+v", occ.Fields)
+	}
+	if f := findID(r, df+"burglar_alarm"); f == nil || f.Fields["value"] != "Yes" || f.Fields["feature_category"] != "protection" || f.KeyValue != "DF-TEST0001-burglar_alarm" {
+		t.Fatalf("burglar alarm feature: %+v", f)
+	}
+	if f := findID(r, df+"sprinkler_system"); f == nil || f.Fields["value"] != "none" {
+		t.Fatalf("sprinkler feature: %+v", f)
+	}
+	if _, ok := find(r, "dwelling.property.us.personal").Fields["burglar_alarm"]; ok {
+		t.Fatal("burglar alarm still written to the Duck Creek copy table")
+	}
+	w := find(r, "wind_mitigation_verification.property.us-fl.personal.safepoint")
+	if _, ok := w.Fields["roof_covering_code_compliance"]; ok || w.Fields["roof_to_wall_connection"] != "toe_nails" {
+		t.Fatalf("wind mitigation: %+v", w.Fields)
+	}
+	warned := false
+	for _, is := range p.Issues {
+		warned = warned || (is.Row == 2 && is.RuleID == "HO-20" && is.Severity == "warning")
+	}
+	if !warned {
+		t.Fatal("no warning for the roof covering left empty")
+	}
+	// Premium rules are switched off: no premium transaction.
+	if findID(r, "premium_transaction#surplus_contribution") != nil {
+		t.Fatal("a switched-off premium rule wrote a record")
+	}
+	// Write order: each record after what it references.
+	pos := map[string]int{}
+	for i, rec := range r {
+		pos[rec.ID] = i
+	}
+	for _, rec := range r {
+		for f, to := range rec.Refs {
+			if at, ok := pos[to]; ok && at > pos[rec.ID] {
+				t.Errorf("%s.%s refers to %s, written later", rec.ID, f, to)
+			}
+		}
+	}
+}
+
 func TestPlanMapsConfirmedColumnsAndTemplates(t *testing.T) {
 	p := build(t, workbook(t, [][]any{row("TEST0001")}), Overrides{})
 	if p.BlockingCount != 0 {
@@ -129,8 +243,12 @@ func TestPlanMapsConfirmedColumnsAndTemplates(t *testing.T) {
 	if l := find(r.Records, "line.property.us.personal"); l.Fields["consent_to_rate"] != false {
 		t.Fatalf("consent_to_rate: %+v", l.Fields)
 	}
-	if len(p.JobRecords) != 2 || p.JobRecords[0].Variant != "organization" || p.JobRecords[1].Fields["effective_date"] != "2026-05-07" {
-		t.Fatalf("job records: %+v", p.JobRecords)
+	// Issuer, product, the 16 product coverages and the product version.
+	if len(p.JobRecords) != 19 || p.JobRecords[0].Variant != "organization" || findID(p.JobRecords, "product").Fields["effective_date"] != "2026-05-07" {
+		t.Fatalf("job records: %d %+v", len(p.JobRecords), p.JobRecords[0])
+	}
+	if pv := findID(p.JobRecords, "product_version"); pv == nil || pv.Refs["coverage_set_reference"] != "coverage.property.us.personal#coverage_a" {
+		t.Fatalf("product version: %+v", pv)
 	}
 	// Order: everything referenced comes first.
 	pos := map[string]int{}
@@ -235,5 +353,71 @@ func TestRealHOWorkbook(t *testing.T) {
 	}
 	for _, vi := range p.Impact {
 		t.Logf("%-62s %-5s records=%d fields=%d", vi.Variant, vi.Scope, vi.Records, len(vi.Fields))
+	}
+}
+
+func TestDisabledRuleWritesNothing(t *testing.T) {
+	base, _ := rules.Load("manatee_fl_select_ho_12_1_25")
+	var off rules.Rule
+	for _, r := range base.RuleSet.Rules {
+		if r.ID == "HO-05" {
+			off = r
+		}
+	}
+	off.Disabled = "Territory is recalculated"
+	b, err := rules.Apply(base, []rules.Change{{Seq: 1, Kind: rules.ChangeRule, Key: "HO-05", Reason: "x", Rule: &off}})
+	if err != nil {
+		t.Fatal(err)
+	}
+	p, err := Build(context.Background(), Input{Bundle: b, Sheet: workbook(t, [][]any{row("TEST0001")}), FileSHA: "f", Schema: testSchema(t)})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, ok := find(p.Rows[0].Records, "dwelling.property.us.personal").Fields["rated_territory"]; ok {
+		t.Fatal("a disabled rule wrote its field")
+	}
+	for _, a := range p.Attention {
+		if strings.Contains(a.ID, "HO-05") {
+			t.Fatalf("a rule switched off in the Rules tab needs no acknowledgement per file: %+v", a)
+		}
+	}
+	if p.Hash == build(t, workbook(t, [][]any{row("TEST0001")}), Overrides{}).Hash {
+		t.Fatal("edited rules must change the plan hash")
+	}
+}
+
+// TestHelixRulesBlockBeforeWriting checks that start states and record rules
+// from /describe become blocking issues in the plan, not write failures.
+func TestHelixRulesBlockBeforeWriting(t *testing.T) {
+	s := workbook(t, [][]any{row("TEST0001", "D", 1, "AH", 0.02)})
+	p := build(t, s, Overrides{Templates: map[string]string{"policy_term|in_force_status": "in_force"}})
+	var msgs []string
+	for _, is := range p.Issues {
+		if is.Severity == "blocking" {
+			msgs = append(msgs, is.Target+": "+is.Message)
+		}
+	}
+	if len(msgs) != 1 || !strings.Contains(msgs[0], "policy_term: Helix rule: in_force_status cannot start at in_force (allowed: bound)") {
+		t.Fatalf("blocking issues: %q", msgs)
+	}
+	// Without the percentage rule, a percentage hurricane deductible breaks "required when".
+	b, _ := rules.Load("manatee_fl_select_ho_12_1_25")
+	var off rules.Rule
+	for _, r := range b.RuleSet.Rules {
+		if r.ID == "HO-34c" {
+			off = r
+		}
+	}
+	off.Disabled = "test"
+	nb, err := rules.Apply(b, []rules.Change{{Seq: 1, Kind: rules.ChangeRule, Key: "HO-34c", Reason: "x", Rule: &off}})
+	if err != nil {
+		t.Fatal(err)
+	}
+	p, err = Build(context.Background(), Input{Bundle: nb, Sheet: s, FileSHA: "f", Schema: testSchema(t)})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if p.BlockingCount != 1 || !strings.Contains(fmt.Sprint(p.Issues), "deductible_percentage is required when deductible_basis is percentage_of_dwelling_limit") {
+		t.Fatalf("required-when not caught: %+v", p.Issues)
 	}
 }

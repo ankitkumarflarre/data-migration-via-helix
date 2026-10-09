@@ -1,16 +1,326 @@
 {
-  "dwelling.property.us.personal.building_code_effectiveness_grading": {
+  "contract_wording.document_reference": {
     "enum": null,
-    "key": "building_code_effectiveness_grading",
-    "owner": "dwelling.property.us.personal",
+    "key": "document_reference",
+    "owner": "contract_wording",
     "reference": null,
-    "required": false,
+    "required": true,
+    "type": "string(128)",
+    "write_once": false
+  },
+  "contract_wording.effective_date": {
+    "enum": null,
+    "key": "effective_date",
+    "owner": "contract_wording",
+    "reference": null,
+    "required": true,
+    "type": "date",
+    "write_once": false
+  },
+  "contract_wording.policy_revision_reference": {
+    "enum": null,
+    "key": "policy_revision_reference",
+    "owner": "contract_wording",
+    "reference": {
+      "entity": "policy_revision",
+      "field": "policy_revision_id",
+      "key": null
+    },
+    "required": true,
+    "type": "reference(policy_revision)",
+    "write_once": false
+  },
+  "contract_wording.status": {
+    "enum": null,
+    "key": "status",
+    "owner": "contract_wording",
+    "reference": null,
+    "required": true,
+    "type": "string(128)",
+    "write_once": false
+  },
+  "contract_wording.wording_id": {
+    "enum": null,
+    "key": "wording_id",
+    "owner": "contract_wording",
+    "reference": null,
+    "required": true,
     "type": "string(255)",
     "write_once": false
   },
-  "dwelling.property.us.personal.burglar_alarm": {
+  "contract_wording.wording_version": {
     "enum": null,
-    "key": "burglar_alarm",
+    "key": "wording_version",
+    "owner": "contract_wording",
+    "reference": null,
+    "required": true,
+    "type": "integer",
+    "write_once": false
+  },
+  "coverage.property.us.personal.coverage_code": {
+    "enum": null,
+    "key": "coverage_code",
+    "owner": "coverage",
+    "reference": null,
+    "required": true,
+    "type": "string(255)",
+    "write_once": false
+  },
+  "coverage.property.us.personal.coverage_name": {
+    "enum": null,
+    "key": "coverage_name",
+    "owner": "coverage",
+    "reference": null,
+    "required": true,
+    "type": "string(255)",
+    "write_once": false
+  },
+  "coverage.property.us.personal.coverage_status": {
+    "enum": [
+      "active",
+      "suspended",
+      "withdrawn"
+    ],
+    "key": "coverage_status",
+    "owner": "coverage",
+    "reference": null,
+    "required": true,
+    "type": "enum(active,suspended,withdrawn)",
+    "write_once": false
+  },
+  "coverage.property.us.personal.coverage_type": {
+    "enum": [
+      "base",
+      "optional",
+      "mandatory_add"
+    ],
+    "key": "coverage_type",
+    "owner": "coverage",
+    "reference": null,
+    "required": true,
+    "type": "enum(base,optional,mandatory_add)",
+    "write_once": false
+  },
+  "coverage.property.us.personal.effective_date": {
+    "enum": null,
+    "key": "effective_date",
+    "owner": "coverage",
+    "reference": null,
+    "required": true,
+    "type": "date",
+    "write_once": false
+  },
+  "coverage.property.us.personal.homeowners_coverage_section": {
+    "enum": [
+      "coverage_a_dwelling",
+      "coverage_b_other_structures",
+      "coverage_c_personal_property",
+      "coverage_d_loss_of_use",
+      "coverage_e_personal_liability",
+      "coverage_f_medical_payments",
+      "optional"
+    ],
+    "key": "homeowners_coverage_section",
+    "owner": "coverage.property.personal",
+    "reference": null,
+    "required": true,
+    "type": "enum(coverage_a_dwelling,coverage_b_other_structures,coverage_c_personal_property,coverage_d_loss_of_use,coverage_e_personal_liability,coverage_f_medical_payments,optional)",
+    "write_once": false
+  },
+  "coverage.property.us.personal.peril_basis": {
+    "enum": [
+      "open_perils",
+      "named_perils",
+      "not_applicable"
+    ],
+    "key": "peril_basis",
+    "owner": "coverage.property.personal",
+    "reference": null,
+    "required": true,
+    "type": "enum(open_perils,named_perils,not_applicable)",
+    "write_once": false
+  },
+  "coverage.property.us.personal.statutory_status_code": {
+    "enum": null,
+    "key": "statutory_status_code",
+    "owner": "coverage.property.us.personal",
+    "reference": null,
+    "required": true,
+    "type": "string(64)",
+    "write_once": false
+  },
+  "coverage.property.us.personal.trigger_basis": {
+    "enum": [
+      "occurrence",
+      "claims_made",
+      "other_invariant_trigger_basis"
+    ],
+    "key": "trigger_basis",
+    "owner": "coverage",
+    "reference": null,
+    "required": true,
+    "type": "enum(occurrence,claims_made,other_invariant_trigger_basis)",
+    "write_once": false
+  },
+  "coverage_deductible.property.us-fl.personal.safepoint.coverage_deductible_reference": {
+    "enum": null,
+    "key": "coverage_deductible_reference",
+    "owner": "coverage_deductible.property",
+    "reference": null,
+    "required": true,
+    "type": "string(128)",
+    "write_once": false
+  },
+  "coverage_deductible.property.us-fl.personal.safepoint.deductible_amount": {
+    "enum": null,
+    "key": "deductible_amount",
+    "owner": "coverage_deductible.property",
+    "reference": null,
+    "required": false,
+    "type": "decimal(18,4)",
+    "write_once": false
+  },
+  "coverage_deductible.property.us-fl.personal.safepoint.deductible_basis": {
+    "enum": [
+      "flat_amount",
+      "percentage_of_dwelling_limit",
+      "percentage_of_insured_value"
+    ],
+    "key": "deductible_basis",
+    "owner": "coverage_deductible.property",
+    "reference": null,
+    "required": true,
+    "type": "enum(flat_amount,percentage_of_dwelling_limit,percentage_of_insured_value)",
+    "write_once": false
+  },
+  "coverage_deductible.property.us-fl.personal.safepoint.deductible_kind": {
+    "enum": [
+      "all_other_perils",
+      "wind_hail",
+      "hurricane",
+      "named_storm",
+      "earthquake",
+      "sinkhole",
+      "water_damage",
+      "theft"
+    ],
+    "key": "deductible_kind",
+    "owner": "coverage_deductible.property",
+    "reference": null,
+    "required": true,
+    "type": "enum(all_other_perils,wind_hail,hurricane,named_storm,earthquake,sinkhole,water_damage,theft)",
+    "write_once": false
+  },
+  "coverage_deductible.property.us-fl.personal.safepoint.florida_hurricane_deductible_option": {
+    "enum": [
+      "amount_500",
+      "percent_2",
+      "percent_5",
+      "percent_10"
+    ],
+    "key": "florida_hurricane_deductible_option",
+    "owner": "coverage_deductible.property.us-fl.personal.safepoint",
+    "reference": null,
+    "required": false,
+    "type": "enum(amount_500,percent_2,percent_5,percent_10)",
+    "write_once": false
+  },
+  "coverage_deductible.property.us-fl.personal.safepoint.policy_term_reference": {
+    "enum": null,
+    "key": "policy_term_reference",
+    "owner": "coverage_deductible.property",
+    "reference": {
+      "entity": "policy_term",
+      "field": "policy_term_id",
+      "key": null
+    },
+    "required": true,
+    "type": "reference(policy_term)",
+    "write_once": false
+  },
+  "coverage_instance.property.us.personal.coverage_identity_key": {
+    "enum": null,
+    "key": "coverage_identity_key",
+    "owner": "coverage_instance",
+    "reference": null,
+    "required": true,
+    "type": "string(255)",
+    "write_once": false
+  },
+  "coverage_instance.property.us.personal.coverage_instance_reference": {
+    "enum": null,
+    "key": "coverage_instance_reference",
+    "owner": "coverage_instance",
+    "reference": null,
+    "required": true,
+    "type": "string(255)",
+    "write_once": false
+  },
+  "coverage_instance.property.us.personal.coverage_section_code": {
+    "enum": null,
+    "key": "coverage_section_code",
+    "owner": "coverage_instance.property.us.personal",
+    "reference": null,
+    "required": true,
+    "type": "string(64)",
+    "write_once": false
+  },
+  "coverage_instance.property.us.personal.coverage_status": {
+    "enum": null,
+    "key": "coverage_status",
+    "owner": "coverage_instance",
+    "reference": null,
+    "required": true,
+    "type": "string(128)",
+    "write_once": false
+  },
+  "coverage_instance.property.us.personal.limit_amount": {
+    "enum": null,
+    "key": "limit_amount",
+    "owner": "coverage_instance",
+    "reference": null,
+    "required": false,
+    "type": "decimal(18,4)",
+    "write_once": false
+  },
+  "coverage_instance.property.us.personal.percentage_of_dwelling_limit": {
+    "enum": null,
+    "key": "percentage_of_dwelling_limit",
+    "owner": "coverage_instance.property.personal",
+    "reference": null,
+    "required": false,
+    "type": "decimal(18,4)",
+    "write_once": false
+  },
+  "coverage_instance.property.us.personal.policy_version_reference": {
+    "enum": null,
+    "key": "policy_version_reference",
+    "owner": "coverage_instance",
+    "reference": {
+      "entity": "policy_version",
+      "field": "policy_version_id",
+      "key": null
+    },
+    "required": true,
+    "type": "reference(policy_version)",
+    "write_once": false
+  },
+  "coverage_instance.property.us.personal.product_coverage_reference": {
+    "enum": null,
+    "key": "product_coverage_reference",
+    "owner": "coverage_instance",
+    "reference": {
+      "entity": "coverage",
+      "field": "coverage_id",
+      "key": null
+    },
+    "required": true,
+    "type": "reference(coverage)",
+    "write_once": false
+  },
+  "dwelling.property.us.personal.building_code_effectiveness_grading": {
+    "enum": null,
+    "key": "building_code_effectiveness_grading",
     "owner": "dwelling.property.us.personal",
     "reference": null,
     "required": false,
@@ -148,6 +458,95 @@
     "reference": null,
     "required": false,
     "type": "string(255)",
+    "write_once": false
+  },
+  "dwelling_feature.property.personal.dwelling_asset_reference": {
+    "enum": null,
+    "key": "dwelling_asset_reference",
+    "owner": "dwelling_feature.property.personal",
+    "reference": {
+      "entity": "dwelling_asset",
+      "field": "dwelling_asset_id",
+      "key": null
+    },
+    "required": true,
+    "type": "reference(dwelling_asset)",
+    "write_once": false
+  },
+  "dwelling_feature.property.personal.dwelling_feature_reference": {
+    "enum": null,
+    "key": "dwelling_feature_reference",
+    "owner": "dwelling_feature.property.personal",
+    "reference": null,
+    "required": true,
+    "type": "string(255)",
+    "write_once": false
+  },
+  "dwelling_feature.property.personal.effective_start_date": {
+    "enum": null,
+    "key": "effective_start_date",
+    "owner": "dwelling_feature.property.personal",
+    "reference": null,
+    "required": true,
+    "type": "date",
+    "write_once": false
+  },
+  "dwelling_feature.property.personal.feature_category": {
+    "enum": [
+      "construction",
+      "protection",
+      "occupancy",
+      "hazard",
+      "amenity",
+      "maintenance",
+      "mitigation"
+    ],
+    "key": "feature_category",
+    "owner": "dwelling_feature.property.personal",
+    "reference": null,
+    "required": true,
+    "type": "enum(construction,protection,occupancy,hazard,amenity,maintenance,mitigation)",
+    "write_once": false
+  },
+  "dwelling_feature.property.personal.feature_code": {
+    "enum": null,
+    "key": "feature_code",
+    "owner": "dwelling_feature.property.personal",
+    "reference": null,
+    "required": true,
+    "type": "string(255)",
+    "write_once": false
+  },
+  "dwelling_feature.property.personal.value": {
+    "enum": null,
+    "key": "value",
+    "owner": "dwelling_feature.property.personal",
+    "reference": null,
+    "required": true,
+    "type": "text",
+    "write_once": false
+  },
+  "dwelling_feature.property.personal.value_type": {
+    "enum": null,
+    "key": "value_type",
+    "owner": "dwelling_feature.property.personal",
+    "reference": null,
+    "required": true,
+    "type": "text",
+    "write_once": false
+  },
+  "dwelling_feature.property.personal.verification_status": {
+    "enum": [
+      "declared",
+      "verified",
+      "rejected",
+      "expired"
+    ],
+    "key": "verification_status",
+    "owner": "dwelling_feature.property.personal",
+    "reference": null,
+    "required": true,
+    "type": "enum(declared,verified,rejected,expired)",
     "write_once": false
   },
   "line.property.us.personal.consent_to_rate": {
@@ -405,6 +804,21 @@
     "type": "enum(safepoint,manatee,cajun)",
     "write_once": false
   },
+  "policy.property.us-fl.personal.safepoint.residence_occupancy": {
+    "enum": [
+      "owner_occupied",
+      "tenant_occupied",
+      "seasonal",
+      "secondary",
+      "vacant"
+    ],
+    "key": "residence_occupancy",
+    "owner": "policy.property.personal",
+    "reference": null,
+    "required": false,
+    "type": "enum(owner_occupied,tenant_occupied,seasonal,secondary,vacant)",
+    "write_once": false
+  },
   "policy.property.us-fl.personal.safepoint.sinkhole_coverage_option": {
     "enum": [
       "catastrophic_ground_cover_collapse_only",
@@ -415,6 +829,300 @@
     "reference": null,
     "required": true,
     "type": "enum(catastrophic_ground_cover_collapse_only,sinkhole_loss)",
+    "write_once": false
+  },
+  "policy_revision.bound_datetime": {
+    "enum": null,
+    "key": "bound_datetime",
+    "owner": "policy_revision",
+    "reference": null,
+    "required": true,
+    "type": "timestamp",
+    "write_once": false
+  },
+  "policy_revision.model_sequence": {
+    "enum": null,
+    "key": "model_sequence",
+    "owner": "policy_revision",
+    "reference": null,
+    "required": true,
+    "type": "integer",
+    "write_once": false
+  },
+  "policy_revision.policy_revision_reference": {
+    "enum": null,
+    "key": "policy_revision_reference",
+    "owner": "policy_revision",
+    "reference": null,
+    "required": true,
+    "type": "string(255)",
+    "write_once": false
+  },
+  "policy_revision.policy_term_reference": {
+    "enum": null,
+    "key": "policy_term_reference",
+    "owner": "policy_revision",
+    "reference": {
+      "entity": "policy_term",
+      "field": "policy_term_id",
+      "key": null
+    },
+    "required": true,
+    "type": "reference(policy_term)",
+    "write_once": false
+  },
+  "policy_revision.revision_reason_code": {
+    "enum": null,
+    "key": "revision_reason_code",
+    "owner": "policy_revision",
+    "reference": null,
+    "required": true,
+    "type": "string(128)",
+    "write_once": false
+  },
+  "policy_term.effective_end_date": {
+    "enum": null,
+    "key": "effective_end_date",
+    "owner": "policy_term",
+    "reference": null,
+    "required": true,
+    "type": "date",
+    "write_once": false
+  },
+  "policy_term.effective_start_date": {
+    "enum": null,
+    "key": "effective_start_date",
+    "owner": "policy_term",
+    "reference": null,
+    "required": true,
+    "type": "date",
+    "write_once": false
+  },
+  "policy_term.in_force_status": {
+    "enum": [
+      "bound",
+      "in_force",
+      "awaiting_renewal",
+      "grace_period",
+      "lapsed",
+      "cancelled",
+      "non_renewed",
+      "rescinded",
+      "terminated"
+    ],
+    "key": "in_force_status",
+    "owner": "policy_term",
+    "reference": null,
+    "required": true,
+    "type": "enum(bound,in_force,awaiting_renewal,grace_period,lapsed,cancelled,non_renewed,rescinded,terminated)",
+    "write_once": false
+  },
+  "policy_term.policy_reference": {
+    "enum": null,
+    "key": "policy_reference",
+    "owner": "policy_term",
+    "reference": {
+      "entity": "policy",
+      "field": "policy_id",
+      "key": "policy_number"
+    },
+    "required": true,
+    "type": "reference(policy)",
+    "write_once": false
+  },
+  "policy_term.policy_term_reference": {
+    "enum": null,
+    "key": "policy_term_reference",
+    "owner": "policy_term",
+    "reference": null,
+    "required": true,
+    "type": "string(255)",
+    "write_once": false
+  },
+  "policy_term.product_version_reference": {
+    "enum": null,
+    "key": "product_version_reference",
+    "owner": "policy_term",
+    "reference": {
+      "entity": "product_version",
+      "field": "product_version_id",
+      "key": null
+    },
+    "required": true,
+    "type": "reference(product_version)",
+    "write_once": false
+  },
+  "policy_term.term_number": {
+    "enum": null,
+    "key": "term_number",
+    "owner": "policy_term",
+    "reference": null,
+    "required": true,
+    "type": "integer",
+    "write_once": false
+  },
+  "policy_version.contract_wording_reference": {
+    "enum": null,
+    "key": "contract_wording_reference",
+    "owner": "policy_version",
+    "reference": {
+      "entity": "contract_wording",
+      "field": "contract_wording_id",
+      "key": "wording_id",
+      "key_with": [
+        "wording_version",
+        "policy_revision_reference"
+      ]
+    },
+    "required": true,
+    "type": "reference(contract_wording)",
+    "write_once": false
+  },
+  "policy_version.effective_end_date": {
+    "enum": null,
+    "key": "effective_end_date",
+    "owner": "policy_version",
+    "reference": null,
+    "required": true,
+    "type": "date",
+    "write_once": false
+  },
+  "policy_version.effective_start_date": {
+    "enum": null,
+    "key": "effective_start_date",
+    "owner": "policy_version",
+    "reference": null,
+    "required": true,
+    "type": "date",
+    "write_once": false
+  },
+  "policy_version.policy_reference": {
+    "enum": null,
+    "key": "policy_reference",
+    "owner": "policy_version",
+    "reference": {
+      "entity": "policy",
+      "field": "policy_id",
+      "key": "policy_number"
+    },
+    "required": true,
+    "type": "reference(policy)",
+    "write_once": false
+  },
+  "policy_version.policy_revision_reference": {
+    "enum": null,
+    "key": "policy_revision_reference",
+    "owner": "policy_version",
+    "reference": {
+      "entity": "policy_revision",
+      "field": "policy_revision_id",
+      "key": null
+    },
+    "required": true,
+    "type": "reference(policy_revision)",
+    "write_once": false
+  },
+  "policy_version.policy_version_reference": {
+    "enum": null,
+    "key": "policy_version_reference",
+    "owner": "policy_version",
+    "reference": null,
+    "required": true,
+    "type": "string(255)",
+    "write_once": false
+  },
+  "premium_transaction.amount": {
+    "enum": null,
+    "key": "amount",
+    "owner": "premium_transaction",
+    "reference": null,
+    "required": true,
+    "type": "decimal(18,4)",
+    "write_once": false
+  },
+  "premium_transaction.calculated_datetime": {
+    "enum": null,
+    "key": "calculated_datetime",
+    "owner": "premium_transaction",
+    "reference": null,
+    "required": true,
+    "type": "timestamp",
+    "write_once": false
+  },
+  "premium_transaction.contract_term_reference": {
+    "enum": null,
+    "key": "contract_term_reference",
+    "owner": "premium_transaction",
+    "reference": {
+      "entity": "policy_term",
+      "field": "policy_term_id",
+      "key": null
+    },
+    "required": true,
+    "type": "reference(policy_term)",
+    "write_once": false
+  },
+  "premium_transaction.effective_from": {
+    "enum": null,
+    "key": "effective_from",
+    "owner": "premium_transaction",
+    "reference": null,
+    "required": true,
+    "type": "date",
+    "write_once": false
+  },
+  "premium_transaction.effective_to": {
+    "enum": null,
+    "key": "effective_to",
+    "owner": "premium_transaction",
+    "reference": null,
+    "required": true,
+    "type": "date",
+    "write_once": false
+  },
+  "premium_transaction.premium_transaction_reference": {
+    "enum": null,
+    "key": "premium_transaction_reference",
+    "owner": "premium_transaction",
+    "reference": null,
+    "required": true,
+    "type": "string(128)",
+    "write_once": false
+  },
+  "premium_transaction.source_transaction_reference": {
+    "enum": null,
+    "key": "source_transaction_reference",
+    "owner": "premium_transaction",
+    "reference": null,
+    "required": true,
+    "type": "string(128)",
+    "write_once": false
+  },
+  "premium_transaction.status_code": {
+    "enum": null,
+    "key": "status_code",
+    "owner": "premium_transaction",
+    "reference": null,
+    "required": true,
+    "type": "string(64)",
+    "write_once": false
+  },
+  "premium_transaction.transaction_group_reference": {
+    "enum": null,
+    "key": "transaction_group_reference",
+    "owner": "premium_transaction",
+    "reference": null,
+    "required": true,
+    "type": "string(128)",
+    "write_once": false
+  },
+  "premium_transaction.transaction_type_code": {
+    "enum": null,
+    "key": "transaction_type_code",
+    "owner": "premium_transaction",
+    "reference": null,
+    "required": true,
+    "type": "string(64)",
     "write_once": false
   },
   "product.effective_date": {
@@ -465,6 +1173,100 @@
     "reference": null,
     "required": true,
     "type": "enum(draft,active,withdrawn,retired)",
+    "write_once": false
+  },
+  "product_version.coverage_set_reference": {
+    "enum": null,
+    "key": "coverage_set_reference",
+    "owner": "product_version",
+    "reference": {
+      "entity": "coverage",
+      "field": "coverage_id",
+      "key": null
+    },
+    "required": true,
+    "type": "reference(coverage)",
+    "write_once": false
+  },
+  "product_version.effective_date": {
+    "enum": null,
+    "key": "effective_date",
+    "owner": "product_version",
+    "reference": null,
+    "required": true,
+    "type": "date",
+    "write_once": false
+  },
+  "product_version.product_reference": {
+    "enum": null,
+    "key": "product_reference",
+    "owner": "product_version",
+    "reference": {
+      "entity": "product",
+      "field": "product_id",
+      "key": "product_code"
+    },
+    "required": true,
+    "type": "reference(product)",
+    "write_once": false
+  },
+  "product_version.version_number": {
+    "enum": null,
+    "key": "version_number",
+    "owner": "product_version",
+    "reference": null,
+    "required": true,
+    "type": "string(255)",
+    "write_once": false
+  },
+  "product_version.version_status": {
+    "enum": [
+      "draft",
+      "current",
+      "superseded",
+      "retired"
+    ],
+    "key": "version_status",
+    "owner": "product_version",
+    "reference": null,
+    "required": true,
+    "type": "enum(draft,current,superseded,retired)",
+    "write_once": false
+  },
+  "rating_record.charged_price": {
+    "enum": null,
+    "key": "charged_price",
+    "owner": "rating_record",
+    "reference": null,
+    "required": false,
+    "type": "decimal(18,4)",
+    "write_once": false
+  },
+  "rating_record.plan_price": {
+    "enum": null,
+    "key": "plan_price",
+    "owner": "rating_record",
+    "reference": null,
+    "required": true,
+    "type": "decimal(18,4)",
+    "write_once": false
+  },
+  "residual_market_placement.property.us.personal.external_policy_number": {
+    "enum": null,
+    "key": "external_policy_number",
+    "owner": "residual_market_placement.property.us.personal",
+    "reference": null,
+    "required": false,
+    "type": "string(255)",
+    "write_once": false
+  },
+  "residual_market_placement.property.us.personal.placement_basis_code": {
+    "enum": null,
+    "key": "placement_basis_code",
+    "owner": "residual_market_placement.property.us.personal",
+    "reference": null,
+    "required": true,
+    "type": "string(64)",
     "write_once": false
   },
   "section_icoverages.property.us.personal.equipment_breakdown": {
@@ -521,6 +1323,19 @@
     "type": "enum(none,basic,hurricane_rated,unknown)",
     "write_once": false
   },
+  "wind_mitigation_verification.property.us-fl.personal.safepoint.roof_covering_code_compliance": {
+    "enum": [
+      "meets_2001_fbc",
+      "pre_2001_fbc",
+      "unknown"
+    ],
+    "key": "roof_covering_code_compliance",
+    "owner": "wind_mitigation_verification.property.us-fl.personal.safepoint",
+    "reference": null,
+    "required": false,
+    "type": "enum(meets_2001_fbc,pre_2001_fbc,unknown)",
+    "write_once": false
+  },
   "wind_mitigation_verification.property.us-fl.personal.safepoint.roof_shape": {
     "enum": [
       "hip",
@@ -533,6 +1348,22 @@
     "reference": null,
     "required": false,
     "type": "enum(hip,gable,flat,other)",
+    "write_once": false
+  },
+  "wind_mitigation_verification.property.us-fl.personal.safepoint.roof_to_wall_connection": {
+    "enum": [
+      "toe_nails",
+      "clips",
+      "single_wraps",
+      "double_wraps",
+      "structural",
+      "unknown"
+    ],
+    "key": "roof_to_wall_connection",
+    "owner": "wind_mitigation_verification.property.us.personal",
+    "reference": null,
+    "required": false,
+    "type": "enum(toe_nails,clips,single_wraps,double_wraps,structural,unknown)",
     "write_once": false
   },
   "wind_mitigation_verification.property.us-fl.personal.safepoint.secondary_water_resistance_flag": {

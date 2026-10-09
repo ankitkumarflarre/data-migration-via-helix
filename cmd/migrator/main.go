@@ -22,6 +22,7 @@ import (
 	"github.com/ankitkumarflarre/datamigration/internal/helix"
 	"github.com/ankitkumarflarre/datamigration/internal/ledger"
 	"github.com/ankitkumarflarre/datamigration/internal/quote"
+	"github.com/ankitkumarflarre/datamigration/internal/rules"
 	"github.com/ankitkumarflarre/datamigration/internal/schema"
 	"github.com/ankitkumarflarre/datamigration/web"
 )
@@ -78,6 +79,7 @@ func serve(args []string) {
 	addr := fset.String("addr", "127.0.0.1:8080", "listen address (local only by default, D11)")
 	webDir := fset.String("web-dir", "", "serve the UI from this directory instead of the embedded build")
 	quoteDir := fset.String("quote-dir", "data/quotes", "durable local quote directory")
+	rulesDir := fset.String("rules-dir", "data/rules", "where Rules-tab edits of the rule sets are kept")
 	offline := fset.Bool("offline", false, "serve quote application without Helix")
 	_ = fset.Parse(args)
 	quotes, err := quote.Open(*quoteDir)
@@ -106,6 +108,9 @@ func serve(args []string) {
 		defer l.Close()
 		srv := api.NewServer(h, h, schema.New(h), l, ui)
 		srv.Quotes = quotes
+		if srv.Rules, err = rules.OpenStore(*rulesDir); err != nil {
+			log.Fatal(err)
+		}
 		handler = srv.Handler()
 	}
 	ln, err := net.Listen("tcp", *addr)

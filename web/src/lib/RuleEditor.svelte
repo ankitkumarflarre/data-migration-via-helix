@@ -2,10 +2,11 @@
   import type { EffectiveRule, RuleOverride, Target } from './api';
   import FieldPicker from './FieldPicker.svelte';
 
-  let { rule, current, onApply, onClose }: {
+  let { rule, current, onApply, onSaveDefault, onClose }: {
     rule: EffectiveRule;
     current: RuleOverride | undefined;
     onApply: (o: RuleOverride | null) => Promise<void>;
+    onSaveDefault?: (o: RuleOverride, reason: string) => Promise<void>; // make it the rule for every new upload
     onClose: () => void;
   } = $props();
 
@@ -47,6 +48,27 @@
     return m;
   }
 
+  let defaulting = $state(false);
+  let reason = $state('');
+
+  function override(): RuleOverride {
+    const o: RuleOverride = {};
+    if (exclude) o.exclude = true;
+    if (target !== key(rule.target)) o.target = parse(target);
+    const m = mapObject();
+    if (JSON.stringify(m) !== JSON.stringify(rule.transform.map ?? {})) o.map = m;
+    return o;
+  }
+
+  async function saveDefault() {
+    if (!onSaveDefault) return;
+    if (reason.trim().length < 3) { error = 'Say why this should be the rule for every upload.'; return; }
+    busy = true; error = '';
+    try { await onSaveDefault(override(), reason.trim()); onClose(); }
+    catch (e) { error = (e as Error).message; }
+    finally { busy = false; }
+  }
+
   async function apply() {
     busy = true; error = '';
     const o: RuleOverride = {};
@@ -69,7 +91,7 @@
 <div class="editor stack">
   <div class="row wrap">
     <strong>{rule.id}</strong>
-    <span class="muted small">Column {rule.excel_column} · “{rule.header}”{#if rule.when} · only when column {rule.when.column} is {rule.when.in.join(' or ')}{/if}</span>
+    <span class="muted small">Column {rule.excel_column} · “{rule.header}”{#if rule.when} · only when column {rule.when.column} {rule.when.not_in?.length ? `is not ${rule.when.not_in.join(' or ')}` : `is ${(rule.when.in ?? []).join(' or ')}`}{/if}</span>
     <span class="spacer"></span>
     <label class="row chk"><input type="checkbox" bind:checked={exclude} /> Exclude this column</label>
   </div>
@@ -110,9 +132,18 @@
     </details>
   {/if}
 
+  {#if defaulting}
+    <div class="row wrap default">
+      <label for="why-{rule.id}">Why should every new upload use this?</label>
+      <input id="why-{rule.id}" type="text" bind:value={reason} placeholder="Reason, kept in the rule history" style="flex:1; min-width: 220px" />
+      <button class="btn sm" onclick={() => (defaulting = false)} disabled={busy}>Cancel</button>
+      <button class="btn sm primary" onclick={saveDefault} disabled={busy}>{busy ? 'Saving…' : 'Save as default rule'}</button>
+    </div>
+  {/if}
   {#if error}<div class="err" role="alert">✕ {error}</div>{/if}
   <div class="row">
     <button class="btn sm ghost" onclick={reset} disabled={busy || !current}>Reset to default</button>
+    {#if onSaveDefault && !defaulting}<button class="btn sm ghost" onclick={() => (defaulting = true)} disabled={busy} title="Change the rule in the Rules tab for every new upload">Save as default rule…</button>{/if}
     <span class="spacer"></span>
     <button class="btn sm" onclick={onClose} disabled={busy}>Cancel</button>
     <button class="btn sm primary" onclick={apply} disabled={busy}>{busy ? 'Re-planning…' : 'Apply override'}</button>
@@ -125,6 +156,7 @@
   .lbl { color: var(--text-muted); font-size: var(--fs-sm); padding-top: 6px; }
   .maps input { width: 200px; }
   .chk { gap: 6px; color: var(--text); }
+  .default { padding: var(--space-3); background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); }
   .spacer { flex: 1; }
   .locs { white-space: pre; max-height: 160px; overflow: auto; padding: var(--space-2); background: var(--surface); border-radius: var(--radius-sm); margin-top: 4px; }
   .err { background: var(--danger-soft); color: var(--danger); padding: var(--space-2) var(--space-3); border-radius: var(--radius-sm); }

@@ -1,6 +1,6 @@
 // Types mirror the Go JSON of internal/plan, internal/execute and internal/api.
 
-export interface Target { variant: string; field: string }
+export interface Target { variant: string; instance?: string; field: string } // instance: one of several records of the variant
 export interface Transform { case?: string; map?: Record<string, string> }
 export interface FieldType { type: string; kind: string; max_len?: number; enum?: string[] }
 export interface Sample { row: number; before: string; after: string }
@@ -20,7 +20,7 @@ export interface EffectiveRule {
   id: string; report_no: number; excel_column: string; header: string;
   report_status: string; confidence: string; target: Target; alternatives: Target[];
   report_locations: string[]; transform: Transform; attention?: string; note?: string;
-  when?: { column: string; in: string[] }; target_basis?: string;
+  when?: Condition; target_basis?: string; disabled?: string;
   excluded: boolean; overridden: boolean; effective_target: Target; effective_transform: Transform;
 }
 export interface AttentionItem { id: string; kind: string; title: string; detail: string }
@@ -47,6 +47,7 @@ export interface Job {
   id: string; file_name: string; file_sha: string; rule_set: string; uploaded_at: string;
   sheet_rows: number; headers: Record<string, string>; overrides: Overrides; plan: Plan;
   approvals: Approval[]; progress?: Progress; status: string; helix_url: string;
+  rules_outdated?: boolean;
 }
 export interface Issue { row: number; column?: string; rule_id?: string; target?: string; severity: string; message: string }
 export interface PlanRow { row: number; policy_number: string; blocked: boolean; records: PlanRecord[] }
@@ -96,7 +97,59 @@ export const api = {
     call<Page<RowResult>>('GET', `/api/jobs/${id}/results?status=${status}&offset=${offset}&limit=${limit}`),
   variants: () => call<{ bundle: string; variants: Leaf[] }>('GET', '/api/schema/variants'),
   variant: (v: string) => call<SchemaVariant>('GET', `/api/schema/variants/${encodeURIComponent(v)}`),
+  refreshRules: (id: string) => call<Job>('POST', `/api/jobs/${id}/rules/refresh`),
 };
+
+// ---- rules tab ----
+export interface Condition { column: string; in?: string[]; not_in?: string[] }
+export interface FieldSource {
+  const?: string; col?: string; map?: Record<string, string>; format?: string; ref?: string;
+  generate?: boolean; min_col?: string; attention?: string;
+}
+export interface Rule {
+  id: string; report_no: number; excel_column: string; header: string; report_status: string; confidence: string;
+  when?: Condition; target: Target; target_basis?: string; alternatives: Target[]; report_locations: string[];
+  transform: Transform; attention?: string; note?: string; disabled?: string;
+}
+export type RuleStatus = 'reviewed' | 'edited' | 'added';
+export interface RuleView extends Rule {
+  status: RuleStatus; reviewed?: Rule; changes: number;
+  target_type?: FieldType; target_entity?: string; target_required?: boolean; target_error?: string;
+}
+export interface TemplateFieldView {
+  field: string; source: FieldSource; reviewed?: FieldSource; status: RuleStatus; changes: number;
+  type?: FieldType; required?: boolean; editable: boolean;
+}
+export interface TemplateView { id: string; variant: string; instance?: string; entity?: string; scope: 'job' | 'row'; key?: string; anchor?: boolean; fields: TemplateFieldView[] }
+export interface ExcludedColumn { report_no: number; excel_column: string; header: string; reason: string }
+export interface Change { seq: number; at: string; kind: 'rule' | 'template'; key: string; reason: string; rule?: Rule; source?: FieldSource }
+export interface RuleSetView {
+  name: string; sheet: string; source_report: string; reviewed_sha: string; sha: string;
+  row_key_column: string; row_date_column: string; headers: Record<string, string>;
+  rules: RuleView[]; excluded: ExcludedColumn[]; templates: TemplateView[]; changes: Change[];
+}
+export interface RuleInput {
+  excel_column?: string; header?: string; when?: Condition | null; target: Target; transform: Transform;
+  attention?: string; note?: string; disabled?: string;
+}
+
+export const rulesApi = {
+  get: (set: string) => call<RuleSetView>('GET', `/api/rules/${set}`),
+  put: (set: string, id: string, rule: RuleInput, reason: string) =>
+    call<RuleSetView>('PUT', `/api/rules/${set}/rules/${encodeURIComponent(id)}`, { rule, reason }),
+  add: (set: string, rule: RuleInput, reason: string) => call<RuleSetView>('POST', `/api/rules/${set}/rules`, { rule, reason }),
+  putTemplate: (set: string, variant: string, field: string, source: FieldSource, reason: string) =>
+    call<RuleSetView>('PUT', `/api/rules/${set}/templates/${encodeURIComponent(variant)}/${encodeURIComponent(field)}`, { source, reason }),
+  revert: (set: string, kind: 'rule' | 'template', key: string, seq: number, reason: string) =>
+    call<RuleSetView>('POST', `/api/rules/${set}/revert`, { kind, key, seq, reason }),
+  exportUrl: (set: string, file: 'pins' | 'templates') => `/api/rules/${set}/export?file=${file}`,
+};
+
+/** The editable part of a rule, as the Rules API expects it. */
+export const ruleInput = (r: Rule): RuleInput => ({
+  excel_column: r.excel_column, header: r.header, when: r.when ?? null, target: r.target,
+  transform: { case: r.transform.case, map: r.transform.map }, attention: r.attention ?? '', note: r.note ?? '', disabled: r.disabled ?? '',
+});
 
 export const short = (v: string) => v.replace('.property.', '.prop.').replace('.personal', '.pers.');
 export const fmtValue = (v: unknown) => (v === null || v === undefined ? '' : typeof v === 'string' ? v : JSON.stringify(v));

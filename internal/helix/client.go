@@ -399,8 +399,40 @@ type Field struct {
 
 // Description is the /describe answer for one variant.
 type Description struct {
-	Entity string  `json:"entity"`
-	Fields []Field `json:"fields"`
+	Entity        string         `json:"entity"`
+	Fields        []Field        `json:"fields"`
+	Transitions   []Transition   `json:"transitions,omitempty"`
+	EnforcedRules []EnforcedRule `json:"enforced_rules,omitempty"`
+}
+
+// Transition is a status field's state machine; a new record must start in
+// one of Initial.
+type Transition struct {
+	Field   string     `json:"field"`
+	Initial []string   `json:"initial"`
+	Moves   [][]string `json:"moves,omitempty"`
+}
+
+// EnforcedRule is a record-level check Helix applies on write.
+type EnforcedRule struct {
+	Name  string `json:"name"`
+	Prose string `json:"prose"`
+	Rule  struct {
+		Kind      string `json:"kind"` // required_when | compare | …
+		Field     string `json:"field,omitempty"`
+		When      string `json:"when,omitempty"`
+		Condition *struct {
+			Kind   string   `json:"kind"` // equals | in | is_set
+			Value  any      `json:"value,omitempty"`
+			Values []string `json:"values,omitempty"`
+		} `json:"condition,omitempty"`
+		Left  string `json:"left,omitempty"`
+		Op    string `json:"op,omitempty"`
+		Right *struct {
+			Kind string `json:"kind"`
+			Key  string `json:"key"`
+		} `json:"right,omitempty"`
+	} `json:"rule"`
 }
 
 // Describe returns a variant's fields.

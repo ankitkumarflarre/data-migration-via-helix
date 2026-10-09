@@ -4,7 +4,15 @@ Upload a rater workbook. The tool reads its **Policy Data** sheet and applies th
 *Confirmed* section of a schema-validation report. You review every impacted Helix table and column, override what you
 need, approve, and the records are written through the Helix entity API.
 
-Iteration 1 ships one rule set: **Manatee FL Select HO Rater Effective 12.1.25**. It has 20 confirmed columns, cross-checked against the UI page field inventory (D13): 19 are mapped (Number of Stories gets a separate rule per form) and one is excluded.
+Iteration 1 ships one rule set: **Manatee FL Select HO Rater Effective 12.1.25**. Every column of its Policy Data sheet (A–CI) is accounted for:
+
+- **55 rules.** 20 come from the report's confirmed columns, cross-checked against the UI page field inventory (D13). 35 cover the Review and Not found columns, following the under-review analysis workbook (D15). 6 of them, for premiums, fees and the Citizens take-out, are switched off with their reason.
+- **34 excluded columns,** each with its reason: test and comparison columns, values Helix can derive, premiums by peril, and blank columns.
+- **Two columns read by templates:** Form and Sinkhole Coverage.
+
+The plan also checks the rules Helix enforces on write, read from `/describe`: start states (a new policy term must start as `bound`), "required when" (a percentage hurricane deductible needs `deductible_percentage`) and date order. A record that would be refused becomes a blocking issue on the Review page, before anything is written.
+
+Some columns write one record per coverage, deductible or house feature. For example, `coverage_instance#coverage_a` is linked to its product coverage and to the policy version. The policy term → revision → contract wording → version chain is written for that.
 The design, the decisions (D1–D12) and the schema backlog (S1–S15) are in [PROJECT_PLAN.md](PROJECT_PLAN.md).
 
 ## Run
@@ -56,6 +64,21 @@ The **Browse data** page (header) reads Helix back:
   
   Reverse references are followed up to 4 levels. Shared records such as the product are shown but not expanded, so other policies don't leak in. Reference values link to the record they point at.
 - **By table** lists any of the ~1,000 entities, optionally filtered by one column = value. Strings are quoted and numbers and booleans are not, as the Helix `where=` filter expects. Pages use the API cursor, and clicking a row shows every field.
+
+## Rules
+
+The **Rules** page (left rail) shows every mapping rule in plain words, e.g. *Column N · Number of Units → Dwelling (Duck Creek copy) › Number of units (whole number) · Only when Form (column B) is "HO6" · Translated: "1 to 4" → 1, "5+" → 5*. It has four tabs:
+
+- **Sheet columns.** Search, filter (flagged, edited, conditional, switched off, outside the report, Duck Creek copy) and group by column or by Helix table. Each rule can be edited: target field, letter case, value translations, an "only when" condition, switching it off, the approval flag and a note. **Add rule** creates a simple one-column rule for a column that has none.
+- **Fixed & generated values.** The template fields. You can change a fixed value, a sheet column (with translations) or a pattern. Links between records stay as they are.
+- **Excluded columns.** Confirmed columns with no rule, with the reason, and a shortcut to add one.
+- **History.** Every change with its time and reason. Any version can be restored, and **Undo edits** returns a rule to the reviewed version.
+
+Every save needs a reason and is checked against the live Helix model: the field must exist, must not be a link, and every translated or fixed value must fit its type and allowed values.
+
+**Where edits live.** Edits are stored in `data/rules/<rule set>.edits.json` (`-rules-dir`, git-ignored) and applied on top of the reviewed, embedded rule set. New uploads use them at once. A file that is already uploaded keeps the rules it was planned with, because approval is tied to the plan hash; its Review page offers **Re-plan with the latest rules**.
+
+**Promoting edits.** On the Review page, **Save as default rule…** turns a per-file override into a rule change. **Export pins** / **Export templates** download the reviewed files with every edit applied. Commit them and run `make rules` to make the edits the reviewed version. Rules added in the tab go to `additional_rules` in the pins file.
 
 ## Layout
 

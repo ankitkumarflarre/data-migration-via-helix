@@ -38,6 +38,7 @@ const maxUpload = 25 << 20
 // Server holds the shared dependencies and the jobs.
 type Server struct {
 	Quotes *quote.Store
+	Rules  *rules.Store // Rules-tab edits; nil serves the reviewed rule sets read-only
 	Helix  *helix.Client
 	API    execute.API
 	Schema *schema.Schema
@@ -90,6 +91,13 @@ func (s *Server) Handler() http.Handler {
 	}
 	mux.HandleFunc("GET /api/health", s.health)
 	mux.HandleFunc("GET /api/rulesets", s.ruleSets)
+	mux.HandleFunc("GET /api/rules/{set}", s.getRuleSet)
+	mux.HandleFunc("POST /api/rules/{set}/rules", s.addRule)
+	mux.HandleFunc("PUT /api/rules/{set}/rules/{id}", s.putRule)
+	mux.HandleFunc("PUT /api/rules/{set}/templates/{variant}/{field}", s.putTemplateField)
+	mux.HandleFunc("POST /api/rules/{set}/revert", s.revert)
+	mux.HandleFunc("GET /api/rules/{set}/export", s.exportRuleSet)
+	mux.HandleFunc("POST /api/jobs/{id}/rules/refresh", s.refreshRules)
 	mux.HandleFunc("POST /api/jobs", s.upload)
 	mux.HandleFunc("GET /api/jobs/{id}", s.getJob)
 	mux.HandleFunc("GET /api/jobs/{id}/issues", s.issues)
@@ -159,7 +167,7 @@ func (s *Server) health(w http.ResponseWriter, r *http.Request) {
 func (s *Server) ruleSets(w http.ResponseWriter, _ *http.Request) {
 	var out []map[string]any
 	for _, n := range rules.Names() {
-		b, err := rules.Load(n)
+		b, err := s.bundle(n)
 		if err != nil {
 			continue
 		}
@@ -195,7 +203,7 @@ func (s *Server) upload(w http.ResponseWriter, r *http.Request) {
 	if ruleSet == "" {
 		ruleSet = rules.Names()[0]
 	}
-	b, err := rules.Load(ruleSet)
+	b, err := s.bundle(ruleSet)
 	if err != nil {
 		fail(w, http.StatusBadRequest, "%v", err)
 		return
@@ -243,6 +251,8 @@ type jobView struct {
 	Progress   *execute.Progress `json:"progress,omitempty"`
 	Status     string            `json:"status"`
 	HelixURL   string            `json:"helix_url"`
+	// RulesOutdated is set when the rule set was edited after this file was planned.
+	RulesOutdated bool `json:"rules_outdated"`
 }
 
 func (s *Server) view(j *job) jobView {
@@ -251,6 +261,9 @@ func (s *Server) view(j *job) jobView {
 	v := jobView{ID: j.ID, FileName: j.FileName, FileSHA: j.FileSHA, RuleSet: j.RuleSet, UploadedAt: j.UploadedAt,
 		SheetRows: len(j.sheet.Rows), Headers: j.sheet.Headers, Overrides: j.Overrides, Plan: j.plan,
 		Approvals: append([]approval{}, j.approvals...), Status: "review", HelixURL: s.Helix.Base()}
+	if cur, err := s.bundle(j.RuleSet); err == nil {
+		v.RulesOutdated = cur.SHA256 != j.bundle.SHA256
+	}
 	if j.exec != nil {
 		p := j.exec.Snapshot()
 		p.Results = nil

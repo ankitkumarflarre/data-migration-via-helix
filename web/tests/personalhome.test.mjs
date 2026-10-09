@@ -36,8 +36,10 @@ test('mapping report retains unapproved statuses and exact rule count', () => {
   assert.equal(report.columns.filter(c => c.status.startsWith('Confirmed')).length,20);
   assert.equal(report.columns.filter(c => c.status.startsWith('Review')).length,39);
   assert.equal(report.columns.filter(c => c.status === 'Not Found').length,22);
-  assert.equal(ruleset.rules.length,20);
-  for (const rule of ruleset.rules) assert(report.columns.some(c => c.column === rule.excel_column && c.status.startsWith('Confirmed')));
+  // 20 rules from confirmed rows (BU excluded, Number of Stories split by form) and 35 for Review / Not found columns.
+  assert.equal(ruleset.rules.length,55);
+  assert.equal(ruleset.rules.filter(r => r.report_status.startsWith('Confirmed')).length,20);
+  for (const rule of ruleset.rules) assert(report.columns.some(c => c.column === rule.excel_column && c.status === rule.report_status));
 });
 test('correspondences and template targets reference actual fields', () => {
   for (const [key,id] of Object.entries(correspondences)) {

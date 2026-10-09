@@ -7,7 +7,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"slices"
 	"sort"
+	"strings"
 	"sync"
 
 	"github.com/ankitkumarflarre/datamigration/internal/helix"
@@ -31,10 +33,76 @@ type Field struct {
 
 // Variant is a leaf variant with its fields, sorted by key.
 type Variant struct {
-	ID     string  `json:"variant"`
-	Entity string  `json:"entity"`
-	Fields []Field `json:"fields"`
-	byKey  map[string]Field
+	ID      string               `json:"variant"`
+	Entity  string               `json:"entity"`
+	Fields  []Field              `json:"fields"`
+	Initial map[string][]string  `json:"initial,omitempty"` // status field → states a new record may start in
+	Rules   []helix.EnforcedRule `json:"enforced_rules,omitempty"`
+	byKey   map[string]Field
+}
+
+// Check returns the Helix rules a new record with these field values would
+// break: start states of status fields, "required when" and date order. Rules
+// of other kinds are left to Helix.
+func (v *Variant) Check(fields map[string]any) []string {
+	var out []string
+	str := func(x any) string {
+		if x == nil {
+			return ""
+		}
+		return fmt.Sprint(x)
+	}
+	for f, allowed := range v.Initial {
+		if val, ok := fields[f]; ok && len(allowed) > 0 && !slices.Contains(allowed, str(val)) {
+			out = append(out, fmt.Sprintf("%s cannot start at %s (allowed: %s)", f, str(val), strings.Join(allowed, ", ")))
+		}
+	}
+	for _, r := range v.Rules {
+		switch r.Rule.Kind {
+		case "required_when":
+			c := r.Rule.Condition
+			w, set := fields[r.Rule.When]
+			if c == nil || !set {
+				continue
+			}
+			hit := false
+			switch c.Kind {
+			case "equals":
+				hit = str(w) == str(c.Value)
+			case "in":
+				hit = slices.Contains(c.Values, str(w))
+			case "is_set":
+				hit = str(w) != ""
+			}
+			if _, has := fields[r.Rule.Field]; hit && !has {
+				out = append(out, fmt.Sprintf("%s is required when %s is %s (%s)", r.Rule.Field, r.Rule.When, str(w), r.Name))
+			}
+		case "compare":
+			if r.Rule.Right == nil || r.Rule.Right.Kind != "field" {
+				continue
+			}
+			l, r2 := str(fields[r.Rule.Left]), str(fields[r.Rule.Right.Key])
+			if l == "" || r2 == "" {
+				continue
+			}
+			ok := true // ISO dates and timestamps compare as text
+			switch r.Rule.Op {
+			case ">":
+				ok = l > r2
+			case ">=":
+				ok = l >= r2
+			case "<":
+				ok = l < r2
+			case "<=":
+				ok = l <= r2
+			}
+			if !ok {
+				out = append(out, fmt.Sprintf("%s (%s) must be %s %s (%s): %s", r.Rule.Left, l, r.Rule.Op, r.Rule.Right.Key, r2, r.Name))
+			}
+		}
+	}
+	sort.Strings(out)
+	return out
 }
 
 // Field returns a field by key.
@@ -86,7 +154,10 @@ func (s *Schema) Variant(ctx context.Context, id string) (*Variant, error) {
 	if err != nil {
 		return nil, fmt.Errorf("describe %s: %w", id, err)
 	}
-	v := &Variant{ID: id, Entity: d.Entity, byKey: map[string]Field{}}
+	v := &Variant{ID: id, Entity: d.Entity, byKey: map[string]Field{}, Rules: d.EnforcedRules, Initial: map[string][]string{}}
+	for _, t := range d.Transitions {
+		v.Initial[t.Field] = t.Initial
+	}
 	for _, f := range d.Fields {
 		fld := Field{Key: f.Key, Type: transform.ParseType(f.Type, f.Enum), Required: f.Required, WriteOnce: f.WriteOnce}
 		if f.Reference != nil {

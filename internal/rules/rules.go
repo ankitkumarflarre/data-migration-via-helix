@@ -17,12 +17,35 @@ import (
 var files embed.FS
 
 // Target is one Helix field: a leaf variant and a field key.
+// Instance tells apart several records of the same variant in one row, such as
+// one coverage_instance per coverage; it names a template record (see Record).
 type Target struct {
-	Variant string `json:"variant"`
-	Field   string `json:"field"`
+	Variant  string `json:"variant"`
+	Instance string `json:"instance,omitempty"`
+	Field    string `json:"field"`
 }
 
-func (t Target) String() string { return t.Variant + "." + t.Field }
+func (t Target) String() string { return t.Record() + "." + t.Field }
+
+// Record is the id of the record the target writes: the variant, or
+// "variant#instance" for one of several records of that variant.
+func (t Target) Record() string { return RecordID(t.Variant, t.Instance) }
+
+// RecordID joins a variant and an optional instance.
+func RecordID(variant, instance string) string {
+	if instance == "" {
+		return variant
+	}
+	return variant + "#" + instance
+}
+
+// VariantOf strips the instance from a record id.
+func VariantOf(id string) string {
+	if i := strings.IndexByte(id, '#'); i >= 0 {
+		return id[:i]
+	}
+	return id
+}
 
 // Transform turns a cell into the value given to type coercion.
 type Transform struct {
@@ -34,7 +57,8 @@ type Transform struct {
 // (trimmed, case-insensitive).
 type Condition struct {
 	Column string   `json:"column"`
-	In     []string `json:"in"`
+	In     []string `json:"in,omitempty"`
+	NotIn  []string `json:"not_in,omitempty"` // matches any value except these (and empty cells)
 }
 
 // Matches reports whether a row's cells satisfy the condition. A nil
@@ -44,6 +68,17 @@ func (c *Condition) Matches(cells map[string]string) bool {
 		return true
 	}
 	v := strings.TrimSpace(cells[c.Column])
+	if len(c.NotIn) > 0 {
+		if v == "" {
+			return false
+		}
+		for _, w := range c.NotIn {
+			if strings.EqualFold(v, w) {
+				return false
+			}
+		}
+		return true
+	}
 	for _, w := range c.In {
 		if strings.EqualFold(v, w) {
 			return true
@@ -53,6 +88,9 @@ func (c *Condition) Matches(cells map[string]string) bool {
 }
 
 func (c *Condition) String() string {
+	if len(c.NotIn) > 0 {
+		return "column " + c.Column + " is not empty or " + strings.Join(c.NotIn, " or ")
+	}
 	return "column " + c.Column + " is " + strings.Join(c.In, " or ")
 }
 
@@ -73,6 +111,7 @@ type Rule struct {
 	Transform       Transform  `json:"transform"`
 	Attention       string     `json:"attention,omitempty"`
 	Note            string     `json:"note,omitempty"`
+	Disabled        string     `json:"disabled,omitempty"` // why the rule is switched off; empty = active
 }
 
 // Excluded is a confirmed report row that deliberately has no rule.
@@ -106,24 +145,30 @@ type FieldSource struct {
 	Format    string            `json:"format,omitempty"` // "PH-{PN}", "{C}, FL": {PN} = row key, {X} = column X
 	Ref       string            `json:"ref,omitempty"`    // variant of another template record
 	Generate  bool              `json:"generate,omitempty"`
-	MinCol    string            `json:"min_col,omitempty"` // earliest value of a column across the file (job scope)
+	MinCol    string            `json:"min_col,omitempty"`    // earliest value of a column across the file (job scope)
+	PlusYears int               `json:"plus_years,omitempty"` // with a date Col: that date plus whole years (a term's end)
 	Attention string            `json:"attention,omitempty"`
 }
 
 // TemplateRecord describes a record the migrator writes besides the mapped fields.
 type TemplateRecord struct {
-	Variant string                 `json:"variant"`
-	Scope   string                 `json:"scope"` // "job" | "row"
-	Key     string                 `json:"key,omitempty"`
-	Anchor  bool                   `json:"anchor,omitempty"` // always written (the policy)
-	Fields  map[string]FieldSource `json:"fields,omitempty"`
+	Variant  string                 `json:"variant"`
+	Instance string                 `json:"instance,omitempty"` // one of several records of the variant (needs a Key)
+	Scope    string                 `json:"scope"`              // "job" | "row"
+	Key      string                 `json:"key,omitempty"`
+	Anchor   bool                   `json:"anchor,omitempty"` // always written (the policy)
+	Fields   map[string]FieldSource `json:"fields,omitempty"`
 }
+
+// ID is the record id rules and references use: RecordID(Variant, Instance).
+func (t TemplateRecord) ID() string { return RecordID(t.Variant, t.Instance) }
 
 // Templates is the companion file of a rule set.
 type Templates struct {
-	RowKeyColumn  string           `json:"row_key_column"`
-	RowDateColumn string           `json:"row_date_column"`
-	Records       []TemplateRecord `json:"records"`
+	RowKeyColumn  string            `json:"row_key_column"`
+	RowDateColumn string            `json:"row_date_column"`
+	Headers       map[string]string `json:"headers,omitempty"` // headers of columns read only by templates
+	Records       []TemplateRecord  `json:"records"`
 }
 
 // Bundle is a loaded rule set with its templates and content hash.
@@ -181,19 +226,30 @@ func (b *Bundle) validate() error {
 			return fmt.Errorf("duplicate rule id %s", r.ID)
 		}
 		seen[r.ID] = true
-		if r.When != nil && (r.When.Column == "" || len(r.When.In) == 0) {
+		if r.When != nil && (r.When.Column == "" || len(r.When.In)+len(r.When.NotIn) == 0) {
 			return fmt.Errorf("rule %s has an incomplete condition", r.ID)
 		}
 	}
-	variants := map[string]bool{}
+	ids := map[string]bool{}
 	for _, t := range b.Templates.Records {
-		variants[t.Variant] = true
+		if ids[t.ID()] {
+			return fmt.Errorf("duplicate template record %s", t.ID())
+		}
+		ids[t.ID()] = true
+		if t.Instance != "" && t.Key == "" {
+			return fmt.Errorf("template record %s needs a business key: several records of %s are written per row", t.ID(), t.Variant)
+		}
 	}
 	for _, t := range b.Templates.Records {
 		for f, src := range t.Fields {
-			if src.Ref != "" && !variants[src.Ref] {
-				return fmt.Errorf("template %s.%s refers to unknown record %s", t.Variant, f, src.Ref)
+			if src.Ref != "" && !ids[src.Ref] {
+				return fmt.Errorf("template %s.%s refers to unknown record %s", t.ID(), f, src.Ref)
 			}
+		}
+	}
+	for _, r := range b.RuleSet.Rules {
+		if r.Target.Instance != "" && !ids[r.Target.Record()] {
+			return fmt.Errorf("rule %s writes %s, which has no template record", r.ID, r.Target.Record())
 		}
 	}
 	return nil

@@ -193,3 +193,41 @@ func TestCleanupRemovesEverythingCreated(t *testing.T) {
 		t.Fatalf("cleanup: deleted=%d failed=%d left=%d", deleted, failed, len(f.recs))
 	}
 }
+
+// TestInstancesOfOneVariantAreLinkedSeparately writes two records of the same
+// variant in a row (two coverages) and checks each link points at its own one.
+func TestInstancesOfOneVariantAreLinkedSeparately(t *testing.T) {
+	f := newFake()
+	f.entity["cov.x"], f.entity["ci.x"] = "coverage", "coverage_instance"
+	cov := func(code string) plan.Record {
+		return plan.Record{ID: "cov.x#" + code, Variant: "cov.x", Entity: "coverage", Scope: "job", KeyField: "coverage_code", KeyValue: code,
+			Fields: map[string]any{"coverage_code": code}, SheetFields: []string{}}
+	}
+	inst := func(code string, limit int64) plan.Record {
+		return plan.Record{ID: "ci.x#" + code, Variant: "ci.x", Entity: "coverage_instance", Scope: "row", KeyField: "coverage_instance_reference",
+			KeyValue: "CI-PN1-" + code, Fields: map[string]any{"coverage_instance_reference": "CI-PN1-" + code, "limit_amount": limit},
+			SheetFields: []string{"limit_amount"}, Refs: map[string]string{"product_coverage_reference": "cov.x#" + code}}
+	}
+	p := &plan.Plan{JobRecords: []plan.Record{cov("COA"), cov("COC")},
+		Rows: []plan.Row{{Row: 2, Key: "PN1", Records: []plan.Record{inst("COA", 200000), inst("COC", 80000)}}}}
+	x := newExec(t, f)
+	x.Run(context.Background(), p, Options{RunID: "r1"})
+	if s := x.Snapshot(); s.State != "done" || s.Written != 1 || s.Counts["ci.x"][Created] != 2 {
+		t.Fatalf("run: %+v", s)
+	}
+	byCode := map[string]string{} // coverage code → record id
+	for id, r := range f.recs {
+		if r.Variant == "cov.x" {
+			byCode[r.Fields["coverage_code"].(string)] = id
+		}
+	}
+	for _, r := range f.recs {
+		if r.Variant != "ci.x" {
+			continue
+		}
+		code := strings.TrimPrefix(r.Fields["coverage_instance_reference"].(string), "CI-PN1-")
+		if r.Fields["product_coverage_reference"] != byCode[code] {
+			t.Errorf("%s links to %v, want %s", r.Fields["coverage_instance_reference"], r.Fields["product_coverage_reference"], byCode[code])
+		}
+	}
+}

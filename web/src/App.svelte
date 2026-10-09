@@ -9,9 +9,11 @@
   import Browse from './lib/Browse.svelte';
   import WorkspaceIcon from './lib/personalhome/WorkspaceIcon.svelte';
   import QuoteApplication from './lib/personalhome/QuoteApplication.svelte';
+  import Rules from './lib/rules/Rules.svelte';
 
-  type View = 'migrate' | 'browse' | 'personalhome';
-  let view = $state<View>(location.hash.startsWith('#reference') ? 'personalhome' : location.hash.startsWith('#personalhome') ? 'personalhome' : location.hash.startsWith('#browse') ? 'browse' : 'migrate');
+  type View = 'migrate' | 'browse' | 'rules' | 'personalhome';
+  const viewOf = (h: string): View => h.startsWith('#reference') || h.startsWith('#personalhome') ? 'personalhome' : h.startsWith('#browse') ? 'browse' : h.startsWith('#rules') ? 'rules' : 'migrate';
+  let view = $state<View>(viewOf(location.hash));
 
   type Step = 'upload' | 'review' | 'approve' | 'run';
   const steps: { id: Step; label: string }[] = [
@@ -37,14 +39,14 @@
   });
 
   onMount(() => {
-    const syncView = () => { const next = location.hash.startsWith('#reference') ? 'personalhome' : location.hash.startsWith('#personalhome') ? 'personalhome' : location.hash.startsWith('#browse') ? 'browse' : 'migrate'; if (next !== view && !window.dispatchEvent(new Event('quote-before-leave', { cancelable: true }))) return; view = next; };
+    const syncView = () => { const next = viewOf(location.hash); if (next !== view && !window.dispatchEvent(new Event('quote-before-leave', { cancelable: true }))) return; view = next; };
     window.addEventListener('hashchange', syncView);
     return () => window.removeEventListener('hashchange', syncView);
   });
 
   // Keep the job in the URL so a refresh returns to it.
   $effect(() => {
-    const want = view === 'personalhome' ? `${(location.hash.startsWith('#personalhome') ? location.hash : '#personalhome/newquote').split('?')[0]}${job ? `?job=${job.id}` : ''}` : view === 'browse' ? '#browse' : job ? `#job=${job.id}` : '';
+    const want = view === 'personalhome' ? `${(location.hash.startsWith('#personalhome') ? location.hash : '#personalhome/newquote').split('?')[0]}${job ? `?job=${job.id}` : ''}` : view === 'browse' ? '#browse' : view === 'rules' ? '#rules' : job ? `#job=${job.id}` : '';
     if (location.hash !== want) history.replaceState(null, '', location.pathname + want);
   });
 
@@ -65,6 +67,7 @@
     <button class:on={view === 'personalhome'} aria-current={view === 'personalhome' ? 'page' : undefined} onclick={() => switchView('personalhome')}><WorkspaceIcon name="grid"/>Quotes</button>
     <button class:on={view === 'browse'} aria-current={view === 'browse' ? 'page' : undefined} onclick={() => switchView('browse')}><WorkspaceIcon name="database"/>Browse data</button>
     <button class:on={view === 'migrate'} aria-current={view === 'migrate' ? 'page' : undefined} onclick={() => switchView('migrate')}><WorkspaceIcon name="transfer"/>Migrate</button>
+    <button class:on={view === 'rules'} aria-current={view === 'rules' ? 'page' : undefined} onclick={() => switchView('rules')}><WorkspaceIcon name="rules"/>Rules</button>
   </nav>
   <div class="rail-bottom"><span class="avatar" title="Local workspace">MW</span></div>
 </aside>
@@ -80,6 +83,8 @@
 <main><QuoteApplication /></main>
 {:else if view === 'browse'}
 <main><Browse /></main>
+{:else if view === 'rules'}
+<main><Rules /></main>
 {:else}
 <nav class="stepper" aria-label="Progress">
   {#each steps as s, i}

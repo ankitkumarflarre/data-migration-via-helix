@@ -10,14 +10,15 @@ func TestCommittedRuleSetHasOnlyTableLocations(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	// 20 confirmed columns: one excluded, one split into two form-specific rules.
-	if n := len(b.RuleSet.Rules); n != 20 {
-		t.Fatalf("rules = %d, want 20", n)
-	}
-	if ex := b.RuleSet.Excluded; len(ex) != 1 || ex[0].Column != "BU" || ex[0].Reason == "" {
-		t.Fatalf("excluded = %+v, want only the second Policy Number column (BU)", ex)
+	// 20 confirmed columns (one excluded, one split by form) and 35 rules for
+	// the Review / Not found columns of the under-review analysis.
+	if n := len(b.RuleSet.Rules); n != 55 {
+		t.Fatalf("rules = %d, want 55", n)
 	}
 	for _, r := range b.RuleSet.Rules {
+		if !strings.HasPrefix(r.ReportStatus, "Confirmed") {
+			continue // rules for non-confirmed columns name no report location
+		}
 		if len(r.ReportLocations) == 0 {
 			t.Errorf("%s has no TABLE location", r.ID)
 		}
@@ -26,6 +27,53 @@ func TestCommittedRuleSetHasOnlyTableLocations(t *testing.T) {
 				t.Errorf("%s keeps a non-table location %q", r.ID, l)
 			}
 		}
+	}
+}
+
+// TestEveryColumnIsAccounted checks that each column of the Policy Data sheet
+// (A–CI) has a rule, is excluded with a reason, or is read by a template.
+func TestEveryColumnIsAccounted(t *testing.T) {
+	b, err := Load("manatee_fl_select_ho_12_1_25")
+	if err != nil {
+		t.Fatal(err)
+	}
+	seen := map[string]string{}
+	for _, r := range b.RuleSet.Rules {
+		seen[r.Column] = "rule " + r.ID
+	}
+	for _, e := range b.RuleSet.Excluded {
+		if e.Reason == "" {
+			t.Errorf("column %s is excluded without a reason", e.Column)
+		}
+		if prev, dup := seen[e.Column]; dup {
+			t.Errorf("column %s is excluded but also has %s", e.Column, prev)
+		}
+		seen[e.Column] = "excluded"
+	}
+	for _, rec := range b.Templates.Records {
+		for _, src := range rec.Fields {
+			if src.Col != "" && seen[src.Col] == "" {
+				seen[src.Col] = "template"
+			}
+		}
+	}
+	for n := 1; n <= colNum("CI"); n++ {
+		c := ""
+		for x := n; x > 0; x = (x - 1) / 26 {
+			c = string(rune('A'+(x-1)%26)) + c
+		}
+		if seen[c] == "" {
+			t.Errorf("column %s has no rule, template or exclusion", c)
+		}
+	}
+	off := 0
+	for _, r := range b.RuleSet.Rules {
+		if r.Disabled != "" {
+			off++
+		}
+	}
+	if len(b.RuleSet.Excluded) != 34 || off != 6 {
+		t.Fatalf("excluded = %d, switched off = %d; want 34 and 6", len(b.RuleSet.Excluded), off)
 	}
 }
 
@@ -46,6 +94,10 @@ func TestReviewedRuleChanges(t *testing.T) {
 		"HO-13b": "dwelling.property.us.personal.number_of_floor",
 		"HO-25":  "wind_mitigation_verification.property.us-fl.personal.safepoint.secondary_water_resistance_flag",
 		"HO-26":  "wind_mitigation_verification.property.us-fl.personal.safepoint.opening_protection",
+		"HO-16":  "dwelling_feature.property.personal#burglar_alarm.value",
+		"HO-29":  "coverage_instance.property.us.personal#coverage_a.limit_amount",
+		"HO-34":  "coverage_deductible.property.us-fl.personal.safepoint#hurricane.florida_hurricane_deductible_option",
+		"HO-04":  "policy_term.term_number",
 	}
 	for id, target := range want {
 		if got := byID[id].Target.String(); got != target {

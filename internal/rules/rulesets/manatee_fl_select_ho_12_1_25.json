@@ -103,6 +103,22 @@
       }
     },
     {
+      "id": "HO-04",
+      "report_no": 4,
+      "excel_column": "D",
+      "header": "Risk Term",
+      "report_status": "Review - Possible Mapping",
+      "confidence": "Medium/Low",
+      "target": {
+        "variant": "policy_term",
+        "field": "term_number"
+      },
+      "alternatives": [],
+      "report_locations": [],
+      "transform": {},
+      "note": "Under-review analysis workbook: Mapped to lall_jall_sall_call.policy_term.term_number. Writing it creates the policy term (PT-\u003cpolicy\u003e)."
+    },
+    {
       "id": "HO-05",
       "report_no": 5,
       "excel_column": "E",
@@ -520,6 +536,84 @@
       "transform": {}
     },
     {
+      "id": "HO-07",
+      "report_no": 7,
+      "excel_column": "G",
+      "header": "Risk Origin",
+      "report_status": "Review - Possible Mapping",
+      "confidence": "Medium/Low",
+      "target": {
+        "variant": "residual_market_placement.property.us.personal",
+        "field": "placement_basis_code"
+      },
+      "alternatives": [],
+      "report_locations": [],
+      "transform": {
+        "map": {
+          "FLCPIC": "citizens_take_out"
+        }
+      },
+      "note": "Under-review analysis workbook: Keep under review. Concept covered by a residual_market_placement row when the origin is Citizens.",
+      "disabled": "A residual market placement needs a property asset record the migrator does not write, and every row is FLCPIC. Open question: are there origins other than Citizens?"
+    },
+    {
+      "id": "HO-08",
+      "report_no": 8,
+      "excel_column": "H",
+      "header": "Occupancy",
+      "report_status": "Review - Possible Mapping",
+      "confidence": "Medium/Low",
+      "when": {
+        "column": "I",
+        "in": [
+          "O"
+        ]
+      },
+      "target": {
+        "variant": "policy.property.us-fl.personal.safepoint",
+        "field": "residence_occupancy"
+      },
+      "alternatives": [],
+      "report_locations": [],
+      "transform": {
+        "map": {
+          "Primary": "owner_occupied",
+          "Seasonal": "seasonal",
+          "Secondary": "secondary"
+        }
+      },
+      "note": "Under-review analysis workbook: Mapped to policy.residence_occupancy; Occupancy and Occupied By (column I) together give the value. Owner-occupied rows (I = O)."
+    },
+    {
+      "id": "HO-08b",
+      "report_no": 8,
+      "excel_column": "H",
+      "header": "Occupancy",
+      "report_status": "Review - Possible Mapping",
+      "confidence": "Medium/Low",
+      "when": {
+        "column": "I",
+        "in": [
+          "T"
+        ]
+      },
+      "target": {
+        "variant": "policy.property.us-fl.personal.safepoint",
+        "field": "residence_occupancy"
+      },
+      "alternatives": [],
+      "report_locations": [],
+      "transform": {
+        "map": {
+          "Primary": "tenant_occupied",
+          "Seasonal": "seasonal",
+          "Secondary": "secondary"
+        }
+      },
+      "attention": "Seasonal or secondary homes occupied by a tenant are written as seasonal / secondary: Helix has one occupancy value, so the tenant is not recorded for them (2 rows in the HO test file).",
+      "note": "Under-review analysis workbook: Mapped to policy.residence_occupancy; Occupancy and Occupied By (column I) together give the value. Tenant-occupied rows (I = T)."
+    },
+    {
       "id": "HO-10",
       "report_no": 10,
       "excel_column": "J",
@@ -688,6 +782,23 @@
       "attention": "Number of Units is a band (“1 to 4”, “5+”); its lower bound is stored. Written for HO6 only: the UI asks “Number of Units in Building” for condos, and every HO3 row is “1 to 4” (D1)."
     },
     {
+      "id": "HO-15",
+      "report_no": 15,
+      "excel_column": "O",
+      "header": "Total Number of Units Within the Fire Division",
+      "report_status": "Review - Possible Mapping",
+      "confidence": "Medium/Low",
+      "target": {
+        "variant": "dwelling_feature.property.personal",
+        "instance": "units_in_fire_division",
+        "field": "value"
+      },
+      "alternatives": [],
+      "report_locations": [],
+      "transform": {},
+      "note": "Under-review analysis workbook: Feature row (feature_category = construction, feature_code = units_in_fire_division). One dwelling_feature per policy."
+    },
+    {
       "id": "HO-16",
       "report_no": 16,
       "excel_column": "P",
@@ -695,15 +806,60 @@
       "report_status": "Confirmed - Exact/Normalized",
       "confidence": "High",
       "target": {
-        "variant": "dwelling.property.us.personal",
-        "field": "burglar_alarm"
+        "variant": "dwelling_feature.property.personal",
+        "instance": "burglar_alarm",
+        "field": "value"
       },
-      "alternatives": [],
+      "target_basis": "Analysis workbook rule 6: alarms, sprinklers and similar house facts are one row per feature in property_jall_personal_call.dwelling_feature, not a column; the report's dwelling.burglar_alarm is the Duck Creek copy table.",
+      "alternatives": [
+        {
+          "variant": "dwelling.property.us.personal",
+          "field": "burglar_alarm"
+        }
+      ],
       "report_locations": [
         "jur_us_property_personal.dwelling.burglar_alarm [TABLE]"
       ],
       "transform": {},
-      "note": "Duck Creek copy table for now: not on any UI page; protective devices are planned as dwelling_feature rows (protection / burglar_alarm) with the analysis workbook's feature rows."
+      "note": "Under-review analysis workbook: Feature row (feature_category = protection, feature_code = burglar_alarm). Was dwelling.burglar_alarm (Duck Creek copy) before 2026-10-09."
+    },
+    {
+      "id": "HO-17",
+      "report_no": 17,
+      "excel_column": "Q",
+      "header": "Fire Protection Device",
+      "report_status": "Review - Possible Mapping",
+      "confidence": "Medium/Low",
+      "target": {
+        "variant": "dwelling_feature.property.personal",
+        "instance": "fire_alarm",
+        "field": "value"
+      },
+      "alternatives": [],
+      "report_locations": [],
+      "transform": {},
+      "note": "Under-review analysis workbook: Feature row (feature_category = protection, feature_code = fire_alarm). One dwelling_feature per policy."
+    },
+    {
+      "id": "HO-18",
+      "report_no": 18,
+      "excel_column": "R",
+      "header": "Sprinkler System",
+      "report_status": "Review - Possible Mapping",
+      "confidence": "Medium/Low",
+      "target": {
+        "variant": "dwelling_feature.property.personal",
+        "instance": "sprinkler_system",
+        "field": "value"
+      },
+      "alternatives": [],
+      "report_locations": [],
+      "transform": {
+        "map": {
+          "Neither": "none"
+        }
+      },
+      "note": "Under-review analysis workbook: Feature row (feature_category = protection, feature_code = sprinkler_system). One dwelling_feature per policy."
     },
     {
       "id": "HO-19",
@@ -722,6 +878,53 @@
       ],
       "transform": {},
       "note": "Text kept as is: the UI lists grades 1–10, while 1,002 rater rows say “Ungraded”."
+    },
+    {
+      "id": "HO-20",
+      "report_no": 20,
+      "excel_column": "T",
+      "header": "Roof Covering",
+      "report_status": "Review - Possible Mapping",
+      "confidence": "Medium/Low",
+      "target": {
+        "variant": "wind_mitigation_verification.property.us-fl.personal.safepoint",
+        "field": "roof_covering_code_compliance"
+      },
+      "alternatives": [],
+      "report_locations": [],
+      "transform": {
+        "map": {
+          "FBC Equivalent": "meets_2001_fbc",
+          "Non-FBC Equivalent": "pre_2001_fbc",
+          "Reinforced Concrete Roof Deck": ""
+        }
+      },
+      "attention": "“Reinforced Concrete Roof Deck” has no equivalent in Helix (meets_2001_fbc, pre_2001_fbc, unknown); the field is left empty for those rows, with a warning.",
+      "note": "Under-review analysis workbook: Mapped. UI inventory: WM - Roof Covering (FBC Equivalent, Non-FBC Equivalent, Other)."
+    },
+    {
+      "id": "HO-21",
+      "report_no": 21,
+      "excel_column": "U",
+      "header": "Roof Wall Connection",
+      "report_status": "Review - Possible Mapping",
+      "confidence": "Medium/Low",
+      "target": {
+        "variant": "wind_mitigation_verification.property.us-fl.personal.safepoint",
+        "field": "roof_to_wall_connection"
+      },
+      "alternatives": [],
+      "report_locations": [],
+      "transform": {
+        "map": {
+          "Clips": "clips",
+          "DoubleWraps": "double_wraps",
+          "SingleWraps": "single_wraps",
+          "ToeNails": "toe_nails",
+          "Unknown": "unknown"
+        }
+      },
+      "note": "Under-review analysis workbook: Mapped. UI inventory: WM - Roof-to-Wall Attachment."
     },
     {
       "id": "HO-22",
@@ -771,6 +974,23 @@
         }
       },
       "attention": "Writing Roof Shape also creates a location, a dwelling asset and a wind mitigation verification with placeholder inspection fields (D4, S7)."
+    },
+    {
+      "id": "HO-24",
+      "report_no": 24,
+      "excel_column": "X",
+      "header": "Terrain Exposure",
+      "report_status": "Review - Possible Mapping",
+      "confidence": "Medium/Low",
+      "target": {
+        "variant": "dwelling_feature.property.personal",
+        "instance": "terrain_exposure",
+        "field": "value"
+      },
+      "alternatives": [],
+      "report_locations": [],
+      "transform": {},
+      "note": "Under-review analysis workbook: Feature row (feature_category = mitigation, feature_code = terrain_exposure). One dwelling_feature per policy."
     },
     {
       "id": "HO-25",
@@ -871,6 +1091,410 @@
       "transform": {}
     },
     {
+      "id": "HO-29",
+      "report_no": 29,
+      "excel_column": "AC",
+      "header": "Coverage A",
+      "report_status": "Review - Possible Mapping",
+      "confidence": "Medium/Low",
+      "target": {
+        "variant": "coverage_instance.property.us.personal",
+        "instance": "coverage_a",
+        "field": "limit_amount"
+      },
+      "alternatives": [],
+      "report_locations": [],
+      "transform": {},
+      "note": "Under-review analysis workbook: Coverage row, code COA. One coverage_instance per policy, linked to the product coverage and the policy version."
+    },
+    {
+      "id": "HO-30",
+      "report_no": 30,
+      "excel_column": "AD",
+      "header": "Coverage B",
+      "report_status": "Review - Possible Mapping",
+      "confidence": "Medium/Low",
+      "when": {
+        "column": "AD",
+        "not_in": [
+          "0"
+        ]
+      },
+      "target": {
+        "variant": "coverage_instance.property.us.personal",
+        "instance": "coverage_b",
+        "field": "limit_amount"
+      },
+      "alternatives": [],
+      "report_locations": [],
+      "transform": {},
+      "note": "Under-review analysis workbook: Coverage row, code COB. One coverage_instance per policy, linked to the product coverage and the policy version. Written only when the amount is not 0."
+    },
+    {
+      "id": "HO-31",
+      "report_no": 31,
+      "excel_column": "AE",
+      "header": "Coverage C",
+      "report_status": "Review - Possible Mapping",
+      "confidence": "Medium/Low",
+      "when": {
+        "column": "AE",
+        "not_in": [
+          "0"
+        ]
+      },
+      "target": {
+        "variant": "coverage_instance.property.us.personal",
+        "instance": "coverage_c",
+        "field": "limit_amount"
+      },
+      "alternatives": [],
+      "report_locations": [],
+      "transform": {},
+      "note": "Under-review analysis workbook: Coverage row, code COC. One coverage_instance per policy, linked to the product coverage and the policy version. Written only when the amount is not 0."
+    },
+    {
+      "id": "HO-32",
+      "report_no": 32,
+      "excel_column": "AF",
+      "header": "Coverage E",
+      "report_status": "Review - Possible Mapping",
+      "confidence": "Medium/Low",
+      "target": {
+        "variant": "coverage_instance.property.us.personal",
+        "instance": "coverage_e",
+        "field": "limit_amount"
+      },
+      "alternatives": [],
+      "report_locations": [],
+      "transform": {
+        "map": {
+          "$100,000 Included": "100000",
+          "Increase to $300,000": "300000"
+        }
+      },
+      "note": "Under-review analysis workbook: Coverage row, code COE. One coverage_instance per policy, linked to the product coverage and the policy version."
+    },
+    {
+      "id": "HO-33",
+      "report_no": 33,
+      "excel_column": "AG",
+      "header": "All Peril Deductible",
+      "report_status": "Review - Possible Mapping",
+      "confidence": "Medium/Low",
+      "target": {
+        "variant": "coverage_deductible.property.us-fl.personal.safepoint",
+        "instance": "all_other_perils",
+        "field": "deductible_amount"
+      },
+      "alternatives": [],
+      "report_locations": [],
+      "transform": {},
+      "note": "Under-review analysis workbook: Mapped to the all-other-perils coverage deductible of the policy term."
+    },
+    {
+      "id": "HO-34",
+      "report_no": 34,
+      "excel_column": "AH",
+      "header": "Hurricane Deductible",
+      "report_status": "Review - Possible Mapping",
+      "confidence": "Medium/Low",
+      "target": {
+        "variant": "coverage_deductible.property.us-fl.personal.safepoint",
+        "instance": "hurricane",
+        "field": "florida_hurricane_deductible_option"
+      },
+      "alternatives": [],
+      "report_locations": [],
+      "transform": {
+        "map": {
+          "0.02": "percent_2",
+          "0.05": "percent_5",
+          "0.1": "percent_10",
+          "500": "amount_500",
+          "Ex-Wind": ""
+        }
+      },
+      "attention": "“Ex-Wind” (wind excluded) has no hurricane deductible option, so no hurricane deductible is written for those rows; 0.03 and 0.04 would also have no option.",
+      "note": "Under-review analysis workbook: Mapped to property_us_fl_personal_sp.coverage_deductible.florida_hurricane_deductible_option."
+    },
+    {
+      "id": "HO-34b",
+      "report_no": 34,
+      "excel_column": "AH",
+      "header": "Hurricane Deductible",
+      "report_status": "Review - Possible Mapping",
+      "confidence": "Medium/Low",
+      "target": {
+        "variant": "coverage_deductible.property.us-fl.personal.safepoint",
+        "instance": "hurricane",
+        "field": "deductible_basis"
+      },
+      "alternatives": [],
+      "report_locations": [],
+      "transform": {
+        "map": {
+          "0.02": "percentage_of_dwelling_limit",
+          "0.05": "percentage_of_dwelling_limit",
+          "0.1": "percentage_of_dwelling_limit",
+          "500": "flat_amount",
+          "Ex-Wind": ""
+        }
+      },
+      "note": "Percentages are of the dwelling limit (Coverage A); 500 is a flat amount."
+    },
+    {
+      "id": "HO-34c",
+      "report_no": 34,
+      "excel_column": "AH",
+      "header": "Hurricane Deductible",
+      "report_status": "Review - Possible Mapping",
+      "confidence": "Medium/Low",
+      "target": {
+        "variant": "coverage_deductible.property.us-fl.personal.safepoint",
+        "instance": "hurricane",
+        "field": "deductible_percentage"
+      },
+      "alternatives": [],
+      "report_locations": [],
+      "transform": {
+        "map": {
+          "0.02": "2",
+          "0.05": "5",
+          "0.1": "10",
+          "500": "",
+          "Ex-Wind": ""
+        }
+      },
+      "attention": "The hurricane deductible percentage is written as a percent (0.02 → 2). Confirm Helix expects percent, not a fraction.",
+      "note": "Helix requires deductible_percentage when the basis is a percentage (rule percentage_when_percentage_basis). Written as a percent: 0.02 → 2."
+    },
+    {
+      "id": "HO-35",
+      "report_no": 35,
+      "excel_column": "AI",
+      "header": "Permitted Incidental Occupancy (Business Use)",
+      "report_status": "Review - Possible Mapping",
+      "confidence": "Medium/Low",
+      "when": {
+        "column": "AI",
+        "in": [
+          "Yes"
+        ]
+      },
+      "target": {
+        "variant": "coverage_instance.property.us.personal",
+        "instance": "business_use",
+        "field": "coverage_status"
+      },
+      "alternatives": [],
+      "report_locations": [],
+      "transform": {
+        "map": {
+          "Yes": "active"
+        }
+      },
+      "note": "Under-review analysis workbook: Coverage row, code BUSINESS_USE. One coverage_instance per policy, linked to the product coverage and the policy version. Written only when the sheet says Yes."
+    },
+    {
+      "id": "HO-36",
+      "report_no": 36,
+      "excel_column": "AJ",
+      "header": "Specific Other Structures Coverage - Rented to Others Residence",
+      "report_status": "Not Found",
+      "confidence": "High (for name-based absence)",
+      "when": {
+        "column": "AJ",
+        "in": [
+          "Yes"
+        ]
+      },
+      "target": {
+        "variant": "coverage_instance.property.us.personal",
+        "instance": "other_structures_rented",
+        "field": "coverage_status"
+      },
+      "alternatives": [],
+      "report_locations": [],
+      "transform": {
+        "map": {
+          "Yes": "active"
+        }
+      },
+      "note": "Under-review analysis workbook: Coverage row, code OS_RENTED. One coverage_instance per policy, linked to the product coverage and the policy version. Written only when the sheet says Yes."
+    },
+    {
+      "id": "HO-37",
+      "report_no": 37,
+      "excel_column": "AK",
+      "header": "Ordinance or Law Coverage",
+      "report_status": "Not Found",
+      "confidence": "High (for name-based absence)",
+      "target": {
+        "variant": "coverage_instance.property.us.personal",
+        "instance": "ordinance_or_law",
+        "field": "percentage_of_dwelling_limit"
+      },
+      "alternatives": [],
+      "report_locations": [],
+      "transform": {
+        "map": {
+          "0.1": "10",
+          "0.25": "25",
+          "0.5": "50"
+        }
+      },
+      "attention": "Ordinance or Law is a share of Coverage A; 0.25 is written as 25 (percent). Confirm Helix expects percent, not a fraction.",
+      "note": "Under-review analysis workbook: Coverage row, code ORD_LAW. One coverage_instance per policy, linked to the product coverage and the policy version."
+    },
+    {
+      "id": "HO-38",
+      "report_no": 38,
+      "excel_column": "AL",
+      "header": "Loss Assessment Coverage",
+      "report_status": "Not Found",
+      "confidence": "High (for name-based absence)",
+      "target": {
+        "variant": "coverage_instance.property.us.personal",
+        "instance": "loss_assessment",
+        "field": "limit_amount"
+      },
+      "alternatives": [],
+      "report_locations": [],
+      "transform": {
+        "map": {
+          "$1,000 Included": "1000",
+          "Increase to $2,000": "2000"
+        }
+      },
+      "note": "Under-review analysis workbook: Coverage row, code LOSS_ASSESS. One coverage_instance per policy, linked to the product coverage and the policy version."
+    },
+    {
+      "id": "HO-39",
+      "report_no": 39,
+      "excel_column": "AM",
+      "header": "Screened Enclosure",
+      "report_status": "Not Found",
+      "confidence": "High (for name-based absence)",
+      "when": {
+        "column": "AM",
+        "not_in": [
+          "0"
+        ]
+      },
+      "target": {
+        "variant": "coverage_instance.property.us.personal",
+        "instance": "screened_enclosure",
+        "field": "limit_amount"
+      },
+      "alternatives": [],
+      "report_locations": [],
+      "transform": {},
+      "note": "Under-review analysis workbook: Coverage row, code SCREEN_ENCL. One coverage_instance per policy, linked to the product coverage and the policy version. Written only when the amount is not 0."
+    },
+    {
+      "id": "HO-40",
+      "report_no": 40,
+      "excel_column": "AN",
+      "header": "Replacement Cost on Contents",
+      "report_status": "Review - Possible Mapping",
+      "confidence": "Medium/Low",
+      "when": {
+        "column": "AN",
+        "in": [
+          "Yes"
+        ]
+      },
+      "target": {
+        "variant": "coverage_instance.property.us.personal",
+        "instance": "replacement_cost_contents",
+        "field": "coverage_status"
+      },
+      "alternatives": [],
+      "report_locations": [],
+      "transform": {
+        "map": {
+          "Yes": "active"
+        }
+      },
+      "note": "Under-review analysis workbook: Coverage row, code RC_CONTENTS. One coverage_instance per policy, linked to the product coverage and the policy version. Written only when the sheet says Yes."
+    },
+    {
+      "id": "HO-41",
+      "report_no": 41,
+      "excel_column": "AO",
+      "header": "Water Back Up",
+      "report_status": "Review - Possible Mapping",
+      "confidence": "Medium/Low",
+      "when": {
+        "column": "AO",
+        "in": [
+          "Yes"
+        ]
+      },
+      "target": {
+        "variant": "coverage_instance.property.us.personal",
+        "instance": "water_back_up",
+        "field": "coverage_status"
+      },
+      "alternatives": [],
+      "report_locations": [],
+      "transform": {
+        "map": {
+          "Yes": "active"
+        }
+      },
+      "note": "Under-review analysis workbook: Coverage row, code WATER_BACKUP. One coverage_instance per policy, linked to the product coverage and the policy version. Written only when the sheet says Yes."
+    },
+    {
+      "id": "HO-43",
+      "report_no": 43,
+      "excel_column": "AQ",
+      "header": "Limited Fungi, Wet or Dry Rot, Yeast or Bacteria - Sect. 1",
+      "report_status": "Not Found",
+      "confidence": "High (for name-based absence)",
+      "target": {
+        "variant": "coverage_instance.property.us.personal",
+        "instance": "limited_fungi_section_1",
+        "field": "limit_amount"
+      },
+      "alternatives": [],
+      "report_locations": [],
+      "transform": {
+        "map": {
+          "$10,000 Included": "10000"
+        }
+      },
+      "note": "Under-review analysis workbook: Coverage row, code FUNGI_S1. One coverage_instance per policy, linked to the product coverage and the policy version."
+    },
+    {
+      "id": "HO-44",
+      "report_no": 44,
+      "excel_column": "AR",
+      "header": "Limited Fungi, Wet or Dry Rot, Yeast or Bacteria - Sect. 2 $6 for liability increase to $100,000",
+      "report_status": "Not Found",
+      "confidence": "High (for name-based absence)",
+      "when": {
+        "column": "AR",
+        "in": [
+          "Yes"
+        ]
+      },
+      "target": {
+        "variant": "coverage_instance.property.us.personal",
+        "instance": "limited_fungi_section_2",
+        "field": "limit_amount"
+      },
+      "alternatives": [],
+      "report_locations": [],
+      "transform": {
+        "map": {
+          "Yes": "100000"
+        }
+      },
+      "note": "Under-review analysis workbook: Coverage row, code FUNGI_S2. One coverage_instance per policy, linked to the product coverage and the policy version. Written only when Yes; the header says the liability limit increases to $100,000."
+    },
+    {
       "id": "HO-45",
       "report_no": 45,
       "excel_column": "AS",
@@ -886,6 +1510,83 @@
         "jur_us_property_personal.section_icoverages.equipment_breakdown [TABLE]"
       ],
       "transform": {}
+    },
+    {
+      "id": "HO-46",
+      "report_no": 46,
+      "excel_column": "AT",
+      "header": "HO6 Units Regularly Rented to Others",
+      "report_status": "Not Found",
+      "confidence": "High (for name-based absence)",
+      "when": {
+        "column": "AT",
+        "in": [
+          "Yes"
+        ]
+      },
+      "target": {
+        "variant": "coverage_instance.property.us.personal",
+        "instance": "ho6_units_rented",
+        "field": "coverage_status"
+      },
+      "alternatives": [],
+      "report_locations": [],
+      "transform": {
+        "map": {
+          "Yes": "active"
+        }
+      },
+      "note": "Under-review analysis workbook: Coverage row, code HO6_RENTED. One coverage_instance per policy, linked to the product coverage and the policy version. Written only when the sheet says Yes."
+    },
+    {
+      "id": "HO-47",
+      "report_no": 47,
+      "excel_column": "AU",
+      "header": "HO6 Special Coverage A",
+      "report_status": "Not Found",
+      "confidence": "High (for name-based absence)",
+      "when": {
+        "column": "AU",
+        "in": [
+          "Yes"
+        ]
+      },
+      "target": {
+        "variant": "coverage_instance.property.us.personal",
+        "instance": "ho6_special_coverage_a",
+        "field": "coverage_status"
+      },
+      "alternatives": [],
+      "report_locations": [],
+      "transform": {
+        "map": {
+          "Yes": "active"
+        }
+      },
+      "note": "Under-review analysis workbook: Coverage row, code HO6_SPECIAL_A. One coverage_instance per policy, linked to the product coverage and the policy version. Written only when the sheet says Yes."
+    },
+    {
+      "id": "HO-48",
+      "report_no": 48,
+      "excel_column": "AV",
+      "header": "Other Structures - Increased Limits - Not Rented",
+      "report_status": "Not Found",
+      "confidence": "High (for name-based absence)",
+      "when": {
+        "column": "AV",
+        "not_in": [
+          "0"
+        ]
+      },
+      "target": {
+        "variant": "coverage_instance.property.us.personal",
+        "instance": "other_structures_increased",
+        "field": "limit_amount"
+      },
+      "alternatives": [],
+      "report_locations": [],
+      "transform": {},
+      "note": "Under-review analysis workbook: Coverage row, code OS_INCREASED. One coverage_instance per policy, linked to the product coverage and the policy version. Written only when the amount is not 0."
     },
     {
       "id": "HO-50",
@@ -909,14 +1610,299 @@
         }
       },
       "attention": "Read as a yes/no flag (0/1), but the UI shows Consent to Rate as an amount and a factor (line.ctrfactor). Every test row is 0; any other value blocks the row."
+    },
+    {
+      "id": "HO-58",
+      "report_no": 58,
+      "excel_column": "BF",
+      "header": "Rater Uncapped Total Premium",
+      "report_status": "Review - Possible Mapping",
+      "confidence": "Medium/Low",
+      "target": {
+        "variant": "rating_record",
+        "field": "plan_price"
+      },
+      "alternatives": [],
+      "report_locations": [],
+      "transform": {},
+      "note": "Under-review analysis workbook: Mapped to lall_jall_sall_call.rating_record.plan_price.",
+      "disabled": "Premiums and charges are not migrated until it is agreed that Helix stores rater premiums (analysis workbook open question; decision 3 of the under-review plan). A rating record also needs a rate revision and about 25 other fields the sheet does not have."
+    },
+    {
+      "id": "HO-60",
+      "report_no": 60,
+      "excel_column": "BH",
+      "header": "Rater Capped Total Premium",
+      "report_status": "Review - Possible Mapping",
+      "confidence": "Medium/Low",
+      "target": {
+        "variant": "rating_record",
+        "field": "charged_price"
+      },
+      "alternatives": [],
+      "report_locations": [],
+      "transform": {},
+      "note": "Under-review analysis workbook: Mapped to rating_record.charged_price (and premium_transaction lines).",
+      "disabled": "Premiums and charges are not migrated until it is agreed that Helix stores rater premiums (analysis workbook open question; decision 3 of the under-review plan). A rating record also needs a rate revision and about 25 other fields the sheet does not have."
+    },
+    {
+      "id": "HO-63",
+      "report_no": 63,
+      "excel_column": "BK",
+      "header": "FIGA",
+      "report_status": "Not Found",
+      "confidence": "High (for name-based absence)",
+      "target": {
+        "variant": "premium_transaction",
+        "instance": "figa",
+        "field": "amount"
+      },
+      "alternatives": [],
+      "report_locations": [],
+      "transform": {},
+      "note": "Under-review analysis workbook: fee_schedule (rate) + premium_transaction (amount). Open question: is FIGA charged on HO policies? Empty in every test row.",
+      "disabled": "Premiums and charges are not migrated until it is agreed that Helix stores rater premiums (analysis workbook open question; decision 3 of the under-review plan)."
+    },
+    {
+      "id": "HO-72",
+      "report_no": 72,
+      "excel_column": "BT",
+      "header": "Surplus Contribution",
+      "report_status": "Review - Possible Mapping",
+      "confidence": "Medium/Low",
+      "target": {
+        "variant": "premium_transaction",
+        "instance": "surplus_contribution",
+        "field": "amount"
+      },
+      "alternatives": [],
+      "report_locations": [],
+      "transform": {},
+      "note": "Under-review analysis workbook: fee_schedule (rate) + premium_transaction (amount): one charge line per policy.",
+      "disabled": "Premiums and charges are not migrated until it is agreed that Helix stores rater premiums (analysis workbook open question; decision 3 of the under-review plan)."
+    },
+    {
+      "id": "HO-74",
+      "report_no": 74,
+      "excel_column": "BV",
+      "header": "Citizens Policy Number",
+      "report_status": "Review - Possible Mapping",
+      "confidence": "Medium/Low",
+      "target": {
+        "variant": "residual_market_placement.property.us.personal",
+        "field": "external_policy_number"
+      },
+      "alternatives": [],
+      "report_locations": [],
+      "transform": {},
+      "note": "Under-review analysis workbook: Mapped to property_us_personal_call.residual_market_placement.external_policy_number.",
+      "disabled": "Empty in every test row, and a residual market placement needs a property asset record the migrator does not write."
     }
   ],
   "excluded": [
+    {
+      "report_no": 9,
+      "excel_column": "I",
+      "header": "Occupied By",
+      "reason": "Read as the condition of HO-08 and HO-08b (Occupancy): owner (O) or tenant (T) decides the occupancy written."
+    },
+    {
+      "report_no": 49,
+      "excel_column": "AW",
+      "header": "Prior Claims",
+      "reason": "Under-review analysis workbook: Helix keeps prior losses as prior_loss rows and counts them; the count is 0 in every row and is not stored."
+    },
+    {
+      "report_no": 51,
+      "excel_column": "AY",
+      "header": "FL CPIC Expiring Premium Non-Sinkhole Non Guaranty Fees (For Term 1)",
+      "reason": "Prior-term amount used only for the Citizens take-out capping rule; Helix would read it from the prior term's rating record, which the migrator does not write. Open question: should it sit on residual_market_placement?"
+    },
+    {
+      "report_no": 52,
+      "excel_column": "AZ",
+      "header": "Manatee Uncapped Initial Non-Sinkhole Non-Guaranty Fees (For Term 1)",
+      "reason": "Prior-term amount used only for the Citizens take-out capping rule; Helix would read it from the prior term's rating record, which the migrator does not write."
+    },
+    {
+      "report_no": 53,
+      "excel_column": "BA",
+      "header": "Was the Prior Term Capped?",
+      "reason": "Can be worked out from the prior term (analysis workbook: keep under review). Read by the rater through the misspelled name PolicyInfor.PriorTermCapped?."
+    },
+    {
+      "report_no": 54,
+      "excel_column": "BB",
+      "header": "Expiring Term Manatee Capped Premium Non-Sinkhole Non Guaranty (For Term 2/3)",
+      "reason": "Prior-term amount used only for the Citizens take-out capping rule; Helix would read it from the prior term's rating record, which the migrator does not write."
+    },
+    {
+      "report_no": 55,
+      "excel_column": "BC",
+      "header": "Expiring Term Manatee Uncapped Premium Non-Sinkhole Non Guaranty (For Term 2/3)",
+      "reason": "Prior-term amount used only for the Citizens take-out capping rule; Helix would read it from the prior term's rating record, which the migrator does not write."
+    },
+    {
+      "report_no": 56,
+      "excel_column": "BD",
+      "header": "Is Policy Capped?",
+      "reason": "True when the capped total is below the uncapped total; calculated, not stored (analysis workbook: keep under review)."
+    },
+    {
+      "report_no": 57,
+      "excel_column": "BE",
+      "header": "Rater Uncapped Subtotal Premium",
+      "reason": "Rater intermediate value (subtotal or ratio); not a schema field (analysis workbook)."
+    },
+    {
+      "report_no": 59,
+      "excel_column": "BG",
+      "header": "Rater Capped Subtotal Premium",
+      "reason": "Rater intermediate value (subtotal or ratio); not a schema field (analysis workbook)."
+    },
+    {
+      "report_no": 61,
+      "excel_column": "BI",
+      "header": "Capped Percentage",
+      "reason": "Rater intermediate value (subtotal or ratio); not a schema field (analysis workbook)."
+    },
+    {
+      "report_no": 62,
+      "excel_column": "BJ",
+      "header": "Sinkhole Premium",
+      "reason": "Premium by peril: Helix has no column for it (it could be listed inside rating_record.factor_applications). Open question: store by peril, or recalculate?"
+    },
+    {
+      "report_no": 64,
+      "excel_column": "BL",
+      "header": "SubtB",
+      "reason": "Rater intermediate value (subtotal or ratio); not a schema field (analysis workbook)."
+    },
+    {
+      "report_no": 65,
+      "excel_column": "BM",
+      "header": "Fire",
+      "reason": "Premium by peril: Helix has no column for it (it could be listed inside rating_record.factor_applications). Open question: store by peril, or recalculate?"
+    },
+    {
+      "report_no": 66,
+      "excel_column": "BN",
+      "header": "Water",
+      "reason": "Premium by peril: Helix has no column for it (it could be listed inside rating_record.factor_applications). Open question: store by peril, or recalculate?"
+    },
+    {
+      "report_no": 67,
+      "excel_column": "BO",
+      "header": "Theft",
+      "reason": "Premium by peril: Helix has no column for it (it could be listed inside rating_record.factor_applications). Open question: store by peril, or recalculate?"
+    },
+    {
+      "report_no": 68,
+      "excel_column": "BP",
+      "header": "AOP",
+      "reason": "Premium by peril: Helix has no column for it (it could be listed inside rating_record.factor_applications). Open question: store by peril, or recalculate? Note: the rater macro fills this column from MAIN!L23 (Liability/Medical), not the AOP premium (MAIN!M23)."
+    },
+    {
+      "report_no": 69,
+      "excel_column": "BQ",
+      "header": "Liability",
+      "reason": "Premium by peril: Helix has no column for it (it could be listed inside rating_record.factor_applications). Open question: store by peril, or recalculate?"
+    },
+    {
+      "report_no": 70,
+      "excel_column": "BR",
+      "header": "Hurricane",
+      "reason": "Premium by peril: Helix has no column for it (it could be listed inside rating_record.factor_applications). Open question: store by peril, or recalculate?"
+    },
+    {
+      "report_no": 71,
+      "excel_column": "BS",
+      "header": "Other Wind",
+      "reason": "Premium by peril: Helix has no column for it (it could be listed inside rating_record.factor_applications). Open question: store by peril, or recalculate?"
+    },
     {
       "report_no": 73,
       "excel_column": "BU",
       "header": "Policy Number",
       "reason": "Second Policy Number column: empty in every row, placed among the Duck Creek comparison columns, and the UI has a single policy number. Column A is the business key."
+    },
+    {
+      "report_no": 75,
+      "excel_column": "BW",
+      "header": "DC Premium Subtotal",
+      "reason": "Duck Creek comparison or test column; not a schema field (analysis workbook)."
+    },
+    {
+      "report_no": 76,
+      "excel_column": "BX",
+      "header": "DC Premium Total",
+      "reason": "Duck Creek comparison or test column; not a schema field (analysis workbook)."
+    },
+    {
+      "report_no": 77,
+      "excel_column": "BY",
+      "header": "Subtotal Difference",
+      "reason": "Duck Creek comparison or test column; not a schema field (analysis workbook)."
+    },
+    {
+      "report_no": 78,
+      "excel_column": "BZ",
+      "header": "Total Difference",
+      "reason": "Duck Creek comparison or test column; not a schema field (analysis workbook)."
+    },
+    {
+      "report_no": 79,
+      "excel_column": "CA",
+      "header": "Reason for Difference",
+      "reason": "Duck Creek comparison or test column; not a schema field (analysis workbook)."
+    },
+    {
+      "report_no": 80,
+      "excel_column": "CB",
+      "header": "Percent Matching:",
+      "reason": "Duck Creek comparison or test column; not a schema field (analysis workbook)."
+    },
+    {
+      "report_no": 81,
+      "excel_column": "CC",
+      "header": "#DIV/0!",
+      "reason": "Duck Creek comparison or test column; not a schema field (analysis workbook)."
+    },
+    {
+      "report_no": 0,
+      "excel_column": "CD",
+      "header": "(blank)",
+      "reason": "Blank column: no header and no values."
+    },
+    {
+      "report_no": 0,
+      "excel_column": "CE",
+      "header": "(blank)",
+      "reason": "Blank column: no header and no values."
+    },
+    {
+      "report_no": 0,
+      "excel_column": "CF",
+      "header": "(blank)",
+      "reason": "Blank column: no header and no values."
+    },
+    {
+      "report_no": 0,
+      "excel_column": "CG",
+      "header": "(blank)",
+      "reason": "Blank column: no header and no values."
+    },
+    {
+      "report_no": 0,
+      "excel_column": "CH",
+      "header": "(blank)",
+      "reason": "Blank column: no header and no values."
+    },
+    {
+      "report_no": 0,
+      "excel_column": "CI",
+      "header": "(blank)",
+      "reason": "Blank column: no header and no values."
     }
   ]
 }

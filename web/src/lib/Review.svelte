@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { api, fmtValue, type FieldImpact, type Issue, type Job, type Overrides, type PlanRow, type RuleOverride, type VariantImpact } from './api';
+  import { api, fmtValue, ruleInput, rulesApi, type EffectiveRule, type FieldImpact, type Issue, type Job, type Overrides, type PlanRow, type RuleOverride, type VariantImpact } from './api';
   import RuleEditor from './RuleEditor.svelte';
 
   let { job = $bindable(), onNext }: { job: Job; onNext: () => void } = $props();
@@ -30,6 +30,27 @@
     const rules = { ...(job.overrides.rules ?? {}) };
     if (o) rules[id] = o; else delete rules[id];
     await save({ ...job.overrides, rules });
+  }
+
+  // Make an override the rule's default for every new upload (Rules tab), then
+  // re-plan this file with the updated rules instead of the override.
+  async function saveDefault(rule: EffectiveRule, o: RuleOverride, reason: string) {
+    const input = ruleInput(rule);
+    if (o.target) input.target = o.target;
+    if (o.map) input.transform = { ...input.transform, map: o.map };
+    if (o.exclude) input.disabled = reason;
+    await rulesApi.put(job.rule_set, rule.id, input, reason);
+    const rules = { ...(job.overrides.rules ?? {}) };
+    delete rules[rule.id];
+    await save({ ...job.overrides, rules });
+    await refreshRules();
+  }
+
+  async function refreshRules() {
+    busy = true; error = '';
+    try { job = await api.refreshRules(job.id); }
+    catch (e) { error = (e as Error).message; throw e; }
+    finally { busy = false; }
   }
 
   async function setTemplate(k: string, v: string | null) {
@@ -88,6 +109,13 @@
   </div>
 
   {#if error}<div class="err" role="alert">✕ {error}</div>{/if}
+  {#if job.rules_outdated}
+    <div class="note warn-note" role="status">
+      ✎ The mapping rules were changed in the Rules tab after this file was planned. This plan still uses the earlier rules.
+      <button class="btn sm" disabled={busy} onclick={() => refreshRules().catch(() => {})}>Re-plan with the latest rules</button>
+      <a class="btn sm ghost" href="#rules">See the rules</a>
+    </div>
+  {/if}
   {#if plan.blocking_count > 0}
     <div class="note bad-note">✕ {plan.blocking_count} blocking issues on {plan.blocked_rows} rows. Fix them with an override (value map, other target, or exclude) before approving. <button class="btn sm" onclick={() => { tab = 'issues'; issueSeverity = 'blocking'; }}>Show issues</button></div>
   {/if}
@@ -150,7 +178,7 @@
                   {#if editing === rowKey}
                     <tr class="edit-row"><td colspan="7">
                       {#if rid && ruleById[rid]}
-                        <RuleEditor rule={ruleById[rid]} current={job.overrides.rules?.[rid]} onApply={(o) => setRule(rid, o)} onClose={() => (editing = null)} />
+                        <RuleEditor rule={ruleById[rid]} current={job.overrides.rules?.[rid]} onApply={(o) => setRule(rid, o)} onSaveDefault={(o, reason) => saveDefault(ruleById[rid], o, reason)} onClose={() => (editing = null)} />
                       {:else}
                         <div class="tedit row wrap">
                           <label for="tv-{f.field}">Value for <span class="mono">{v.variant}.{f.field}</span></label>
@@ -184,7 +212,9 @@
         <div class="table-wrap flat"><table><tbody>
           {#each excluded as r}
             <tr><td class="mono">{r.id}</td><td>Column {r.excel_column} · {r.header}</td><td class="mono small">{r.target.variant}.{r.target.field}</td>
-              <td><button class="btn sm" disabled={busy} onclick={() => setRule(r.id, null)}>Restore</button></td></tr>
+              <td>{#if r.disabled && !job.overrides.rules?.[r.id]?.exclude}
+                <span class="xs muted">Switched off in the Rules tab: {r.disabled}</span> <a class="btn sm ghost" href="#rules">Rules</a>
+              {:else}<button class="btn sm" disabled={busy} onclick={() => setRule(r.id, null)}>Restore</button>{/if}</td></tr>
           {/each}
         </tbody></table></div>
       </article>
@@ -258,6 +288,7 @@
   .spacer { flex: 1; }
   .err, .bad-note { background: var(--danger-soft); color: var(--danger); padding: var(--space-3); border-radius: var(--radius-sm); }
   .bad-note { display: flex; gap: var(--space-3); align-items: center; flex-wrap: wrap; }
+  .warn-note { display: flex; gap: var(--space-3); align-items: center; flex-wrap: wrap; background: var(--warning-soft); color: var(--warning); padding: var(--space-3); border-radius: var(--radius-sm); }
   .tabs { display: flex; gap: var(--space-1); border-bottom: 1px solid var(--border); align-items: center; }
   .tabs button { border: none; background: none; padding: 8px 14px; font: 500 var(--fs) var(--font); color: var(--text-muted); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; }
   .tabs button.on { color: var(--text); border-bottom-color: var(--accent); }

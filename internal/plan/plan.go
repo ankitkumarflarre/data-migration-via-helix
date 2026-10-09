@@ -117,6 +117,7 @@ type AttentionItem struct {
 
 // Record is one record to write.
 type Record struct {
+	ID          string            `json:"id"` // record id: the variant, or "variant#instance"
 	Variant     string            `json:"variant"`
 	Entity      string            `json:"entity"`
 	Scope       string            `json:"scope"`
@@ -124,7 +125,7 @@ type Record struct {
 	KeyValue    string            `json:"key_value,omitempty"`
 	Fields      map[string]any    `json:"fields"`
 	SheetFields []string          `json:"sheet_fields"`
-	Refs        map[string]string `json:"refs,omitempty"` // field → variant of the referenced record
+	Refs        map[string]string `json:"refs,omitempty"` // field → id of the referenced record
 	Generated   []string          `json:"generated,omitempty"`
 }
 
@@ -225,7 +226,7 @@ func (b *builder) variant(id string) (*schema.Variant, error) {
 	if v, ok := b.variants[id]; ok {
 		return v, nil
 	}
-	v, err := b.in.Schema.Variant(b.ctx, id)
+	v, err := b.in.Schema.Variant(b.ctx, rules.VariantOf(id)) // id may be a record id
 	if err != nil {
 		return nil, err
 	}
@@ -235,9 +236,9 @@ func (b *builder) variant(id string) (*schema.Variant, error) {
 
 func (b *builder) effectiveRules() error {
 	for _, r := range b.in.Bundle.RuleSet.Rules {
-		er := EffectiveRule{Rule: r, Effective: r.Target, EffMap: r.Transform}
+		er := EffectiveRule{Rule: r, Effective: r.Target, EffMap: r.Transform, Excluded: r.Disabled != ""}
 		if o, ok := b.in.Overrides.Rules[r.ID]; ok {
-			er.Excluded = o.Exclude
+			er.Excluded = er.Excluded || o.Exclude
 			if o.Target != nil && *o.Target != r.Target {
 				er.Effective, er.Overridden = *o.Target, true
 			}
@@ -248,12 +249,17 @@ func (b *builder) effectiveRules() error {
 			er.Overridden = er.Overridden || o.Exclude
 		}
 		if !er.Excluded {
-			v, err := b.variant(er.Effective.Variant)
+			v, err := b.variant(er.Effective.Record())
 			if err != nil {
 				return err
 			}
 			if _, ok := v.Field(er.Effective.Field); !ok {
 				return fmt.Errorf("rule %s: %s has no field %q", r.ID, er.Effective.Variant, er.Effective.Field)
+			}
+			if er.Effective.Instance != "" {
+				if _, ok := b.templateByID(er.Effective.Record()); !ok {
+					return fmt.Errorf("rule %s: %s has no template record", r.ID, er.Effective.Record())
+				}
 			}
 			if h := b.in.Sheet.Headers[r.Column]; !strings.EqualFold(h, r.Header) {
 				b.issue(Issue{Column: r.Column, RuleID: r.ID, Severity: "blocking",
@@ -270,28 +276,29 @@ func (b *builder) effectiveRules() error {
 func (b *builder) includeVariants() error {
 	tmplOrder := map[string]int{}
 	for i, t := range b.in.Bundle.Templates.Records {
-		b.templates[t.Variant] = t
-		tmplOrder[t.Variant] = i
+		b.templates[t.ID()] = t
+		tmplOrder[t.ID()] = i
 	}
 	want := map[string]bool{}
 	for _, t := range b.in.Bundle.Templates.Records {
 		if t.Anchor {
-			want[t.Variant] = true
+			want[t.ID()] = true
 		}
 	}
 	for _, r := range b.plan.Rules {
 		if !r.Excluded {
-			want[r.Effective.Variant] = true
+			want[r.Effective.Record()] = true
 		}
 	}
 	entityToTemplate := map[string]string{}
 	for _, t := range b.in.Bundle.Templates.Records {
-		v, err := b.variant(t.Variant)
+		v, err := b.variant(t.ID())
 		if err != nil {
 			return err
 		}
-		if _, dup := entityToTemplate[v.Entity]; !dup {
-			entityToTemplate[v.Entity] = t.Variant
+		// Instances are one of several records; references to them are explicit.
+		if _, dup := entityToTemplate[v.Entity]; !dup && t.Instance == "" {
+			entityToTemplate[v.Entity] = t.ID()
 		}
 	}
 	for changed := true; changed; {
@@ -417,6 +424,7 @@ func (b *builder) jobRecords() {
 		b.fillTemplate(&rec, 0, "", nil)
 		b.fillRequired(&rec, 0, b.in.Bundle.RuleSet.Name)
 		b.setKey(&rec, 0)
+		b.checkHelixRules(&rec, 0)
 		b.plan.JobRecords = append(b.plan.JobRecords, rec)
 		b.records[id]++
 	}
@@ -424,7 +432,7 @@ func (b *builder) jobRecords() {
 
 func (b *builder) newRecord(id string) Record {
 	v := b.variants[id]
-	rec := Record{Variant: id, Entity: v.Entity, Scope: b.scope[id], Fields: map[string]any{}, SheetFields: []string{}, Refs: map[string]string{}}
+	rec := Record{ID: id, Variant: rules.VariantOf(id), Entity: v.Entity, Scope: b.scope[id], Fields: map[string]any{}, SheetFields: []string{}, Refs: map[string]string{}}
 	if t, ok := b.templates[id]; ok {
 		rec.KeyField = t.Key
 	}
@@ -450,12 +458,20 @@ func (b *builder) row(r excel.Row) {
 		}
 		raw := r.Cells[er.Column]
 		norm := transform.Normalize(raw)
-		fi := b.fieldImpact(er.Effective.Variant, er.Effective.Field)
+		rid := er.Effective.Record()
+		fi := b.fieldImpact(rid, er.Effective.Field)
 		if norm == "" {
 			continue
 		}
 		after := transform.Apply(er.EffMap, norm)
-		f, _ := b.variants[er.Effective.Variant].Field(er.Effective.Field)
+		if after == "" {
+			// The value map says this value has no equivalent: leave the field empty.
+			addSample(fi, r.Number, norm, "(left empty)")
+			b.issue(Issue{Row: r.Number, Column: er.Column, RuleID: er.ID, Target: er.Effective.String(), Severity: "warning",
+				Message: fmt.Sprintf("%q has no equivalent in %s; the field is left empty", norm, er.Effective.Field)})
+			continue
+		}
+		f, _ := b.variants[rid].Field(er.Effective.Field)
 		val, err := transform.Coerce(f.Type, after, b.in.Sheet.Date1904)
 		target := er.Effective.String()
 		if err != nil {
@@ -466,7 +482,7 @@ func (b *builder) row(r excel.Row) {
 		}
 		fi.Values++
 		addSample(fi, r.Number, norm, transform.Canonical(val))
-		rec := get(er.Effective.Variant)
+		rec := get(rid)
 		if prev, ok := rec.Fields[er.Effective.Field]; ok {
 			if transform.Canonical(prev) != transform.Canonical(val) {
 				b.issue(Issue{Row: r.Number, Column: er.Column, RuleID: er.ID, Target: target, Severity: "blocking",
@@ -510,6 +526,7 @@ func (b *builder) row(r excel.Row) {
 		b.fillTemplate(rec, r.Number, key, r.Cells)
 		b.fillRequired(rec, r.Number, key)
 		b.setKey(rec, r.Number)
+		b.checkHelixRules(rec, r.Number)
 		sort.Strings(rec.SheetFields)
 		rp.Records = append(rp.Records, *rec)
 		b.records[id]++
@@ -543,16 +560,16 @@ func (b *builder) rowDateOf(cells map[string]string) string {
 }
 
 func (b *builder) fillTemplate(rec *Record, rowNum int, key string, cells map[string]string) {
-	t, ok := b.templates[rec.Variant]
+	t, ok := b.templates[rec.ID]
 	if !ok {
 		return
 	}
-	v := b.variants[rec.Variant]
+	v := b.variants[rec.ID]
 	for _, field := range sortedKeys(t.Fields) {
 		src := t.Fields[field]
 		if src.Ref != "" {
 			rec.Refs[field] = src.Ref
-			fi := b.fieldImpact(rec.Variant, field)
+			fi := b.fieldImpact(rec.ID, field)
 			fi.Source, fi.RefVariant, fi.Template = SrcReference, src.Ref, "→ "+src.Ref
 			fi.Values++
 			continue
@@ -561,7 +578,7 @@ func (b *builder) fillTemplate(rec *Record, rowNum int, key string, cells map[st
 			continue // the sheet wins over a template
 		}
 		f, ok := v.Field(field)
-		fi := b.fieldImpact(rec.Variant, field)
+		fi := b.fieldImpact(rec.ID, field)
 		if fi.Source == "" {
 			fi.Source, fi.Template, fi.Attention = SrcTemplate, describeSource(src), src.Attention
 			if src.Generate {
@@ -572,11 +589,11 @@ func (b *builder) fillTemplate(rec *Record, rowNum int, key string, cells map[st
 			}
 		}
 		if !ok {
-			b.issue(Issue{Target: rec.Variant + "." + field, Severity: "blocking", Message: "template field does not exist on the variant"})
+			b.issue(Issue{Target: rec.ID + "." + field, Severity: "blocking", Message: "template field does not exist on the variant"})
 			continue
 		}
 		var raw string
-		overrideKey := rec.Variant + "|" + field
+		overrideKey := rec.ID + "|" + field
 		ov, overridden := b.in.Overrides.Templates[overrideKey]
 		switch {
 		case overridden:
@@ -584,6 +601,8 @@ func (b *builder) fillTemplate(rec *Record, rowNum int, key string, cells map[st
 			fi.Source, fi.Overridden = SrcOverride, true
 		case src.Const != nil:
 			raw = *src.Const
+		case src.Col != "" && src.PlusYears != 0:
+			raw = transform.AddYears(transform.Normalize(cells[src.Col]), src.PlusYears, b.in.Sheet.Date1904)
 		case src.Col != "":
 			raw = transform.MapValue(src.Map, transform.Normalize(cells[src.Col]))
 		case src.Format != "":
@@ -608,7 +627,7 @@ func (b *builder) fillTemplate(rec *Record, rowNum int, key string, cells map[st
 		val, err := transform.Coerce(f.Type, raw, b.in.Sheet.Date1904)
 		if err != nil {
 			fi.Errors++
-			b.issue(Issue{Row: rowNum, Column: src.Col, Target: rec.Variant + "." + field, Severity: "blocking", Message: "template value: " + err.Error()})
+			b.issue(Issue{Row: rowNum, Column: src.Col, Target: rec.ID + "." + field, Severity: "blocking", Message: "template value: " + err.Error()})
 			continue
 		}
 		rec.Fields[field] = val
@@ -679,7 +698,7 @@ func (b *builder) minColumn(col string, t transform.FieldType) string {
 // fillRequired supplies generated placeholders for required fields still empty (D6),
 // and references for required reference fields.
 func (b *builder) fillRequired(rec *Record, rowNum int, scope string) {
-	v := b.variants[rec.Variant]
+	v := b.variants[rec.ID]
 	for _, f := range v.Fields {
 		if !f.Required {
 			continue
@@ -690,9 +709,9 @@ func (b *builder) fillRequired(rec *Record, rowNum int, scope string) {
 		if _, ok := rec.Refs[f.Key]; ok {
 			continue
 		}
-		if to := b.refsOf[rec.Variant][f.Key]; to != "" {
+		if to := b.refsOf[rec.ID][f.Key]; to != "" {
 			rec.Refs[f.Key] = to
-			fi := b.fieldImpact(rec.Variant, f.Key)
+			fi := b.fieldImpact(rec.ID, f.Key)
 			fi.Source, fi.RefVariant, fi.Template = SrcReference, to, "→ "+to
 			fi.Values++
 			continue
@@ -700,13 +719,13 @@ func (b *builder) fillRequired(rec *Record, rowNum int, scope string) {
 		if f.Type.Kind == transform.Reference {
 			continue // already reported in includeVariants
 		}
-		if ov, ok := b.in.Overrides.Templates[rec.Variant+"|"+f.Key]; ok {
-			fi := b.fieldImpact(rec.Variant, f.Key)
+		if ov, ok := b.in.Overrides.Templates[rec.ID+"|"+f.Key]; ok {
+			fi := b.fieldImpact(rec.ID, f.Key)
 			fi.Source, fi.Overridden = SrcOverride, true
 			val, err := transform.Coerce(f.Type, ov, b.in.Sheet.Date1904)
 			if err != nil {
 				fi.Errors++
-				b.issue(Issue{Row: rowNum, Target: rec.Variant + "." + f.Key, Severity: "blocking", Message: "override value: " + err.Error()})
+				b.issue(Issue{Row: rowNum, Target: rec.ID + "." + f.Key, Severity: "blocking", Message: "override value: " + err.Error()})
 				continue
 			}
 			rec.Fields[f.Key] = val
@@ -718,7 +737,7 @@ func (b *builder) fillRequired(rec *Record, rowNum int, scope string) {
 		val := transform.Placeholder(f.Type, f.Key, scope, "")
 		rec.Fields[f.Key] = val
 		rec.Generated = append(rec.Generated, f.Key)
-		fi := b.fieldImpact(rec.Variant, f.Key)
+		fi := b.fieldImpact(rec.ID, f.Key)
 		if fi.Source == "" || fi.Source == SrcTemplate {
 			fi.Source = SrcGenerated
 			if fi.Template == "" {
@@ -737,7 +756,7 @@ func (b *builder) setKey(rec *Record, rowNum int) {
 	}
 	rec.KeyValue = transform.Canonical(rec.Fields[rec.KeyField])
 	if rec.KeyValue == "" {
-		b.issue(Issue{Row: rowNum, Target: rec.Variant + "." + rec.KeyField, Severity: "blocking", Message: "business key is empty"})
+		b.issue(Issue{Row: rowNum, Target: rec.ID + "." + rec.KeyField, Severity: "blocking", Message: "business key is empty"})
 	}
 }
 
@@ -761,7 +780,7 @@ func (b *builder) finish() {
 		if er.Excluded {
 			continue
 		}
-		fi := b.fieldImpact(er.Effective.Variant, er.Effective.Field)
+		fi := b.fieldImpact(er.Effective.Record(), er.Effective.Field)
 		if fi.Source == "" || fi.Source == SrcTemplate || fi.Source == SrcGenerated {
 			fi.Source = SrcSheet
 		}
@@ -799,6 +818,8 @@ func (b *builder) finish() {
 	// Attention list (D4): rules, template/generated values, overrides.
 	for _, er := range p.Rules {
 		switch {
+		case er.Excluded && er.Disabled != "" && !er.Overridden:
+			// Switched off in the Rules tab: a default, not a choice made for this file.
 		case er.Excluded:
 			p.Attention = append(p.Attention, AttentionItem{ID: "override:" + er.ID, Kind: SrcOverride,
 				Title: fmt.Sprintf("%s (%s, column %s) is excluded", er.ID, er.Header, er.Column), Detail: "This column will not be written."})
@@ -840,4 +861,21 @@ func sortedKeys[V any](m map[string]V) []string {
 	}
 	sort.Strings(out)
 	return out
+}
+
+func (b *builder) templateByID(id string) (rules.TemplateRecord, bool) {
+	for _, t := range b.in.Bundle.Templates.Records {
+		if t.ID() == id {
+			return t, true
+		}
+	}
+	return rules.TemplateRecord{}, false
+}
+
+// checkHelixRules reports, before anything is written, the rules Helix would
+// refuse the record for: start states and record-level checks (see schema.Check).
+func (b *builder) checkHelixRules(rec *Record, rowNum int) {
+	for _, msg := range b.variants[rec.ID].Check(rec.Fields) {
+		b.issue(Issue{Row: rowNum, Target: rec.ID, Severity: "blocking", Message: "Helix rule: " + msg})
+	}
 }
