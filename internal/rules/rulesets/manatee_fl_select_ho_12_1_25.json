@@ -50,15 +50,6 @@
         }
       ],
       "report_locations": [
-        "_view.policy.policy_number [VIEW]",
-        "_view.policy_lifecycle.policy_number [VIEW]",
-        "_view.policy_motor_us_commercial.policy_number [VIEW]",
-        "_view.policy_motor_us_fleet.policy_number [VIEW]",
-        "_view.policy_motor_us_personal.policy_number [VIEW]",
-        "_view.policy_property_commercial.policy_number [VIEW]",
-        "_view.policy_property_us_fl_personal_safepoint.policy_number [VIEW]",
-        "_view.raw_xml_document.policy_number [VIEW]",
-        "_view.raw_xml_document_property_us_personal.policy_number [VIEW]",
         "core_all.policy.policy_number [TABLE]",
         "core_all.policy_lifecycle.policy_number [TABLE]",
         "jur_us_property_personal.raw_xml_document.policy_number [TABLE]"
@@ -100,13 +91,6 @@
         }
       ],
       "report_locations": [
-        "_view.account_location.county [VIEW]",
-        "_view.account_search_request.county [VIEW]",
-        "_view.contact_address_wrapper.county [VIEW]",
-        "_view.location_address.county [VIEW]",
-        "_view.location_address_property_us_personal.county [VIEW]",
-        "_view.policy_address.county [VIEW]",
-        "_view.tax_location.county [VIEW]",
         "core_all.account_location.county [TABLE]",
         "core_all.account_search_request.county [TABLE]",
         "core_all.contact_address_wrapper.county [TABLE]",
@@ -131,7 +115,6 @@
       },
       "alternatives": [],
       "report_locations": [
-        "_view.loss_ratio_analysis.territory [VIEW]",
         "core_all.loss_ratio_analysis.territory [TABLE]"
       ],
       "transform": {},
@@ -211,10 +194,6 @@
         },
         {
           "variant": "contract_wording",
-          "field": "effective_date"
-        },
-        {
-          "variant": "cost_catalog.motor",
           "field": "effective_date"
         },
         {
@@ -358,22 +337,6 @@
           "field": "effective_date"
         },
         {
-          "variant": "policy.motor.us.commercial",
-          "field": "effective_date"
-        },
-        {
-          "variant": "policy.motor.us.fleet",
-          "field": "effective_date"
-        },
-        {
-          "variant": "policy.motor.us.personal",
-          "field": "effective_date"
-        },
-        {
-          "variant": "policy.property.commercial",
-          "field": "effective_date"
-        },
-        {
           "variant": "policy_restructure",
           "field": "effective_date"
         },
@@ -475,90 +438,6 @@
         }
       ],
       "report_locations": [
-        "_view.address.effective_date [VIEW]",
-        "_view.adverse_development_cover.effective_date [VIEW]",
-        "_view.beneficial_ownership_record.effective_date [VIEW]",
-        "_view.benefit.effective_date [VIEW]",
-        "_view.binder.effective_date [VIEW]",
-        "_view.binding_authority.effective_date [VIEW]",
-        "_view.book_roll.effective_date [VIEW]",
-        "_view.broker_of_record_letter.effective_date [VIEW]",
-        "_view.certificate.effective_date [VIEW]",
-        "_view.cession.effective_date [VIEW]",
-        "_view.code_list.effective_date [VIEW]",
-        "_view.commission_agreement.effective_date [VIEW]",
-        "_view.commission_chargeback.effective_date [VIEW]",
-        "_view.communication_preference.effective_date [VIEW]",
-        "_view.contact_point.effective_date [VIEW]",
-        "_view.contract_wording.effective_date [VIEW]",
-        "_view.cost_catalog.effective_date [VIEW]",
-        "_view.cost_catalog_motor.effective_date [VIEW]",
-        "_view.counterparty_security_approval.effective_date [VIEW]",
-        "_view.coverage.effective_date [VIEW]",
-        "_view.coverage_motor_us_commercial.effective_date [VIEW]",
-        "_view.coverage_motor_us_fleet.effective_date [VIEW]",
-        "_view.coverage_motor_us_personal.effective_date [VIEW]",
-        "_view.coverage_property_commercial.effective_date [VIEW]",
-        "_view.coverage_property_us_personal.effective_date [VIEW]",
-        "_view.domain_role_type.effective_date [VIEW]",
-        "_view.endorsement.effective_date [VIEW]",
-        "_view.facultative_certificate.effective_date [VIEW]",
-        "_view.fee_schedule.effective_date [VIEW]",
-        "_view.fronting_arrangement.effective_date [VIEW]",
-        "_view.geographic_zone.effective_date [VIEW]",
-        "_view.glossary_term.effective_date [VIEW]",
-        "_view.group_master_policy.effective_date [VIEW]",
-        "_view.grouping.effective_date [VIEW]",
-        "_view.iam_role.effective_date [VIEW]",
-        "_view.index.effective_date [VIEW]",
-        "_view.insured_object.effective_date [VIEW]",
-        "_view.insured_object_flood_us_commercial_safepoint.effective_date [VIEW]",
-        "_view.insured_object_flood_us_personal_safepoint.effective_date [VIEW]",
-        "_view.insured_object_property_us_personal_safepoint.effective_date [VIEW]",
-        "_view.kpi.effective_date [VIEW]",
-        "_view.kpi_taxonomy.effective_date [VIEW]",
-        "_view.location.effective_date [VIEW]",
-        "_view.location_property_us_personal.effective_date [VIEW]",
-        "_view.loss_portfolio_transfer.effective_date [VIEW]",
-        "_view.member_resolution.effective_date [VIEW]",
-        "_view.membership.effective_date [VIEW]",
-        "_view.network.effective_date [VIEW]",
-        "_view.network_agreement.effective_date [VIEW]",
-        "_view.nomination.effective_date [VIEW]",
-        "_view.non_renewal.effective_date [VIEW]",
-        "_view.novation.effective_date [VIEW]",
-        "_view.parameter_set.effective_date [VIEW]",
-        "_view.party_life_event.effective_date [VIEW]",
-        "_view.peril.effective_date [VIEW]",
-        "_view.plan_design.effective_date [VIEW]",
-        "_view.policy.effective_date [VIEW]",
-        "_view.policy_property_us_fl_personal_safepoint.effective_date [VIEW]",
-        "_view.policy_restructure.effective_date [VIEW]",
-        "_view.policy_schedule.effective_date [VIEW]",
-        "_view.portfolio_conversion.effective_date [VIEW]",
-        "_view.portfolio_transfer.effective_date [VIEW]",
-        "_view.prior_insurance.effective_date [VIEW]",
-        "_view.prior_insurance_property_us_personal.effective_date [VIEW]",
-        "_view.producer_agreement.effective_date [VIEW]",
-        "_view.producer_appointment.effective_date [VIEW]",
-        "_view.product.effective_date [VIEW]",
-        "_view.product_version.effective_date [VIEW]",
-        "_view.rating_plan.effective_date [VIEW]",
-        "_view.regulatory_action.effective_date [VIEW]",
-        "_view.reinsurance_collateral.effective_date [VIEW]",
-        "_view.relationship.effective_date [VIEW]",
-        "_view.renewal_rights_transfer.effective_date [VIEW]",
-        "_view.requirement_checklist.effective_date [VIEW]",
-        "_view.rider.effective_date [VIEW]",
-        "_view.role_assignment.effective_date [VIEW]",
-        "_view.scheduled_item.effective_date [VIEW]",
-        "_view.servicing_transaction.effective_date [VIEW]",
-        "_view.treaty_participation.effective_date [VIEW]",
-        "_view.trigger.effective_date [VIEW]",
-        "_view.underwriting_guideline.effective_date [VIEW]",
-        "_view.user_role.effective_date [VIEW]",
-        "_view.workflow_definition.effective_date [VIEW]",
-        "_view.workflow_taxonomy.effective_date [VIEW]",
         "core_all.address.effective_date [TABLE]",
         "core_all.adverse_development_cover.effective_date [TABLE]",
         "core_all.beneficial_ownership_record.effective_date [TABLE]",
@@ -652,9 +531,6 @@
         }
       ],
       "report_locations": [
-        "_view.dwelling.year_built [VIEW]",
-        "_view.dwelling_incident.year_built [VIEW]",
-        "_view.dwelling_property_us_personal.year_built [VIEW]",
         "core_all.dwelling_incident.year_built [TABLE]",
         "jur_us_property_personal.dwelling.year_built [TABLE]"
       ],
@@ -673,8 +549,6 @@
       },
       "alternatives": [],
       "report_locations": [
-        "_view.dwelling.construction [VIEW]",
-        "_view.dwelling_property_us_personal.construction [VIEW]",
         "jur_us_property_personal.dwelling.construction [TABLE]"
       ],
       "transform": {}
@@ -692,8 +566,6 @@
       },
       "alternatives": [],
       "report_locations": [
-        "_view.dwelling_asset.protection_class [VIEW]",
-        "_view.dwelling_asset_property_personal.protection_class [VIEW]",
         "lob_property_personal.dwelling_asset.protection_class [TABLE]"
       ],
       "transform": {}
@@ -716,10 +588,6 @@
         }
       ],
       "report_locations": [
-        "_view.dwelling.number_of_stories [VIEW]",
-        "_view.dwelling_property_us_personal.number_of_stories [VIEW]",
-        "_view.geo_code_address_result.number_of_stories [VIEW]",
-        "_view.geo_code_address_result_property_us_personal.number_of_stories [VIEW]",
         "jur_us_property_personal.dwelling.number_of_stories [TABLE]",
         "jur_us_property_personal.geo_code_address_result.number_of_stories [TABLE]"
       ],
@@ -743,10 +611,6 @@
         }
       ],
       "report_locations": [
-        "_view.dwelling.number_of_units [VIEW]",
-        "_view.dwelling_asset.number_of_units [VIEW]",
-        "_view.dwelling_asset_property_personal.number_of_units [VIEW]",
-        "_view.dwelling_property_us_personal.number_of_units [VIEW]",
         "jur_us_property_personal.dwelling.number_of_units [TABLE]",
         "lob_property_personal.dwelling_asset.number_of_units [TABLE]"
       ],
@@ -771,8 +635,6 @@
       },
       "alternatives": [],
       "report_locations": [
-        "_view.dwelling.burglar_alarm [VIEW]",
-        "_view.dwelling_property_us_personal.burglar_alarm [VIEW]",
         "jur_us_property_personal.dwelling.burglar_alarm [TABLE]"
       ],
       "transform": {}
@@ -790,8 +652,6 @@
       },
       "alternatives": [],
       "report_locations": [
-        "_view.dwelling.building_code_effectiveness_grading [VIEW]",
-        "_view.dwelling_property_us_personal.building_code_effectiveness_grading [VIEW]",
         "jur_us_property_personal.dwelling.building_code_effectiveness_grading [TABLE]"
       ],
       "transform": {}
@@ -809,8 +669,6 @@
       },
       "alternatives": [],
       "report_locations": [
-        "_view.dwelling.roof_deck_attachment [VIEW]",
-        "_view.dwelling_property_us_personal.roof_deck_attachment [VIEW]",
         "jur_us_property_personal.dwelling.roof_deck_attachment [TABLE]"
       ],
       "transform": {}
@@ -833,9 +691,6 @@
         }
       ],
       "report_locations": [
-        "_view.wind_mitigation_verification.roof_shape [VIEW]",
-        "_view.wind_mitigation_verification_property_us_fl_personal_safepoint.roof_shape [VIEW]",
-        "_view.wind_mitigation_verification_property_us_tx_personal_safepoint.roof_shape [VIEW]",
         "jur_us_property_personal.wind_mitigation_verification.roof_shape [TABLE]"
       ],
       "transform": {
@@ -861,8 +716,6 @@
       },
       "alternatives": [],
       "report_locations": [
-        "_view.dwelling.secondary_water_resistance [VIEW]",
-        "_view.dwelling_property_us_personal.secondary_water_resistance [VIEW]",
         "jur_us_property_personal.dwelling.secondary_water_resistance [TABLE]"
       ],
       "transform": {
@@ -894,11 +747,6 @@
         }
       ],
       "report_locations": [
-        "_view.dwelling.opening_protection [VIEW]",
-        "_view.dwelling_property_us_personal.opening_protection [VIEW]",
-        "_view.wind_mitigation_verification.opening_protection [VIEW]",
-        "_view.wind_mitigation_verification_property_us_fl_personal_safepoint.opening_protection [VIEW]",
-        "_view.wind_mitigation_verification_property_us_tx_personal_safepoint.opening_protection [VIEW]",
         "jur_us_property_personal.dwelling.opening_protection [TABLE]",
         "jur_us_property_personal.wind_mitigation_verification.opening_protection [TABLE]"
       ],
@@ -917,8 +765,6 @@
       },
       "alternatives": [],
       "report_locations": [
-        "_view.dwelling.wind_speed_design [VIEW]",
-        "_view.dwelling_property_us_personal.wind_speed_design [VIEW]",
         "jur_us_property_personal.dwelling.wind_speed_design [TABLE]"
       ],
       "transform": {}
@@ -936,8 +782,6 @@
       },
       "alternatives": [],
       "report_locations": [
-        "_view.dwelling.wind_speed_location [VIEW]",
-        "_view.dwelling_property_us_personal.wind_speed_location [VIEW]",
         "jur_us_property_personal.dwelling.wind_speed_location [TABLE]"
       ],
       "transform": {}
@@ -955,8 +799,6 @@
       },
       "alternatives": [],
       "report_locations": [
-        "_view.section_icoverages.equipment_breakdown [VIEW]",
-        "_view.section_icoverages_property_us_personal.equipment_breakdown [VIEW]",
         "jur_us_property_personal.section_icoverages.equipment_breakdown [TABLE]"
       ],
       "transform": {}
@@ -974,8 +816,6 @@
       },
       "alternatives": [],
       "report_locations": [
-        "_view.line.consent_to_rate [VIEW]",
-        "_view.line_property_us_personal.consent_to_rate [VIEW]",
         "jur_us_property_personal.line.consent_to_rate [TABLE]"
       ],
       "transform": {
@@ -1023,15 +863,6 @@
         }
       ],
       "report_locations": [
-        "_view.policy.policy_number [VIEW]",
-        "_view.policy_lifecycle.policy_number [VIEW]",
-        "_view.policy_motor_us_commercial.policy_number [VIEW]",
-        "_view.policy_motor_us_fleet.policy_number [VIEW]",
-        "_view.policy_motor_us_personal.policy_number [VIEW]",
-        "_view.policy_property_commercial.policy_number [VIEW]",
-        "_view.policy_property_us_fl_personal_safepoint.policy_number [VIEW]",
-        "_view.raw_xml_document.policy_number [VIEW]",
-        "_view.raw_xml_document_property_us_personal.policy_number [VIEW]",
         "core_all.policy.policy_number [TABLE]",
         "core_all.policy_lifecycle.policy_number [TABLE]",
         "jur_us_property_personal.raw_xml_document.policy_number [TABLE]"

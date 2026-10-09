@@ -1,8 +1,8 @@
 // Command rulegen turns a schema-validation report (HTML) into a committed rule
-// set. Only rows whose status is "Confirmed" become rules. Every location the
-// report lists is translated to current leaf variants using the variant
-// registry in ddl.sql; the reviewed primary target of each rule comes from a
-// pins file and must be one of those candidates.
+// set. Only rows whose status is "Confirmed" become rules. Every TABLE location
+// the report lists is translated to current leaf variants using the variant
+// registry in ddl.sql; VIEW locations are ignored. The reviewed primary target
+// of each rule comes from a pins file and must be one of those candidates.
 //
 //	go run ./cmd/rulegen -report <report.html> -ddl <ddl.sql> \
 //	   -pins internal/rules/rulesets/<name>.pins.json -out internal/rules/rulesets/<name>.json
@@ -169,9 +169,11 @@ func parseReport(doc string) ([]resultRow, map[string][]location, error) {
 			results = append(results, resultRow{no: r[0], column: r[1], header: r[2], status: r[3], confidence: r[4]})
 		}
 	}
+	// Only TABLE locations become rule locations; VIEW rows are read-only
+	// joins over the same tables and are dropped.
 	locs := map[string][]location{}
 	for _, r := range tables[1] {
-		if len(r) >= 7 && r[0] != "Excel #" {
+		if len(r) >= 7 && r[0] != "Excel #" && strings.EqualFold(r[5], "TABLE") {
 			locs[r[0]] = append(locs[r[0]], location{schema: r[2], table: r[3], column: r[4], fq: r[6] + " [" + r[5] + "]"})
 		}
 	}
@@ -215,14 +217,12 @@ func text(n *html.Node) string {
 // ---- variant registry from ddl.sql -----------------------------------------
 
 type variant struct {
-	id, entity, view string
-	leaf             bool
+	id   string
+	leaf bool
 }
 
 type registry struct {
 	variants map[string]variant
-	byView   map[string]string
-	leaves   map[string][]string // entity → leaf variants
 	byTable  map[string][]string // schema.table → variants whose lineage includes it
 }
 
@@ -232,7 +232,7 @@ func readRegistry(path string) (*registry, error) {
 		return nil, err
 	}
 	defer f.Close()
-	reg := &registry{variants: map[string]variant{}, byView: map[string]string{}, leaves: map[string][]string{}, byTable: map[string][]string{}}
+	reg := &registry{variants: map[string]variant{}, byTable: map[string][]string{}}
 	sc := bufio.NewScanner(f)
 	sc.Buffer(make([]byte, 1<<20), 64<<20)
 	const vPrefix, lPrefix = "INSERT INTO _engine.variant VALUES (", "INSERT INTO _engine.variant_lineage VALUES ("
@@ -244,14 +244,7 @@ func readRegistry(path string) (*registry, error) {
 			if len(vals) < 17 {
 				continue
 			}
-			v := variant{id: vals[0], entity: vals[1], leaf: vals[15] == "true", view: vals[16]}
-			reg.variants[v.id] = v
-			if v.view != "" {
-				reg.byView[v.view] = v.id
-			}
-			if v.leaf {
-				reg.leaves[v.entity] = append(reg.leaves[v.entity], v.id)
-			}
+			reg.variants[vals[0]] = variant{id: vals[0], leaf: vals[15] == "true"}
 		case strings.HasPrefix(line, lPrefix):
 			vals := sqlValues(line[len(lPrefix):])
 			if len(vals) == 4 {
@@ -300,22 +293,14 @@ func sqlValues(s string) []string {
 }
 
 func (r *registry) candidates(l location, renames map[string]string) []rules.Target {
+	schema := l.schema
+	if to, ok := renames[schema]; ok {
+		schema = to
+	}
 	var vs []string
-	if l.schema == "_view" {
-		if leaves, ok := r.leaves[l.table]; ok { // entity-wide union view
-			vs = leaves
-		} else if id, ok := r.byView["_view."+l.table]; ok {
-			vs = []string{id}
-		}
-	} else {
-		schema := l.schema
-		if to, ok := renames[schema]; ok {
-			schema = to
-		}
-		for _, id := range r.byTable[schema+"."+l.table] {
-			if r.variants[id].leaf {
-				vs = append(vs, id)
-			}
+	for _, id := range r.byTable[schema+"."+l.table] {
+		if r.variants[id].leaf {
+			vs = append(vs, id)
 		}
 	}
 	out := make([]rules.Target, 0, len(vs))
