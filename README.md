@@ -4,7 +4,7 @@ Upload a rater workbook. The tool reads its **Policy Data** sheet and applies th
 *Confirmed* section of a schema-validation report. You review every impacted Helix table and column, override what you
 need, approve, and the records are written through the Helix entity API.
 
-Iteration 1 ships one rule set: **Manatee FL Select HO Rater Effective 12.1.25** (20 confirmed columns).
+Iteration 1 ships one rule set: **Manatee FL Select HO Rater Effective 12.1.25**. It has 20 confirmed columns, cross-checked against the UI page field inventory (D13): 19 are mapped (Number of Stories gets a separate rule per form) and one is excluded.
 The design, the decisions (D1–D12) and the schema backlog (S1–S15) are in [PROJECT_PLAN.md](PROJECT_PLAN.md).
 
 ## Run

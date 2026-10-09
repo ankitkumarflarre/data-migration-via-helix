@@ -10,7 +10,7 @@ export interface FieldImpact {
   source: 'sheet' | 'template' | 'generated' | 'reference' | 'override';
   rule_id?: string; column?: string; header?: string; transform?: Transform;
   template?: string; ref_variant?: string; values: number; errors: number;
-  samples?: Sample[]; attention?: string; overridden?: boolean; alternatives?: Target[];
+  samples?: Sample[]; attention?: string; condition?: string; overridden?: boolean; alternatives?: Target[];
 }
 export interface VariantImpact {
   variant: string; entity: string; scope: 'job' | 'row'; key?: string;
@@ -20,6 +20,7 @@ export interface EffectiveRule {
   id: string; report_no: number; excel_column: string; header: string;
   report_status: string; confidence: string; target: Target; alternatives: Target[];
   report_locations: string[]; transform: Transform; attention?: string; note?: string;
+  when?: { column: string; in: string[] }; target_basis?: string;
   excluded: boolean; overridden: boolean; effective_target: Target; effective_transform: Transform;
 }
 export interface AttentionItem { id: string; kind: string; title: string; detail: string }

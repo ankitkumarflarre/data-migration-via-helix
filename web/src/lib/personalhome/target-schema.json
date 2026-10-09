@@ -17,13 +17,13 @@
     "type": "string(255)",
     "write_once": false
   },
-  "dwelling.property.us.personal.construction": {
+  "dwelling.property.us.personal.number_of_floor": {
     "enum": null,
-    "key": "construction",
+    "key": "number_of_floor",
     "owner": "dwelling.property.us.personal",
     "reference": null,
     "required": false,
-    "type": "string(255)",
+    "type": "integer",
     "write_once": false
   },
   "dwelling.property.us.personal.number_of_stories": {
@@ -44,13 +44,13 @@
     "type": "integer",
     "write_once": false
   },
-  "dwelling.property.us.personal.opening_protection": {
+  "dwelling.property.us.personal.rated_territory": {
     "enum": null,
-    "key": "opening_protection",
+    "key": "rated_territory",
     "owner": "dwelling.property.us.personal",
     "reference": null,
     "required": false,
-    "type": "string(255)",
+    "type": "integer",
     "write_once": false
   },
   "dwelling.property.us.personal.roof_deck_attachment": {
@@ -60,15 +60,6 @@
     "reference": null,
     "required": false,
     "type": "string(255)",
-    "write_once": false
-  },
-  "dwelling.property.us.personal.secondary_water_resistance": {
-    "enum": null,
-    "key": "secondary_water_resistance",
-    "owner": "dwelling.property.us.personal",
-    "reference": null,
-    "required": false,
-    "type": "boolean",
     "write_once": false
   },
   "dwelling.property.us.personal.wind_speed_design": {
@@ -89,10 +80,19 @@
     "type": "string(255)",
     "write_once": false
   },
-  "dwelling.property.us.personal.year_built": {
+  "dwelling_asset.property.personal.construction_type": {
     "enum": null,
-    "key": "year_built",
-    "owner": "dwelling.property.us.personal",
+    "key": "construction_type",
+    "owner": "dwelling_asset.property.personal",
+    "reference": null,
+    "required": false,
+    "type": "string(64)",
+    "write_once": false
+  },
+  "dwelling_asset.property.personal.construction_year": {
+    "enum": null,
+    "key": "construction_year",
+    "owner": "dwelling_asset.property.personal",
     "reference": null,
     "required": false,
     "type": "integer",
@@ -217,15 +217,6 @@
     "enum": null,
     "key": "county",
     "owner": "location_address.property.us.personal",
-    "reference": null,
-    "required": false,
-    "type": "string(255)",
-    "write_once": false
-  },
-  "loss_ratio_analysis.territory": {
-    "enum": null,
-    "key": "territory",
-    "owner": "loss_ratio_analysis",
     "reference": null,
     "required": false,
     "type": "string(255)",
@@ -516,6 +507,20 @@
     "type": "string(255)",
     "write_once": false
   },
+  "wind_mitigation_verification.property.us-fl.personal.safepoint.opening_protection": {
+    "enum": [
+      "none",
+      "basic",
+      "hurricane_rated",
+      "unknown"
+    ],
+    "key": "opening_protection",
+    "owner": "wind_mitigation_verification.property.us.personal",
+    "reference": null,
+    "required": false,
+    "type": "enum(none,basic,hurricane_rated,unknown)",
+    "write_once": false
+  },
   "wind_mitigation_verification.property.us-fl.personal.safepoint.roof_shape": {
     "enum": [
       "hip",
@@ -528,6 +533,15 @@
     "reference": null,
     "required": false,
     "type": "enum(hip,gable,flat,other)",
+    "write_once": false
+  },
+  "wind_mitigation_verification.property.us-fl.personal.safepoint.secondary_water_resistance_flag": {
+    "enum": null,
+    "key": "secondary_water_resistance_flag",
+    "owner": "wind_mitigation_verification.property.us.personal",
+    "reference": null,
+    "required": false,
+    "type": "boolean",
     "write_once": false
   },
   "wind_mitigation_verification.property.us-fl.personal.safepoint.verification_status": {

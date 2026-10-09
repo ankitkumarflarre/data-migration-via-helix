@@ -131,7 +131,7 @@
                     <td><span class="mono">{f.field}</span>{#if f.required}<span class="req" title="Required by Helix">*</span>{/if}
                       {#if f.attention}<div class="xs warnc">⚠ {f.attention}</div>{/if}</td>
                     <td><span class="badge {f.overridden ? 'override' : f.source}">{f.overridden && f.source === 'sheet' ? 'Sheet · overridden' : srcLabel[f.source]}</span></td>
-                    <td class="small">{from(f)}{#if f.rule_id}<div class="xs faint">{f.rule_id}</div>{/if}</td>
+                    <td class="small">{from(f)}{#if f.rule_id}<div class="xs faint">{f.rule_id}</div>{/if}{#if f.condition}<div class="xs muted">{f.condition}</div>{/if}</td>
                     <td class="xs mono muted">{f.type.type}</td>
                     <td class="small">
                       {#each f.samples ?? [] as s}

@@ -72,6 +72,7 @@ type FieldImpact struct {
 	Errors       int                 `json:"errors"`
 	Samples      []Sample            `json:"samples,omitempty"`
 	Attention    string              `json:"attention,omitempty"`
+	Condition    string              `json:"condition,omitempty"` // the rule only applies to some rows
 	Overridden   bool                `json:"overridden,omitempty"`
 	Alternatives []rules.Target      `json:"alternatives,omitempty"`
 }
@@ -444,7 +445,7 @@ func (b *builder) row(r excel.Row) {
 	}
 	setBy := map[string]string{} // variant.field → rule id that set it
 	for _, er := range b.plan.Rules {
-		if er.Excluded {
+		if er.Excluded || !er.When.Matches(r.Cells) {
 			continue
 		}
 		raw := r.Cells[er.Column]
@@ -771,6 +772,9 @@ func (b *builder) finish() {
 		}
 		tr := er.EffMap
 		fi.RuleID, fi.Column, fi.Header, fi.Transform, fi.Overridden = er.ID, er.Column, er.Header, &tr, er.Overridden
+		if er.When != nil {
+			fi.Condition = "only when " + er.When.String()
+		}
 		fi.Alternatives = append([]rules.Target{}, er.Alternatives...)
 		if er.Overridden {
 			fi.Alternatives = append(fi.Alternatives, er.Target)

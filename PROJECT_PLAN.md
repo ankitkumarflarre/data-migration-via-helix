@@ -36,26 +36,28 @@ The Helix API addresses **leaf variants**, not tables. Each rule therefore resol
 |---|---|---|---|---|---|---|
 | 1 | A | Policy Number | `policy.property.us-fl.personal.safepoint` → `policy_number` | string(255) | trim | **The business key for the whole row (D5).** Unique per carrier. Alternatives: `policy_lifecycle`, `raw_xml_document` |
 | 3 | C | County | `location_address.property.us.personal` → `county` | string(255) | trim, upper-case | Alternative: `policy_address.county`. Source has mixed case (`MIAMI-DADE` / `Miami-dade`) |
-| 5 | E | Territory | `loss_ratio_analysis` → `territory` | string(255) | int → string | ⚠ **Attention flag (D4):** the names match, but this is a portfolio reporting table, not a rating territory. Kept as-is and shown to the user at approval, who can override it |
+| 5 | E | Territory | `dwelling.property.us.personal` → `rated_territory` | integer | int | **Changed (D13):** the UI inventory shows Territory is a calculated rating territory. It was `loss_ratio_analysis.territory`, a name-only match to a portfolio reporting table |
 | 6 | F | Effective Date | `policy.property.us-fl.personal.safepoint` → `effective_date` | date | datetime → `YYYY-MM-DD` | Over 70 alternative tables; the policy is the obvious one |
-| 10 | J | Year Built | `dwelling.property.us.personal` → `year_built` | integer | int | Alternative: `dwelling_incident` |
-| 11 | K | Construction | `dwelling.property.us.personal` → `construction` | string(255) | trim | |
+| 10 | J | Year Built | `dwelling_asset.property.personal` → `construction_year` | integer | int | **Changed (D13):** the Helix-native home. It was the Duck Creek copy `dwelling.year_built` |
+| 11 | K | Construction | `dwelling_asset.property.personal` → `construction_type` | string(64) | trim | **Changed (D13):** the Helix-native home. It was the Duck Creek copy `dwelling.construction` |
 | 12 | L | Protection Class | `dwelling_asset.property.personal` → `protection_class` | string(255) | int → string | |
-| 13 | M | Number of Stories | `dwelling.property.us.personal` → `number_of_stories` | integer | int | Alternative: `geo_code_address_result` |
-| 14 | N | Number of Units | `dwelling.property.us.personal` → `number_of_units` | **integer** | value map `"1 to 4"→4`, `"5+"→5` (D1) | Any other value is a blocking issue. Bare integers are accepted as they are |
+| 13 | M | Number of Stories | HO3: `dwelling.property.us.personal` → `number_of_stories`; HO6 (rule HO-13b): → `number_of_floor` | integer | int | **Changed (D13):** for HO6 the column holds 1–30, the condo building's floors (UI: "Number of Floors in Building") |
+| 14 | N | Number of Units | `dwelling.property.us.personal` → `number_of_units`, **HO6 only** | **integer** | value map `"1 to 4"→1`, `"5+"→5` (D1, amended) | ⚠ A range stored as its lower bound. Every HO3 row is "1 to 4", and the UI asks for it only on condos. Any other value is a blocking issue |
 | 16 | P | Burglar Alarm | `dwelling.property.us.personal` → `burglar_alarm` | string(255) | trim | Yes/No |
 | 19 | S | Building Code Effectiveness Grading | `dwelling.property.us.personal` → `building_code_effectiveness_grading` | string(255) | any → string | `Ungraded` or 2–5 |
 | 22 | V | Roof Deck Attachment | `dwelling.property.us.personal` → `roof_deck_attachment` | string(255) | trim | |
 | 23 | W | Roof Shape | `wind_mitigation_verification.property.us-fl.personal.safepoint` → `roof_shape` | enum(hip,gable,flat,other) | value map `Gable→gable`, `Hip Roof→hip`, `Flat→flat` | ⚠ **Attention flag (D4):** kept. Writing it requires a `location`, a `dwelling_asset` and inspection fields taken from templates (§6.2), all shown at approval |
-| 25 | Y | Secondary Water Resistance | `dwelling.property.us.personal` → `secondary_water_resistance` | boolean | `SWR→true`, `No SWR→false` | |
-| 26 | Z | Opening Protection | `dwelling.property.us.personal` → `opening_protection` | string(255) | trim | Alternative: the wind-mitigation enum (`none`/`basic`/`hurricane_rated`/`unknown`), which would need a value map |
+| 25 | Y | Secondary Water Resistance | `wind_mitigation_verification.property.us-fl.personal.safepoint` → `secondary_water_resistance_flag` | boolean | `SWR→true`, `No SWR→false` | **Changed (D13):** the Helix-native home. It was the Duck Creek copy `dwelling.secondary_water_resistance` |
+| 26 | Z | Opening Protection | `wind_mitigation_verification.property.us-fl.personal.safepoint` → `opening_protection` | enum(none,basic,hurricane_rated,unknown) | `None→none`, `Class A→hurricane_rated`, `Class B→basic` | **Changed (D13).** ⚠ The class reading needs underwriting to confirm |
 | 27 | AA | Wind Speed Design | `dwelling.property.us.personal` → `wind_speed_design` | string(255) | trim | |
 | 28 | AB | Wind Speed Location | `dwelling.property.us.personal` → `wind_speed_location` | string(255) | any → string | Mix of numbers and text |
 | 45 | AS | Equipment Breakdown | `section_icoverages.property.us.personal` → `equipment_breakdown` | text | trim | |
-| 50 | AX | Consent to Rate | `line.property.us.personal` → `consent_to_rate` | boolean | `0→false`, `1→true` | |
-| 73 | BU | Policy Number | `policy.property.us-fl.personal.safepoint` → `policy_number` | string(255) | trim | Same target as column A. **Every value is empty in the HO file.** Rule: use it only if non-empty; if both A and BU have values and they differ, raise a blocking conflict |
+| 50 | AX | Consent to Rate | `line.property.us.personal` → `consent_to_rate` | boolean | `0→false`, `1→true` | ⚠ The UI treats Consent to Rate as an amount and a factor (`line.ctrfactor`). Every test row is 0 |
+| 73 | BU | Policy Number | — | — | — | **Excluded (D13):** empty in every row, sits among the Duck Creek comparison columns, and the UI has one policy number |
 
-**Impacted variants (8):** `policy` (FL SafePoint), `dwelling`, `dwelling_asset`, `wind_mitigation_verification`, `location_address`, `section_icoverages`, `line`, `loss_ratio_analysis`.
+**Impacted variants (7):** `policy` (FL SafePoint), `dwelling`, `dwelling_asset`, `wind_mitigation_verification`, `location_address`, `section_icoverages`, `line`.
+
+**Cross-check against the UI field inventory (2026-10-09, D13).** `Manatee_Select_Homeowners_Page_Field_Inventory.xlsx` lists every field on every workflow page, with its Duck Creek path. `dwelling.property.us.personal` matches the `Policy/Dwelling/DwellingInput/*` paths, so it is the Duck Creek copy table. Rules move to Helix's own tables where one has the field; the rest stay on the copy table (S16). A pin may name a target outside the report only with a stated reason (`outside_report`); the rule records that reason as `target_basis`. The Form map also accepts `HO4` and hyphenated spellings (`HO-3`, …), as on the UI.
 
 ---
 
@@ -368,10 +370,11 @@ The only list API known so far is `GET /api/entities/list/{entity}?limit=&after=
 | D10 | Write `policy` only. The `policy_term` → `policy_revision` → `policy_version` chain is deferred (S14) |
 | D11 | **Single user, local, demo-only.** No authentication. The server listens on `127.0.0.1` only. Target: a working demo **by end of day 2026-10-07** (§14) |
 | D12 | Re-runs **update** existing records with the sheet-sourced fields only (§6.2, item 8) |
+| D13 | (2026-10-09) The rules were cross-checked against the UI page field inventory. Prefer Helix's own tables over the Duck Creek copy. Column M splits by form. Number of Units is HO6 only, stored as the range's lower bound. Territory moves to `dwelling.rated_territory`. Column BU is excluded. See §2 |
 
 ### Still open (non-blocking)
 
-1. **Column BU (second Policy Number).** It is empty in the HO file. Default: ignore it unless it has a value; if it differs from A, raise a blocking conflict.
+1. ~~**Column BU (second Policy Number).**~~ Excluded (D13).
 
 ---
 
@@ -402,7 +405,7 @@ D2 means iteration 1 works with the Helix schema as it is. These are the gaps fo
 | S2 | `section_icoverages.property.us.personal` has no reference | Ledger only | Add `policy_version_reference` |
 | S3 | `line.property.us.personal` has no reference | Ledger only | Add `policy_version_reference` |
 | S4 | `location_address.property.us.personal` has no reference | Ledger only | Add `location_reference` |
-| S5 | `loss_ratio_analysis.territory` is a portfolio metric, not a rating territory | Flagged at approval | Add a rating-territory field on policy, location or dwelling, then move the rule |
+| S5 | `loss_ratio_analysis.territory` is a portfolio metric, not a rating territory | Resolved for now (D13): moved to `dwelling.rated_territory`, which is on the Duck Creek copy table (S16) | A rating territory on a Helix-native record (policy location or dwelling asset) |
 | S6 | `dwelling.number_of_units` is an integer, but raters use bands (`1 to 4`, `5+`) | Value map D1 (4 / 5) loses the band's meaning | Add a band enum, or keep the integer and add `number_of_units_band` |
 | S7 | `wind_mitigation_verification` requires inspection fields the rater doesn't have | Placeholder values, flagged | Make inspection fields optional, or give rater imports a separate home for rating characteristics |
 | S8 | No lookup by business key in the API (to be confirmed in §6.3) | Ledger plus paged scan | Add `GET /records/{variant}?key=…` |
@@ -413,6 +416,8 @@ D2 means iteration 1 works with the Helix schema as it is. These are the gaps fo
 | S13 | Wind-mitigation `inspection_date` and `oir_b1_1802_form_revision` are not in the rater | Placeholders (D9) | Source them from inspection data, or make them optional |
 | S14 | No `policy_term` / `policy_revision` / `policy_version` written, although `Risk Term` and `Effective Date` imply them | Deferred (D10) | Build the full chain; attach coverages and dwelling to `policy_version` |
 | S15 | No authentication or audit of who approved | Demo-only (D11) | SSO, per-user approval audit, roles |
+| S16 | No Helix-native home for stories, building floors, units, BCEG, roof deck attachment, wind speed design/location, burglar alarm or territory. They exist only on the Duck Creek copy `dwelling.property.us.personal` | Written to the copy table; burglar alarm is planned as a `dwelling_feature` row | Add these to `dwelling_asset` or `wind_mitigation_verification`, or confirm `dwelling_feature` rows for them |
+| S17 | The UI inventory and the rater disagree on allowed values. BCEG: UI 1–10, rater "Ungraded". Roof deck attachment: UI A–D labels against the rater's OIR levels. Opening protection: UI Basic/Hurricane Rated against the rater's Class A/B. Form: the UI also offers HO-4 | Kept as text, or mapped with an attention flag | The inventory authors and underwriting to confirm the value lists |
 
 ---
 

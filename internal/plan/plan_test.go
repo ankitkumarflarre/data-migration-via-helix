@@ -102,12 +102,26 @@ func TestPlanMapsConfirmedColumnsAndTemplates(t *testing.T) {
 		t.Fatalf("policy record wrong: %+v", pol)
 	}
 	d := find(r.Records, "dwelling.property.us.personal")
-	if d.Fields["number_of_units"] != int64(4) || d.Fields["secondary_water_resistance"] != true || d.Fields["year_built"] != int64(1996) {
+	if d.Fields["rated_territory"] != int64(34) || d.Fields["number_of_stories"] != int64(1) {
 		t.Fatalf("dwelling wrong: %+v", d.Fields)
 	}
+	// HO3: units and building floors are HO6-only fields.
+	if _, ok := d.Fields["number_of_units"]; ok {
+		t.Fatalf("number_of_units written for HO3: %+v", d.Fields)
+	}
+	if _, ok := d.Fields["number_of_floor"]; ok {
+		t.Fatalf("number_of_floor written for HO3: %+v", d.Fields)
+	}
+	if da := find(r.Records, "dwelling_asset.property.personal"); da.Fields["construction_year"] != int64(1996) || da.Fields["construction_type"] != "Masonry" {
+		t.Fatalf("dwelling asset wrong: %+v", da.Fields)
+	}
 	if w := find(r.Records, "wind_mitigation_verification.property.us-fl.personal.safepoint"); w.Fields["roof_shape"] != "hip" ||
+		w.Fields["secondary_water_resistance_flag"] != true || w.Fields["opening_protection"] != "hurricane_rated" ||
 		w.Refs["dwelling_asset_reference"] != "dwelling_asset.property.personal" {
 		t.Fatalf("wmv wrong: %+v", w)
+	}
+	if find(r.Records, "loss_ratio_analysis") != nil {
+		t.Fatal("loss_ratio_analysis is no longer a target")
 	}
 	if la := find(r.Records, "location_address.property.us.personal"); la.Fields["county"] != "MIAMI-DADE" {
 		t.Fatalf("county not upper-cased: %+v", la.Fields)
@@ -131,9 +145,34 @@ func TestPlanMapsConfirmedColumnsAndTemplates(t *testing.T) {
 	for _, a := range p.Attention {
 		att[a.ID] = true
 	}
-	for _, id := range []string{"rule:HO-05", "rule:HO-23", "template:dwelling_asset.property.personal|dwelling_type"} {
+	for _, id := range []string{"rule:HO-14", "rule:HO-23", "rule:HO-26", "rule:HO-50", "template:dwelling_asset.property.personal|dwelling_type"} {
 		if !att[id] {
 			t.Errorf("missing attention item %s (have %v)", id, att)
+		}
+	}
+}
+
+func TestPlanHO6UsesBuildingFloorsAndUnits(t *testing.T) {
+	p := build(t, workbook(t, [][]any{row("TEST0001", "B", "HO6", "M", 20, "N", "5+")}), Overrides{})
+	if p.BlockingCount != 0 {
+		t.Fatalf("unexpected blocking issues: %+v", p.Issues)
+	}
+	r := p.Rows[0]
+	if pol := find(r.Records, "policy.property.us-fl.personal.safepoint"); pol.Fields["personal_policy_form"] != "ho_6" {
+		t.Fatalf("form: %+v", pol.Fields)
+	}
+	d := find(r.Records, "dwelling.property.us.personal")
+	if d.Fields["number_of_floor"] != int64(20) || d.Fields["number_of_units"] != int64(5) {
+		t.Fatalf("HO6 dwelling wrong: %+v", d.Fields)
+	}
+	if _, ok := d.Fields["number_of_stories"]; ok {
+		t.Fatalf("number_of_stories written for HO6: %+v", d.Fields)
+	}
+	for _, vi := range p.Impact {
+		for _, f := range vi.Fields {
+			if f.Field == "number_of_floor" && f.Condition != "only when column B is HO6" {
+				t.Fatalf("condition not shown: %+v", f)
+			}
 		}
 	}
 }
@@ -151,16 +190,17 @@ func TestPlanIsDeterministic(t *testing.T) {
 }
 
 func TestPlanIssuesAndOverrides(t *testing.T) {
-	s := workbook(t, [][]any{row("TEST0001", "N", "lots"), row("TEST0002", "BU", "OTHER"), row("TEST0003", "BU", "TEST0003")})
+	s := workbook(t, [][]any{row("TEST0001", "B", "HO6", "N", "lots"), row("TEST0002", "Z", "Class C"), row("TEST0003", "N", "lots")})
 	p := build(t, s, Overrides{})
+	// Row 3 is HO3, so Number of Units (HO6 only) is not read.
 	if !p.Rows[0].Blocked || !p.Rows[1].Blocked || p.Rows[2].Blocked {
 		t.Fatalf("blocked flags wrong: %+v", p.Issues)
 	}
-	// Exclude Territory: loss_ratio_analysis is no longer written. Retarget Number of Units.
+	// Exclude Territory. Retarget Number of Units.
 	units := rules.Target{Variant: "dwelling_asset.property.personal", Field: "number_of_units"}
-	p = build(t, s, Overrides{Rules: map[string]RuleOverride{"HO-05": {Exclude: true}, "HO-14": {Target: &units, Map: map[string]string{"lots": "9", "1 to 4": "4"}}}})
-	if find(p.Rows[0].Records, "loss_ratio_analysis") != nil {
-		t.Fatal("excluded rule still writes its variant")
+	p = build(t, s, Overrides{Rules: map[string]RuleOverride{"HO-05": {Exclude: true}, "HO-14": {Target: &units, Map: map[string]string{"lots": "9", "1 to 4": "1"}}}})
+	if _, ok := find(p.Rows[0].Records, "dwelling.property.us.personal").Fields["rated_territory"]; ok {
+		t.Fatal("excluded rule still writes its field")
 	}
 	if da := find(p.Rows[0].Records, "dwelling_asset.property.personal"); da.Fields["number_of_units"] != int64(9) {
 		t.Fatalf("override not applied: %+v", da.Fields)

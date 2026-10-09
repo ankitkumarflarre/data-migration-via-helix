@@ -30,20 +30,57 @@ type Transform struct {
 	Map  map[string]string `json:"map,omitempty"`  // trimmed, case-insensitive source → value
 }
 
-// Rule maps one Excel column (by letter) to one Helix field.
+// Condition limits a rule to rows whose cell in Column is one of In
+// (trimmed, case-insensitive).
+type Condition struct {
+	Column string   `json:"column"`
+	In     []string `json:"in"`
+}
+
+// Matches reports whether a row's cells satisfy the condition. A nil
+// condition always matches.
+func (c *Condition) Matches(cells map[string]string) bool {
+	if c == nil {
+		return true
+	}
+	v := strings.TrimSpace(cells[c.Column])
+	for _, w := range c.In {
+		if strings.EqualFold(v, w) {
+			return true
+		}
+	}
+	return false
+}
+
+func (c *Condition) String() string {
+	return "column " + c.Column + " is " + strings.Join(c.In, " or ")
+}
+
+// Rule maps one Excel column (by letter) to one Helix field. One column may
+// have several rules with disjoint conditions (e.g. a different target per form).
 type Rule struct {
-	ID              string    `json:"id"`
-	ReportNo        int       `json:"report_no"`
-	Column          string    `json:"excel_column"`
-	Header          string    `json:"header"`
-	ReportStatus    string    `json:"report_status"`
-	Confidence      string    `json:"confidence"`
-	Target          Target    `json:"target"`
-	Alternatives    []Target  `json:"alternatives"`
-	ReportLocations []string  `json:"report_locations"`
-	Transform       Transform `json:"transform"`
-	Attention       string    `json:"attention,omitempty"`
-	Note            string    `json:"note,omitempty"`
+	ID              string     `json:"id"`
+	ReportNo        int        `json:"report_no"`
+	Column          string     `json:"excel_column"`
+	Header          string     `json:"header"`
+	ReportStatus    string     `json:"report_status"`
+	Confidence      string     `json:"confidence"`
+	When            *Condition `json:"when,omitempty"`
+	Target          Target     `json:"target"`
+	TargetBasis     string     `json:"target_basis,omitempty"` // set when the target is not one of the report's locations
+	Alternatives    []Target   `json:"alternatives"`
+	ReportLocations []string   `json:"report_locations"`
+	Transform       Transform  `json:"transform"`
+	Attention       string     `json:"attention,omitempty"`
+	Note            string     `json:"note,omitempty"`
+}
+
+// Excluded is a confirmed report row that deliberately has no rule.
+type Excluded struct {
+	ReportNo int    `json:"report_no"`
+	Column   string `json:"excel_column"`
+	Header   string `json:"header"`
+	Reason   string `json:"reason"`
 }
 
 // RuleSet is the committed output of rulegen.
@@ -57,6 +94,7 @@ type RuleSet struct {
 	Sheet         string            `json:"sheet"`
 	SchemaRenames map[string]string `json:"schema_renames"`
 	Rules         []Rule            `json:"rules"`
+	Excluded      []Excluded        `json:"excluded,omitempty"`
 }
 
 // FieldSource says where a template field's value comes from. Exactly one of
@@ -143,6 +181,9 @@ func (b *Bundle) validate() error {
 			return fmt.Errorf("duplicate rule id %s", r.ID)
 		}
 		seen[r.ID] = true
+		if r.When != nil && (r.When.Column == "" || len(r.When.In) == 0) {
+			return fmt.Errorf("rule %s has an incomplete condition", r.ID)
+		}
 	}
 	variants := map[string]bool{}
 	for _, t := range b.Templates.Records {

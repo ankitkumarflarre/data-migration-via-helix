@@ -69,7 +69,7 @@
 <div class="editor stack">
   <div class="row wrap">
     <strong>{rule.id}</strong>
-    <span class="muted small">Column {rule.excel_column} · “{rule.header}”</span>
+    <span class="muted small">Column {rule.excel_column} · “{rule.header}”{#if rule.when} · only when column {rule.when.column} is {rule.when.in.join(' or ')}{/if}</span>
     <span class="spacer"></span>
     <label class="row chk"><input type="checkbox" bind:checked={exclude} /> Exclude this column</label>
   </div>
