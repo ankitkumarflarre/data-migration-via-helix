@@ -3,8 +3,13 @@
  import QuoteField from './QuoteField.svelte';
  import InstallmentSchedule from './InstallmentSchedule.svelte';
  import type {FormField,Value} from './quote-model';
- let {fields,values,errors,busy,dirty,policyNumber,onchange,onsave,onreset,onprevious,onnext}:{fields:FormField[];values:Record<string,Value>;errors:Record<string,string>;busy:boolean;dirty:boolean;policyNumber:string;onchange:(key:string,value:Value)=>void;onsave:()=>void;onreset:()=>void;onprevious:()=>void;onnext:()=>void}=$props();
+ import {billing} from '../billing/api';
+ let {fields,values,errors,busy,dirty,policyNumber,quoteId='',submitted=false,onchange,onsave,onreset,onprevious,onnext}:{fields:FormField[];values:Record<string,Value>;errors:Record<string,string>;busy:boolean;dirty:boolean;policyNumber:string;quoteId?:string;submitted?:boolean;onchange:(key:string,value:Value)=>void;onsave:()=>void;onreset:()=>void;onprevious:()=>void;onnext:()=>void}=$props();
  let showSchedule=$state(false);
+ // D-B5: the billing account is created on request, not when the quote is saved.
+ let account=$state<{number:string;exists:boolean}|null>(null), billingError=$state(''), creating=$state(false);
+ $effect(()=>{if(quoteId&&submitted)billing.quoteAccount(quoteId).then(a=>account=a).catch(()=>account=null);});
+ async function createAccount(){creating=true;billingError='';try{const a=await billing.fromQuote(quoteId);account={number:a.number,exists:true};}catch(e){billingError=e instanceof Error?e.message:String(e);}finally{creating=false;}}
  const radios=$derived(fields.filter(f=>f.control==='radio'));
  const inputs=$derived(fields.filter(f=>f.control!=='radio'));
 </script>
@@ -22,6 +27,13 @@
  <div class="row"><button class="btn primary" disabled={busy} onclick={onsave}>{busy?'Saving…':'Save'}</button><button class="btn" disabled={busy||!dirty} onclick={onreset}>Reset</button></div>
  {#if showSchedule}<InstallmentSchedule id="payment-schedule" {policyNumber} plan={String(values['Billing.PaymentPlan']??'')} due={String(values['Billing.InvoiceDueDate']??'')} effective={String(values['PolicyInput.EffectiveDate']??'')} expiration={String(values['PolicyInput.ExpirationDate']??'')}/>
  {/if}
+ {#if submitted&&quoteId}
+  <div class="billing-link">
+   {#if account?.exists}<span>Billing account <a href={'#billing/account/'+encodeURIComponent(account.number)}>{account.number}</a> is set up for this policy.</span>
+   {:else}<button class="btn" disabled={busy||creating||dirty} onclick={createAccount}>{creating?'Creating…':'Create billing account'}</button><span class="hint">Creates billing account {account?.number??policyNumber} and its term from the saved payment plan and invoice due date. Premium figures are the schedule's samples; the quote is not rated.</span>{/if}
+   {#if billingError}<span class="error" role="alert">{billingError}</span>{/if}
+  </div>
+ {/if}
  <div class="nav"><button class="btn" disabled={busy} onclick={onprevious}>‹ Previous</button><span class="spacer"></span><button class="btn" aria-expanded={showSchedule} aria-controls="payment-schedule" onclick={()=>showSchedule=!showSchedule}><Icon name="calendar" size={16}/>Schedule</button><button class="btn" disabled={busy} onclick={onnext}>Next ›</button></div>
 </section>
 
@@ -31,6 +43,7 @@
  .radio{display:inline-flex;align-items:center;gap:10px;font-size:14px;cursor:pointer}.radio input{width:20px;height:20px;margin:0;accent-color:var(--accent)}
  .grid :global(label){font-size:13px;font-weight:400}.grid :global(input),.grid :global(select){min-height:44px;font-size:14px}
  .grid{border:0;margin:0;padding:0;min-width:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 28px}
+ .billing-link{display:flex;gap:12px;align-items:center;flex-wrap:wrap;padding:12px;border:1px solid var(--border);border-radius:8px;background:var(--surface-2);font-size:13px}.hint{font-size:12px;color:var(--text-muted);flex:1;min-width:200px}
  .row,.nav{display:flex;gap:12px;align-items:center;flex-wrap:wrap}.nav{border-top:1px solid var(--border);padding-top:18px}.nav .btn{display:inline-flex;align-items:center;gap:8px}.spacer{flex:1}
  @media(max-width:540px){.grid{grid-template-columns:1fr}.nav .spacer{display:none}.nav .btn{flex:1;justify-content:center}}
 </style>

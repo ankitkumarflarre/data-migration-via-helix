@@ -3,6 +3,7 @@
 //
 //	migrator serve   [-addr 127.0.0.1:8080] [-env-file .env] [-ledger data/ledger.jsonl] [-web-dir web/dist]
 //	migrator cleanup [-env-file .env] [-ledger data/ledger.jsonl] -yes
+//	migrator billing-seed [-billing-dir data/billing] [-force]
 package main
 
 import (
@@ -18,6 +19,7 @@ import (
 	"time"
 
 	"github.com/ankitkumarflarre/datamigration/internal/api"
+	"github.com/ankitkumarflarre/datamigration/internal/billing"
 	"github.com/ankitkumarflarre/datamigration/internal/execute"
 	"github.com/ankitkumarflarre/datamigration/internal/helix"
 	"github.com/ankitkumarflarre/datamigration/internal/ledger"
@@ -29,7 +31,7 @@ import (
 
 func main() {
 	if len(os.Args) < 2 {
-		fmt.Fprintln(os.Stderr, "usage: migrator serve|cleanup [flags]")
+		fmt.Fprintln(os.Stderr, "usage: migrator serve|cleanup|billing-seed [flags]")
 		os.Exit(2)
 	}
 	switch os.Args[1] {
@@ -37,8 +39,10 @@ func main() {
 		serve(os.Args[2:])
 	case "cleanup":
 		cleanup(os.Args[2:])
+	case "billing-seed":
+		billingSeed(os.Args[2:])
 	default:
-		fmt.Fprintf(os.Stderr, "unknown command %q (serve, cleanup)\n", os.Args[1])
+		fmt.Fprintf(os.Stderr, "unknown command %q (serve, cleanup, billing-seed)\n", os.Args[1])
 		os.Exit(2)
 	}
 }
@@ -80,9 +84,14 @@ func serve(args []string) {
 	webDir := fset.String("web-dir", "", "serve the UI from this directory instead of the embedded build")
 	quoteDir := fset.String("quote-dir", "data/quotes", "durable local quote directory")
 	rulesDir := fset.String("rules-dir", "data/rules", "where Rules-tab edits of the rule sets are kept")
+	billingDir := fset.String("billing-dir", "data/billing", "durable local billing directory")
 	offline := fset.Bool("offline", false, "serve quote application without Helix")
 	_ = fset.Parse(args)
 	quotes, err := quote.Open(*quoteDir)
+	if err != nil {
+		log.Fatal(err)
+	}
+	bills, err := billing.Open(*billingDir)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -94,6 +103,8 @@ func serve(args []string) {
 	if *offline {
 		mux := http.NewServeMux()
 		quote.Register(mux, quotes, nil)
+		billing.Register(mux, bills)
+		billing.RegisterQuoteLink(mux, bills, quotes)
 		mux.HandleFunc("GET /api/health", func(w http.ResponseWriter, r *http.Request) {
 			w.Header().Set("Content-Type", "application/json")
 			fmt.Fprint(w, `{"offline":true,"helix_url":"Offline · local quotes","helix_reachable":false,"helix_error":"Helix is disabled in offline mode","rule_sets":[],"ledger_records":0}`)
@@ -108,6 +119,7 @@ func serve(args []string) {
 		defer l.Close()
 		srv := api.NewServer(h, h, schema.New(h), l, ui)
 		srv.Quotes = quotes
+		srv.Billing = bills
 		if srv.Rules, err = rules.OpenStore(*rulesDir); err != nil {
 			log.Fatal(err)
 		}
@@ -117,7 +129,7 @@ func serve(args []string) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	log.Printf("migrator: http://%s (quotes %s, offline %v)", ln.Addr(), *quoteDir, *offline)
+	log.Printf("migrator: http://%s (quotes %s, billing %s, offline %v)", ln.Addr(), *quoteDir, *billingDir, *offline)
 	hs := &http.Server{Handler: handler, ReadHeaderTimeout: 10 * time.Second}
 	go func() {
 		stop := make(chan os.Signal, 1)
@@ -150,4 +162,19 @@ func cleanup(args []string) {
 	if failed > 0 {
 		os.Exit(1)
 	}
+}
+
+func billingSeed(args []string) {
+	fset := flag.NewFlagSet("billing-seed", flag.ExitOnError)
+	dir := fset.String("billing-dir", "data/billing", "durable local billing directory")
+	force := fset.Bool("force", false, "replace everything in the billing store with the seed")
+	_ = fset.Parse(args)
+	s, err := billing.Open(*dir)
+	if err != nil {
+		log.Fatal(err)
+	}
+	if err := s.Seed(*force); err != nil {
+		log.Fatal(err)
+	}
+	fmt.Printf("billing: seeded %s (system date %s)\n", *dir, billing.SeedDate)
 }

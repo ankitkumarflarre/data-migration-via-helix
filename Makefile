@@ -6,7 +6,7 @@ REPORT   ?= reference/Manatee FL Select HO Rater Effective 12.1.25 - Schema Vali
 DDL      ?= ../pythonProjects/ddl.sql
 RULESET  ?= manatee_fl_select_ho_12_1_25
 
-.PHONY: all ui build run quote-run test check rules cleanup clean
+.PHONY: all ui build run quote-run billing-seed test check rules cleanup clean
 
 all: build
 
@@ -21,6 +21,10 @@ run: build
 
 quote-run: build
 	./bin/migrator serve -offline -addr $(ADDR) -quote-dir data/quotes
+
+# Load the Duck Creek walkthrough test data into an empty billing store.
+billing-seed:
+	go run ./cmd/migrator billing-seed -billing-dir data/billing
 
 test:
 	go vet ./...

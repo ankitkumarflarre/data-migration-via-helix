@@ -10,9 +10,10 @@
   import WorkspaceIcon from './lib/personalhome/WorkspaceIcon.svelte';
   import QuoteApplication from './lib/personalhome/QuoteApplication.svelte';
   import Rules from './lib/rules/Rules.svelte';
+  import BillingWorkspace from './lib/billing/BillingWorkspace.svelte';
 
-  type View = 'migrate' | 'browse' | 'rules' | 'personalhome';
-  const viewOf = (h: string): View => h.startsWith('#reference') || h.startsWith('#personalhome') ? 'personalhome' : h.startsWith('#browse') ? 'browse' : h.startsWith('#rules') ? 'rules' : 'migrate';
+  type View = 'migrate' | 'browse' | 'rules' | 'personalhome' | 'billing';
+  const viewOf = (h: string): View => h.startsWith('#reference') || h.startsWith('#personalhome') ? 'personalhome' : h.startsWith('#billing') ? 'billing' : h.startsWith('#browse') ? 'browse' : h.startsWith('#rules') ? 'rules' : 'migrate';
   let view = $state<View>(viewOf(location.hash));
 
   type Step = 'upload' | 'review' | 'approve' | 'run';
@@ -46,6 +47,7 @@
 
   // Keep the job in the URL so a refresh returns to it.
   $effect(() => {
+    if (view === 'billing') { if (!location.hash.startsWith('#billing')) history.replaceState(null, '', location.pathname + '#billing'); return; }
     const want = view === 'personalhome' ? `${(location.hash.startsWith('#personalhome') ? location.hash : '#personalhome/newquote').split('?')[0]}${job ? `?job=${job.id}` : ''}` : view === 'browse' ? '#browse' : view === 'rules' ? '#rules' : job ? `#job=${job.id}` : '';
     if (location.hash !== want) history.replaceState(null, '', location.pathname + want);
   });
@@ -66,6 +68,7 @@
   <nav aria-label="Sections">
     <div class="rail-label">Workspace</div>
     <button class:on={view === 'personalhome'} aria-current={view === 'personalhome' ? 'page' : undefined} onclick={() => switchView('personalhome')}><WorkspaceIcon name="grid"/>Dashboard</button>
+    <button class:on={view === 'billing'} aria-current={view === 'billing' ? 'page' : undefined} onclick={() => switchView('billing')}><WorkspaceIcon name="card"/>Billing</button>
     <button class:on={view === 'browse'} aria-current={view === 'browse' ? 'page' : undefined} onclick={() => switchView('browse')}><WorkspaceIcon name="database"/>Browse data</button>
     <button class:on={view === 'migrate'} aria-current={view === 'migrate' ? 'page' : undefined} onclick={() => switchView('migrate')}><WorkspaceIcon name="transfer"/>Migrate</button>
     <button class:on={view === 'rules'} aria-current={view === 'rules' ? 'page' : undefined} onclick={() => switchView('rules')}><WorkspaceIcon name="rules"/>Rules</button>
@@ -74,7 +77,7 @@
 </aside>
 <div class="workspace-content">
 <header class="topbar">
-  <div class="workspace-label"><div class="segmented" aria-label="Workspace"><span class="seg on">Daily Experience</span></div><span class="workspace-name">Safe Point · Personal Home</span></div>
+  <div class="workspace-label"><div class="segmented" aria-label="Workspace"><span class="seg on">Daily Experience</span></div><span class="workspace-name">Safe Point · {view === 'billing' ? 'Billing' : 'Personal Home'}</span></div>
   <div class="spacer"></div>
   {#if health}<span class="badge {health.helix_reachable || health.offline ? 'ok' : 'bad'}">{health.offline ? '● Local workspace' : health.helix_reachable ? '● Helix connected' : '✕ Helix unreachable'}</span>{/if}
   <ThemeToggle />
@@ -82,6 +85,8 @@
 
 {#if view === 'personalhome'}
 <main><QuoteApplication /></main>
+{:else if view === 'billing'}
+<main><BillingWorkspace /></main>
 {:else if view === 'browse'}
 <main><Browse /></main>
 {:else if view === 'rules'}

@@ -1,0 +1,532 @@
+[
+ {
+  "id": "home",
+  "component": "Home",
+  "route": "",
+  "shots": [
+   1,
+   2,
+   6,
+   11,
+   14,
+   18,
+   28,
+   30,
+   52
+  ],
+  "note": "Home dashboard; the walkthrough returns here between steps (#011 shows the payment confirmation)"
+ },
+ {
+  "id": "quick-search",
+  "component": "Home",
+  "route": "",
+  "shots": [],
+  "note": "Header quick search, shown in every header (#001)"
+ },
+ {
+  "id": "payment-search",
+  "component": "PaymentSearch",
+  "route": "payments/search",
+  "shots": [
+   3,
+   4
+  ]
+ },
+ {
+  "id": "payment-detail",
+  "component": "PaymentDetail",
+  "route": "payment/:payment",
+  "shots": [
+   5
+  ]
+ },
+ {
+  "id": "enter-payment",
+  "component": "EnterPayment",
+  "route": "payments/enter",
+  "shots": [
+   7,
+   8,
+   9,
+   13
+  ],
+  "note": "Known account search and results; the unidentified option (#013)"
+ },
+ {
+  "id": "make-payment",
+  "component": "MakePayment",
+  "route": "account/:account/pay",
+  "shots": [
+   10,
+   12,
+   66
+  ],
+  "note": "Pay To Account (#010, card #066) and Pay Specific Policies (#012)"
+ },
+ {
+  "id": "unidentified-list",
+  "component": "UnidentifiedList",
+  "route": "unidentified",
+  "shots": [
+   15
+  ]
+ },
+ {
+  "id": "unidentified-detail",
+  "component": "UnidentifiedDetail",
+  "route": "unidentified/:payment",
+  "shots": [
+   16,
+   17
+  ]
+ },
+ {
+  "id": "new-account",
+  "component": "NewAccount",
+  "route": "accounts/new",
+  "shots": [
+   19
+  ]
+ },
+ {
+  "id": "party-search",
+  "component": "PartySearch",
+  "route": "parties/search",
+  "shots": [
+   20,
+   21,
+   22,
+   23,
+   24,
+   25,
+   116
+  ]
+ },
+ {
+  "id": "party-results",
+  "component": "PartySearch",
+  "route": "parties/search",
+  "shots": [
+   26,
+   27,
+   117
+  ],
+  "note": "Search results: View / Select / 360"
+ },
+ {
+  "id": "import-statements",
+  "component": "ImportStatements",
+  "route": "statements",
+  "shots": [
+   29
+  ]
+ },
+ {
+  "id": "reports",
+  "component": "Reports",
+  "route": "reports/:report",
+  "shots": [
+   32,
+   33,
+   34,
+   35,
+   36,
+   37,
+   38,
+   39,
+   40,
+   41
+  ],
+  "note": "Reporting Home with the 9 reports"
+ },
+ {
+  "id": "admin",
+  "component": "Admin",
+  "route": "admin",
+  "shots": [
+   42
+  ]
+ },
+ {
+  "id": "error-queue",
+  "component": "ErrorQueue",
+  "route": "admin/errors",
+  "shots": [
+   43,
+   44,
+   45
+  ]
+ },
+ {
+  "id": "hold-events",
+  "component": "HoldEvents",
+  "route": "admin/holds",
+  "shots": [
+   46
+  ]
+ },
+ {
+  "id": "create-hold-event",
+  "component": "Placeholder",
+  "route": "admin/holds/new",
+  "shots": [],
+  "note": "Not in the walkthrough (D-B8)"
+ },
+ {
+  "id": "disbursement-service",
+  "component": "DisbursementService",
+  "route": "admin/disbursement",
+  "shots": [
+   47
+  ]
+ },
+ {
+  "id": "admin-transactions",
+  "component": "AdminTransactions",
+  "route": "admin/transactions",
+  "shots": [
+   48
+  ]
+ },
+ {
+  "id": "admin-settings",
+  "component": "AdminSettings",
+  "route": "admin/settings",
+  "shots": [],
+  "note": "Workspace settings: auto-authorization limit, PIF configuration, offered plans (not in the walkthrough)"
+ },
+ {
+  "id": "batches-awaiting",
+  "component": "Batches",
+  "route": "batches",
+  "shots": [
+   49
+  ]
+ },
+ {
+  "id": "batch-new",
+  "component": "Batches",
+  "route": "batches/new",
+  "shots": [
+   50
+  ]
+ },
+ {
+  "id": "batches-processed",
+  "component": "Batches",
+  "route": "batches/processed",
+  "shots": [
+   51
+  ]
+ },
+ {
+  "id": "account",
+  "component": "AccountSummary",
+  "route": "account/:account",
+  "shots": [
+   31,
+   53,
+   54,
+   63,
+   65,
+   73,
+   82,
+   89,
+   115
+  ]
+ },
+ {
+  "id": "schedule",
+  "component": "Schedule",
+  "route": "account/:account/schedule",
+  "shots": [
+   62
+  ]
+ },
+ {
+  "id": "account-settings",
+  "component": "AccountSettings",
+  "route": "account/:account/settings",
+  "shots": [
+   64
+  ]
+ },
+ {
+  "id": "card-gateway",
+  "component": "MakePayment",
+  "route": "account/:account/pay",
+  "shots": [
+   67,
+   68,
+   69,
+   70
+  ],
+  "note": "Simulated Global Payments modal"
+ },
+ {
+  "id": "suspense-allocation",
+  "component": "SuspenseAllocation",
+  "route": "account/:account/suspense-allocation",
+  "shots": [
+   71
+  ]
+ },
+ {
+  "id": "payments-list",
+  "component": "PaymentsList",
+  "route": "account/:account/payments",
+  "shots": [
+   72
+  ]
+ },
+ {
+  "id": "suspense",
+  "component": "Suspense",
+  "route": "account/:account/suspense",
+  "shots": [
+   74,
+   77
+  ]
+ },
+ {
+  "id": "disburse",
+  "component": "Disburse",
+  "route": "account/:account/disburse",
+  "shots": [
+   75,
+   76
+  ]
+ },
+ {
+  "id": "eft",
+  "component": "Eft",
+  "route": "account/:account/eft",
+  "shots": [
+   78
+  ]
+ },
+ {
+  "id": "hold-activity",
+  "component": "Holds",
+  "route": "account/:account/holds",
+  "shots": [
+   79,
+   80,
+   81
+  ]
+ },
+ {
+  "id": "edit-hold",
+  "component": "Holds",
+  "route": "account/:account/holds/:hold",
+  "shots": [
+   83
+  ]
+ },
+ {
+  "id": "tasks",
+  "component": "Tasks",
+  "route": "account/:account/tasks",
+  "shots": [
+   84,
+   86,
+   87
+  ]
+ },
+ {
+  "id": "new-task",
+  "component": "Tasks",
+  "route": "account/:account/tasks/new",
+  "shots": [
+   85
+  ]
+ },
+ {
+  "id": "account-transactions",
+  "component": "AccountTransactions",
+  "route": "account/:account/transactions",
+  "shots": [
+   88
+  ]
+ },
+ {
+  "id": "misc-billing-item",
+  "component": "Placeholder",
+  "route": "account/:account/transactions/misc",
+  "shots": [],
+  "note": "Not in the walkthrough (D-B8)"
+ },
+ {
+  "id": "term-summary",
+  "component": "TermSummary",
+  "route": "account/:account/term/:term",
+  "shots": [
+   55
+  ]
+ },
+ {
+  "id": "transfer-term",
+  "component": "TermForms",
+  "route": "account/:account/term/:term/transfer",
+  "shots": [
+   56
+  ]
+ },
+ {
+  "id": "collections",
+  "component": "TermForms",
+  "route": "account/:account/term/:term/collections",
+  "shots": [
+   57
+  ]
+ },
+ {
+  "id": "term-plan",
+  "component": "TermForms",
+  "route": "account/:account/term/:term/plan",
+  "shots": [
+   58
+  ]
+ },
+ {
+  "id": "renewal-plan",
+  "component": "TermForms",
+  "route": "account/:account/term/:term/renewal-plan",
+  "shots": [
+   59
+  ]
+ },
+ {
+  "id": "term-hold",
+  "component": "Holds",
+  "route": "account/:account/term/:term/hold",
+  "shots": [
+   60
+  ]
+ },
+ {
+  "id": "pif",
+  "component": "TermForms",
+  "route": "account/:account/term/:term/pif",
+  "shots": [
+   61
+  ]
+ },
+ {
+  "id": "internal-collections",
+  "component": "Placeholder",
+  "route": "account/:account/term/:term/internal-collections",
+  "shots": [],
+  "note": "Not in the walkthrough (D-B8)"
+ },
+ {
+  "id": "party",
+  "component": "PartyDetails",
+  "route": "party/:party",
+  "shots": [
+   90,
+   93,
+   98,
+   101,
+   104,
+   107,
+   110
+  ]
+ },
+ {
+  "id": "party-name",
+  "component": "PartyName",
+  "route": "party/:party/name/:mode",
+  "shots": [
+   91,
+   92
+  ],
+  "note": "Correct (#091) / Replace (#092)"
+ },
+ {
+  "id": "addresses",
+  "component": "PartyRows",
+  "route": "party/:party/:kind",
+  "shots": [
+   94,
+   95,
+   96,
+   97
+  ],
+  "note": "kind=address"
+ },
+ {
+  "id": "phones",
+  "component": "PartyRows",
+  "route": "party/:party/:kind",
+  "shots": [
+   99,
+   100
+  ],
+  "note": "kind=phone"
+ },
+ {
+  "id": "emails",
+  "component": "PartyRows",
+  "route": "party/:party/:kind",
+  "shots": [
+   102,
+   103
+  ],
+  "note": "kind=email"
+ },
+ {
+  "id": "locations",
+  "component": "PartyRows",
+  "route": "party/:party/:kind",
+  "shots": [
+   105,
+   106
+  ],
+  "note": "kind=location"
+ },
+ {
+  "id": "demographics",
+  "component": "Demographics",
+  "route": "party/:party/demographics",
+  "shots": [
+   108
+  ]
+ },
+ {
+  "id": "other-names",
+  "component": "PartyRows",
+  "route": "party/:party/:kind",
+  "shots": [
+   109
+  ],
+  "note": "kind=othername"
+ },
+ {
+  "id": "licenses",
+  "component": "PartyRows",
+  "route": "party/:party/:kind",
+  "shots": [
+   111,
+   112
+  ],
+  "note": "kind=license"
+ },
+ {
+  "id": "memberships",
+  "component": "PartyRows",
+  "route": "party/:party/:kind",
+  "shots": [
+   113,
+   114
+  ],
+  "note": "kind=membership"
+ },
+ {
+  "id": "relationships",
+  "component": "Placeholder",
+  "route": "party/:party/relationships",
+  "shots": [],
+  "note": "Not in the walkthrough (D-B8)"
+ }
+]

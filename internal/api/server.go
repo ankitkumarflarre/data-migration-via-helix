@@ -22,6 +22,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/ankitkumarflarre/datamigration/internal/billing"
 	"github.com/ankitkumarflarre/datamigration/internal/browse"
 	"github.com/ankitkumarflarre/datamigration/internal/excel"
 	"github.com/ankitkumarflarre/datamigration/internal/execute"
@@ -38,15 +39,16 @@ const maxUpload = 25 << 20
 
 // Server holds the shared dependencies and the jobs.
 type Server struct {
-	Quotes *quote.Store
-	Rules  *rules.Store // Rules-tab edits; nil serves the reviewed rule sets read-only
-	Helix  *helix.Client
-	API    execute.API
-	Schema *schema.Schema
-	Ledger *ledger.Ledger
-	Web    fs.FS // built UI; nil serves a notice
-	Browse *browse.Browser
-	Sync   *quotesync.Syncer // writes quotes to Helix as they are saved
+	Quotes  *quote.Store
+	Billing *billing.Store // local Duck Creek Billing copy; nil leaves it off
+	Rules   *rules.Store   // Rules-tab edits; nil serves the reviewed rule sets read-only
+	Helix   *helix.Client
+	API     execute.API
+	Schema  *schema.Schema
+	Ledger  *ledger.Ledger
+	Web     fs.FS // built UI; nil serves a notice
+	Browse  *browse.Browser
+	Sync    *quotesync.Syncer // writes quotes to Helix as they are saved
 
 	mu      sync.Mutex
 	jobs    map[string]*job
@@ -103,6 +105,12 @@ func (s *Server) Handler() http.Handler {
 			onSaved = s.Sync.Enqueue
 		}
 		quote.Register(mux, s.Quotes, onSaved)
+	}
+	if s.Billing != nil {
+		billing.Register(mux, s.Billing)
+		if s.Quotes != nil {
+			billing.RegisterQuoteLink(mux, s.Billing, s.Quotes)
+		}
 	}
 	mux.HandleFunc("GET /api/health", s.health)
 	mux.HandleFunc("GET /api/rulesets", s.ruleSets)

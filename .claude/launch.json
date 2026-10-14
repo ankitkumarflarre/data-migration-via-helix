@@ -4,8 +4,31 @@
     {
       "name": "migrator",
       "runtimeExecutable": "./bin/migrator",
-      "runtimeArgs": ["serve", "-addr", "127.0.0.1:8080", "-env-file", ".env", "-ledger", "data/ledger.jsonl"],
+      "runtimeArgs": [
+        "serve",
+        "-addr",
+        "127.0.0.1:8080",
+        "-env-file",
+        ".env",
+        "-ledger",
+        "data/ledger.jsonl"
+      ],
       "port": 8080
+    },
+    {
+      "name": "billing",
+      "runtimeExecutable": "./bin/migrator",
+      "runtimeArgs": [
+        "serve",
+        "-offline",
+        "-addr",
+        "127.0.0.1:8081",
+        "-quote-dir",
+        "data/quotes",
+        "-billing-dir",
+        "data/billing-demo"
+      ],
+      "port": 8081
     }
   ]
 }

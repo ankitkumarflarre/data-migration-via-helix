@@ -4,7 +4,7 @@ export interface Condition {key: string; values: Value[]}
 export interface FormField {key:string; label:string; type:string; required:boolean; readOnly?:boolean; hidden?:boolean; derive?:string; unavailable?:string; note?:string; link?:string; sourceRefs?:string[]; disabledWhen?:Condition; default?:Value; control?:'radio'; options?:string[]; group?:string; hint?:string; min?:number; max?:number; maxLength?:number; showWhen?:Condition; requiredWhen?:Condition}
 export interface SourceAction {key:string;label:string;kind:string;reason:string;sourceRefs?:string[]}
 export interface FormPage {id:string; title:string; fields:FormField[]; notice?:string; actions?:SourceAction[];servicePanels?:{title:string;text:string;fields:string[];actions:string[]}[]; when?:Condition; collection?:{key:string;label:string;fields:FormField[];when?:Condition;sourceControls?:Partial<Record<string,string>>}}
-export const pages: FormPage[] = definition.pages;
+export const pages: FormPage[] = definition.pages as FormPage[];
 export interface HelixSync {status:'pending'|'syncing'|'synced'|'blocked'|'failed';policy_number:string;quote_version:number;message?:string;at:string;counts?:Record<string,number>;records?:{variant:string;action:string;record_id?:string}[];warnings?:string[]}
 export interface QuoteSource {kind:string;policy_number:string;imported_at:string;notes?:string[]}
 export interface Quote {id:string;number:string;version:number;status:string;created_at:string;updated_at:string;current_page:string;completed:string[];values:Record<string,Value>;collections:Record<string,Record<string,Value>[]>;source?:QuoteSource;helix?:HelixSync}
