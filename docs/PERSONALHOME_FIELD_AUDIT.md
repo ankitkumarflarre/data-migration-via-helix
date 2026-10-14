@@ -278,11 +278,6 @@ Narrative-only fields use local application keys unless a technical key is suppl
 | summary | Decline messages (`Rating.DeclineMessages`) | read-only |
 | summary | Referral messages (`Rating.ReferralMessages`) | read-only |
 | summary | Subscriber agreement and LPOA (`Rating.SubscriberAgreement`) | read-only |
-| billing | Initial payment method (`Billing.InitialPaymentMethod`) | editable |
-| billing | Initial payment amount (`Billing.InitialPaymentAmount`) | read-only |
-| billing | Payment status (`Billing.PaymentStatus`) | read-only |
-| billing | Installment due dates (`Billing.InstallmentDueDates`) | read-only |
-| billing | Installment amounts (`Billing.InstallmentAmounts`) | read-only |
 | dwellingcoverage | Water backup of sewers or drains limit (`WaterBackupOfSewersOrDrainsInput.Limit`) | read-only |
 | dwellingcoverage | Personal injury limit (`PersonalInjuryInput.Limit`) | read-only |
 | dwellingcoverage | Incidental farming liability limit (`IncidentalFarmingPersonalLiabilityInput.Limit`) | read-only |
@@ -296,6 +291,6 @@ Narrative-only fields use local application keys unless a technical key is suppl
 - Claims, CLUE and insurance score: ordering, FCRA consent text, role permissions and response contracts are missing. Report panels expose documented fields/actions in an unavailable state; they do not claim a report exists. Flood-specific navigation gating requires a carrier rule contract.
 - Coverage: Cov B/C included-factor tables, package defaults, jewelry minimum, farming-type rules and peril deductible definitions are not supplied. Selections are saved for review, with explanatory notes. Included D uses the documented 20% HO3 / 40% HO6 factors.
 - Coverage summary/Pricing: all four premium displays, form controls, messages, subscriber agreement and Bind are present; real rating, PDFs, signatures and binding remain unavailable.
-- Payment/Billing summary: bill class, plan, paperless and method preferences are stored. Due dates, amounts and payment execution require the billing provider. No payment credentials are collected.
+- Payment details: after submission for rating, who is billed, the payment plan and the invoice due date are stored. Installment amounts and payment execution require the billing provider. No payment credentials are collected.
 - Commit: the local Review page submits for rating only. Carrier policy number, In-Force status, IVANS/Insvista notifications, inspection, Zesty and Data Insights are not fabricated.
 - Narrative capping fields are not individually named. A local capping-details input captures notes; exact carrier fields require the authoritative schema. Subscriber/FCRA legal text is also absent.

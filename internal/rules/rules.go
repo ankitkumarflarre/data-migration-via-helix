@@ -153,7 +153,7 @@ type FieldSource struct {
 // TemplateRecord describes a record the migrator writes besides the mapped fields.
 type TemplateRecord struct {
 	Variant  string                 `json:"variant"`
-	Instance string                 `json:"instance,omitempty"` // one of several records of the variant (needs a Key)
+	Instance string                 `json:"instance,omitempty"` // one of several records of the variant; without a Key the ledger finds it by policy and instance
 	Scope    string                 `json:"scope"`              // "job" | "row"
 	Key      string                 `json:"key,omitempty"`
 	Anchor   bool                   `json:"anchor,omitempty"` // always written (the policy)
@@ -236,9 +236,6 @@ func (b *Bundle) validate() error {
 			return fmt.Errorf("duplicate template record %s", t.ID())
 		}
 		ids[t.ID()] = true
-		if t.Instance != "" && t.Key == "" {
-			return fmt.Errorf("template record %s needs a business key: several records of %s are written per row", t.ID(), t.Variant)
-		}
 	}
 	for _, t := range b.Templates.Records {
 		for f, src := range t.Fields {

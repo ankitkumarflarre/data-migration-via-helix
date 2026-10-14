@@ -72,10 +72,6 @@ def complete(pages, catalog, root):
         extra('summary','Rating.'+key,label,readOnly=True,unavailable='Not evaluated — carrier service is not connected',group='Carrier review')
     for label in ['Premium detail','Coverage calculator','Quote sheet','Sign subscriber agreement and LPOA','Bind']:
         action('summary','Rating.'+label,label,'Requires carrier rating, approved documents, e-signature or binding integration.')
-    extra('billing','Billing.InitialPaymentMethod','Initial payment method',options=['EFT','Credit card'],group='Initial payment',note='Preference only. No bank or card details are collected and no payment is processed.')
-    for key,label in [('InitialPaymentAmount','Initial payment amount'),('PaymentStatus','Payment status'),('InstallmentDueDates','Installment due dates'),('InstallmentAmounts','Installment amounts')]:
-        extra('billing','Billing.'+key,label,readOnly=True,unavailable='Awaiting billing provider',group='Billing summary')
-    action('billing','Billing.Pay','Make a payment','Billing provider is not connected. No payment will be taken.')
 
     local_controls = {
         ('account',8): 'collection-add', ('account',13): 'collection-remove',
@@ -199,7 +195,7 @@ def complete(pages, catalog, root):
       '- Claims, CLUE and insurance score: ordering, FCRA consent text, role permissions and response contracts are missing. Report panels expose documented fields/actions in an unavailable state; they do not claim a report exists. Flood-specific navigation gating requires a carrier rule contract.',
       '- Coverage: Cov B/C included-factor tables, package defaults, jewelry minimum, farming-type rules and peril deductible definitions are not supplied. Selections are saved for review, with explanatory notes. Included D uses the documented 20% HO3 / 40% HO6 factors.',
       '- Coverage summary/Pricing: all four premium displays, form controls, messages, subscriber agreement and Bind are present; real rating, PDFs, signatures and binding remain unavailable.',
-      '- Payment/Billing summary: bill class, plan, paperless and method preferences are stored. Due dates, amounts and payment execution require the billing provider. No payment credentials are collected.',
+      '- Payment details: after submission for rating, who is billed, the payment plan and the invoice due date are stored. Installment amounts and payment execution require the billing provider. No payment credentials are collected.',
       '- Commit: the local Review page submits for rating only. Carrier policy number, In-Force status, IVANS/Insvista notifications, inspection, Zesty and Data Insights are not fabricated.',
       '- Narrative capping fields are not individually named. A local capping-details input captures notes; exact carrier fields require the authoritative schema. Subscriber/FCRA legal text is also absent.', '']
     (root/'docs/PERSONALHOME_FIELD_AUDIT.md').write_text('\n'.join(lines))

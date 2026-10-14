@@ -62,9 +62,10 @@
 
 <div class="workspace-shell">
 <aside class="app-rail">
-  <div class="rail-brand" title="Manatee">M<span>⌁</span></div>
+  <a class="rail-brand" href="#personalhome" title="Safe Point Insurance"><img src="/safepoint-logo.webp" alt="Safe Point" width="36" height="36" /></a>
   <nav aria-label="Sections">
-    <button class:on={view === 'personalhome'} aria-current={view === 'personalhome' ? 'page' : undefined} onclick={() => switchView('personalhome')}><WorkspaceIcon name="grid"/>Quotes</button>
+    <div class="rail-label">Workspace</div>
+    <button class:on={view === 'personalhome'} aria-current={view === 'personalhome' ? 'page' : undefined} onclick={() => switchView('personalhome')}><WorkspaceIcon name="grid"/>Dashboard</button>
     <button class:on={view === 'browse'} aria-current={view === 'browse' ? 'page' : undefined} onclick={() => switchView('browse')}><WorkspaceIcon name="database"/>Browse data</button>
     <button class:on={view === 'migrate'} aria-current={view === 'migrate' ? 'page' : undefined} onclick={() => switchView('migrate')}><WorkspaceIcon name="transfer"/>Migrate</button>
     <button class:on={view === 'rules'} aria-current={view === 'rules' ? 'page' : undefined} onclick={() => switchView('rules')}><WorkspaceIcon name="rules"/>Rules</button>
@@ -73,7 +74,7 @@
 </aside>
 <div class="workspace-content">
 <header class="topbar">
-  <div class="workspace-label"><span class="experience">Daily workspace</span><span class="workspace-name">Manatee · Personal Home</span></div>
+  <div class="workspace-label"><div class="segmented" aria-label="Workspace"><span class="seg on">Daily Experience</span></div><span class="workspace-name">Safe Point · Personal Home</span></div>
   <div class="spacer"></div>
   {#if health}<span class="badge {health.helix_reachable || health.offline ? 'ok' : 'bad'}">{health.offline ? '● Local workspace' : health.helix_reachable ? '● Helix connected' : '✕ Helix unreachable'}</span>{/if}
   <ThemeToggle />
@@ -124,15 +125,24 @@
 </div>
 
 <style>
-  .workspace-shell{min-height:100vh;padding-left:76px}
-  .app-rail{width:76px;position:fixed;inset:0 auto 0 0;z-index:20;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column}
-  .rail-brand{height:64px;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:800;color:var(--accent);position:relative;letter-spacing:-3px}
-  .rail-brand span{font-size:25px;color:var(--success);position:absolute;top:0;left:27px}
-  .app-rail nav{display:grid;gap:6px;padding-top:12px}.app-rail button{display:flex;flex-direction:column;align-items:center;gap:7px;padding:15px 3px;border:0;border-left:3px solid transparent;background:none;color:var(--text-muted);font:500 10px var(--font);cursor:pointer}
-  .app-rail button.on{background:var(--accent-soft);border-left-color:var(--accent);color:var(--accent)}.app-rail button:hover{background:var(--surface-2)}
-  .rail-bottom{margin-top:auto;padding:18px;text-align:center;border-top:1px solid var(--border)}.avatar{display:grid;place-items:center;background:var(--surface-3);width:34px;height:34px;border-radius:50%;font-size:11px;font-weight:600}
-  .workspace-content{min-width:0}.topbar{height:64px;display:flex;align-items:center;gap:16px;padding:0 26px;background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:10}
-  .workspace-label{display:flex;align-items:center;gap:14px}.workspace-name{color:var(--text-muted);font-size:12px}.experience{background:var(--experience-bg);color:var(--experience-text);padding:6px 10px;border-radius:5px;font-size:12px;font-weight:600}.spacer{flex:1}
+  .workspace-shell{min-height:100vh;padding-left:72px}
+  .app-rail{width:72px;position:fixed;inset:0 auto 0 0;z-index:20;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column}
+  .rail-brand{height:60px;display:flex;align-items:center;justify-content:center;text-decoration:none}
+  .rail-brand img{width:36px;height:36px;object-fit:contain;border-radius:6px;display:block}
+  .rail-label{display:none}
+  .app-rail nav{display:grid;gap:2px;padding-top:4px}
+  .app-rail button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:8px 4px;min-height:56px;border:0;border-left:3px solid transparent;background:none;color:var(--text-muted);font:500 10px var(--font);cursor:pointer}
+  .app-rail button.on{background:var(--accent-soft);border-left-color:var(--accent);color:var(--accent);font-weight:600}
+  .app-rail button:hover:not(.on){background:var(--surface-2)}
+  .rail-bottom{margin-top:auto;padding:12px 4px;display:flex;justify-content:center}
+  .avatar{display:grid;place-items:center;background:var(--surface-3);color:var(--text-muted);width:32px;height:32px;border-radius:50%;font-size:12px;font-weight:600;box-shadow:0 0 0 2px var(--accent)}
+  .workspace-content{min-width:0}
+  .topbar{min-height:48px;display:flex;align-items:center;gap:16px;padding:4px 20px;background:var(--surface);border-bottom:1px solid color-mix(in srgb, #000 10%, transparent);position:sticky;top:0;z-index:10}
+  .workspace-label{display:flex;align-items:center;gap:14px}.workspace-name{color:var(--text-muted);font-size:12px}
+  .segmented{display:inline-flex;padding:4px;background:var(--surface-3);border-radius:8px;gap:4px}
+  .seg{padding:4px 8px;border-radius:6px;font-size:12px;font-weight:600;color:var(--text-muted)}
+  .seg.on{background:var(--experience-bg);color:var(--experience-text);box-shadow:0 1px 3px #73c16766}
+  .spacer{flex:1}
   .stepper {
     display: flex; align-items: center; gap: var(--space-2); flex-wrap: wrap;
     padding: var(--space-3) var(--space-5); border-bottom: 1px solid var(--border); background: var(--surface);
@@ -154,6 +164,6 @@
   .file { max-width: 340px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   main { padding: var(--space-5); max-width: 1800px; margin: 0 auto; }
   @media (max-width: 720px) {
-    .workspace-shell{padding-left:60px}.app-rail{width:60px}.rail-bottom{padding:12px}.workspace-name{display:none}.topbar{padding:0 14px;gap:8px}.topbar .badge{display:none}main{padding:16px}.sep{display:none}.stepper{padding:12px}
+    .workspace-shell{padding-left:60px}.app-rail{width:60px}.workspace-name{display:none}.topbar{padding:0 14px;gap:8px}.topbar .badge{display:none}main{padding:16px}.sep{display:none}.stepper{padding:12px}
   }
 </style>

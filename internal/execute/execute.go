@@ -11,6 +11,7 @@ import (
 	"errors"
 	"fmt"
 	"sort"
+	"strings"
 	"sync"
 	"time"
 
@@ -288,7 +289,7 @@ func (w *rowWriter) existing(ctx context.Context, rec plan.Record) (*helix.Recor
 	if w.policy == "" {
 		return nil, nil
 	}
-	e, ok := w.x.Ledger.ByPolicy(w.policy, rec.Variant)
+	e, ok := w.x.Ledger.ByPolicy(w.policy, recordID(rec))
 	if !ok {
 		return nil, nil
 	}
@@ -375,6 +376,9 @@ func (w *rowWriter) record(ctx context.Context, rec plan.Record, row int) (Actio
 	w.ids[rid] = got.ID
 	e := ledger.Entry{RecordID: got.ID, Variant: rec.Variant, Entity: rec.Entity, KeyField: rec.KeyField, KeyValue: rec.KeyValue,
 		JobID: w.o.JobID, RunID: w.o.RunID, Generated: rec.Generated}
+	if _, inst, ok := strings.Cut(rid, "#"); ok {
+		e.Instance = inst
+	}
 	if rec.Scope == "row" {
 		e.PolicyNumber, e.SheetRow = w.policy, w.sheetRow
 	}

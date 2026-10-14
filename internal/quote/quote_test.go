@@ -7,6 +7,7 @@ import (
 	"net/http/httptest"
 	"strings"
 	"testing"
+	"time"
 )
 
 func newQuote(t *testing.T) (*Store, *Quote) {
@@ -172,13 +173,13 @@ func TestCollectionDatesAndRequiredRows(t *testing.T) {
 		t.Fatal(err)
 	}
 }
-func TestConditionalHO6AndBilling(t *testing.T) {
+func TestConditionalHO6(t *testing.T) {
 	s, q := newQuote(t)
-	q, err := s.Save(q.ID, Input{Version: q.Version, Page: "newquote", Values: map[string]any{"DwellingInput.Form": "HO6", "Quote.DCTBilling": true}, Advance: true})
+	q, err := s.Save(q.ID, Input{Version: q.Version, Page: "newquote", Values: map[string]any{"DwellingInput.Form": "HO6"}, Advance: true})
 	if err != nil {
 		t.Fatal(err)
 	}
-	if index(ActivePages(q), "billing") < 0 || q.Values["DwellingInput.RoofGeometry"] != "NA" {
+	if q.Values["DwellingInput.RoofGeometry"] != "NA" {
 		t.Fatal(q)
 	}
 	q = advance(t, s, q)
@@ -199,7 +200,7 @@ func TestConditionalHO6AndBilling(t *testing.T) {
 func TestHTTPValidationAndRoundtrip(t *testing.T) {
 	s, _ := newQuote(t)
 	mux := http.NewServeMux()
-	Register(mux, s)
+	Register(mux, s, nil)
 	for _, tc := range []struct {
 		body   string
 		status int
@@ -253,23 +254,46 @@ func TestRemovingConditionalCollection(t *testing.T) {
 		t.Fatal("hidden prior policies retained")
 	}
 }
-func TestBillingEscrowNeedsMortgagee(t *testing.T) {
+func TestPaymentDetailsFollowSubmission(t *testing.T) {
 	s, q := newQuote(t)
-	q, err := s.Save(q.ID, Input{Version: q.Version, Page: "newquote", Values: map[string]any{"Quote.DCTBilling": true}, Advance: true})
-	if err != nil {
-		t.Fatal(err)
-	}
-	for q.CurrentPage != "billing" {
+	for q.CurrentPage != "review" {
 		q = advance(t, s, q)
 	}
-	_, err = s.Save(q.ID, Input{Version: q.Version, Page: "billing", Values: map[string]any{"Billing.BillClass": "Mortgagee Escrow", "Billing.PaymentPlan": "Annual"}, Advance: true})
+	due := time.Now().UTC().AddDate(0, 1, 0).Format("2006-01-02")
+	payment := map[string]any{"Billing.BilledTo": "Customer", "Billing.PaymentPlan": "Monthly", "Billing.InvoiceDueDate": due}
+	if _, err := s.Save(q.ID, Input{Version: q.Version, Page: "payment", Values: payment, Advance: true}); !errors.Is(err, ErrNotSubmitted) {
+		t.Fatal("payment saved before submission:", err)
+	}
+	q, err := s.Submit(q.ID, q.Version)
+	if err != nil || q.CurrentPage != "payment" {
+		t.Fatal(q, err)
+	}
+	past := map[string]any{"Billing.BilledTo": "Customer", "Billing.PaymentPlan": "Annual", "Billing.InvoiceDueDate": "2020-01-01"}
+	_, err = s.Save(q.ID, Input{Version: q.Version, Page: "payment", Values: past, Advance: true})
 	var v *ValidationError
-	if !errors.As(err, &v) || v.Fields["Billing.BillClass"] == "" {
+	if !errors.As(err, &v) || v.Fields["Billing.InvoiceDueDate"] == "" {
 		t.Fatal(err)
 	}
-	q, err = s.Save(q.ID, Input{Version: q.Version, Page: "billing", Values: map[string]any{"Billing.BillClass": "Direct Bill", "Billing.PaymentPlan": "Annual"}, Advance: true})
-	if err != nil || q.CurrentPage != "review" {
+	_, err = s.Save(q.ID, Input{Version: q.Version, Page: "payment", Values: map[string]any{"Billing.BilledTo": "Agency"}, Advance: true})
+	if !errors.As(err, &v) || v.Fields["Billing.BilledTo"] == "" || v.Fields["Billing.PaymentPlan"] == "" {
 		t.Fatal(err)
+	}
+	q, err = s.Save(q.ID, Input{Version: q.Version, Page: "payment", Values: payment, Advance: true})
+	if err != nil || q.Status != "ready_for_rating" || q.CurrentPage != "payment" || !contains(q.Completed, "payment") {
+		t.Fatal(q, err)
+	}
+	// Saving again neither duplicates the completion nor reverts the submission.
+	q, err = s.Save(q.ID, Input{Version: q.Version, Page: "payment", Values: payment, Advance: true})
+	if err != nil || q.Status != "ready_for_rating" || len(q.Completed) != len(ActivePages(q))-2+1 {
+		t.Fatal(q, err)
+	}
+	// Changing the application returns it to draft and clears the payment step.
+	q, err = s.Save(q.ID, Input{Version: q.Version, Page: "account", Values: map[string]any{"AccountInput.FirstName": "Changed"}})
+	if err != nil || q.Status != "draft" || contains(q.Completed, "payment") {
+		t.Fatal(q, err)
+	}
+	if q.Values["Billing.PaymentPlan"] != "Monthly" {
+		t.Fatal("payment details were lost", q.Values)
 	}
 }
 

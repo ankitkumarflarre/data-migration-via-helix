@@ -81,7 +81,49 @@ type Quote struct {
 	Completed   []string                    `json:"completed"`
 	Values      map[string]any              `json:"values"`
 	Collections map[string][]map[string]any `json:"collections"`
+	Source      *Source                     `json:"source,omitempty"` // set when the quote was opened from data already in Helix
+	Helix       *HelixSync                  `json:"helix,omitempty"`  // last hand-over of the quote to Helix
 }
+
+// Source tells where an imported quote came from. Its policy number is the
+// Helix policy the quote reads and writes; Cells keeps the rater columns that
+// have no quote field, so writing the quote back does not lose them.
+type Source struct {
+	Kind         string            `json:"kind"` // "helix": a policy migrated from the rater workbook
+	PolicyNumber string            `json:"policy_number"`
+	ImportedAt   time.Time         `json:"imported_at"`
+	Cells        map[string]string `json:"cells,omitempty"`
+	Notes        []string          `json:"notes,omitempty"`
+}
+
+// HelixSync is the state of writing the quote to Helix.
+type HelixSync struct {
+	Status       string         `json:"status"` // pending | syncing | synced | blocked | failed
+	PolicyNumber string         `json:"policy_number"`
+	QuoteVersion int            `json:"quote_version"` // the quote version this state is about
+	Message      string         `json:"message,omitempty"`
+	At           time.Time      `json:"at"`
+	Counts       map[string]int `json:"counts,omitempty"` // records per action (created, updated, unchanged, reused)
+	Records      []SyncRecord   `json:"records,omitempty"`
+	Warnings     []string       `json:"warnings,omitempty"`
+}
+
+// SyncRecord is one Helix record the last sync wrote or found.
+type SyncRecord struct {
+	Variant  string `json:"variant"`
+	Action   string `json:"action"`
+	RecordID string `json:"record_id,omitempty"`
+}
+
+// PolicyNumber is the Helix policy number the quote is written under: the
+// imported policy's, or the quote number for a new application.
+func (q *Quote) PolicyNumber() string {
+	if q.Source != nil && q.Source.PolicyNumber != "" {
+		return q.Source.PolicyNumber
+	}
+	return q.Number
+}
+
 type Input struct {
 	Version int              `json:"version"`
 	Page    string           `json:"page"`
@@ -98,6 +140,7 @@ func (e *ValidationError) Error() string { return "Please correct the highlighte
 var ErrConflict = errors.New("This quote changed in another tab. Reload it before saving again.")
 var ErrNotFound = errors.New("Quote not found.")
 var ErrTransition = errors.New("Complete the preceding pages before continuing.")
+var ErrNotSubmitted = errors.New("Submit the application for rating before adding payment details.")
 var idPattern = regexp.MustCompile(`^[a-f0-9]{24}$`)
 var zipPattern = regexp.MustCompile(`^\d{5}(-\d{4})?$`)
 var statePattern = regexp.MustCompile(`^[A-Z]{2}$`)
@@ -133,6 +176,10 @@ func ActivePages(q *Quote) []Page {
 	}
 	return out
 }
+
+// afterSubmission reports whether a page is filled in only once the
+// application is ready for rating. It is not part of what gets submitted.
+func afterSubmission(id string) bool { return id == "payment" }
 func index(pages []Page, id string) int {
 	for i, p := range pages {
 		if p.ID == id {
@@ -264,8 +311,12 @@ func (s *Store) Save(id string, in Input) (*Quote, error) {
 	if i < 0 {
 		return nil, ErrTransition
 	}
+	if afterSubmission(in.Page) {
+		return s.savePayment(q, pages[i], in)
+	}
+	// Imported policies can be opened on any page; new applications go in order.
 	for _, p := range pages[:i] {
-		if !contains(q.Completed, p.ID) {
+		if !contains(q.Completed, p.ID) && q.Source == nil {
 			return nil, ErrTransition
 		}
 	}
@@ -277,9 +328,12 @@ func (s *Store) Save(id string, in Input) (*Quote, error) {
 		return nil, &ValidationError{fields}
 	}
 	// Any edit invalidates this and later completions and any prior submission.
+	prior := q.Completed
 	q.Completed = []string{}
 	for _, prev := range pages[:i] {
-		q.Completed = append(q.Completed, prev.ID)
+		if q.Source == nil || contains(prior, prev.ID) {
+			q.Completed = append(q.Completed, prev.ID)
+		}
 	}
 	q.Status = "draft"
 	q.CurrentPage = p.ID
@@ -298,6 +352,99 @@ func (s *Store) Save(id string, in Input) (*Quote, error) {
 	}
 	return q, nil
 }
+
+// savePayment saves a page that follows submission. The application itself is
+// unchanged, so the quote stays ready for rating.
+func (s *Store) savePayment(q *Quote, p Page, in Input) (*Quote, error) {
+	if q.Status != "ready_for_rating" {
+		return nil, ErrNotSubmitted
+	}
+	if err := apply(q, p, in.Values, in.Rows); err != nil {
+		return nil, err
+	}
+	if fields := validate(q, p, in.Advance); len(fields) > 0 {
+		return nil, &ValidationError{fields}
+	}
+	q.CurrentPage = p.ID
+	if in.Advance && !contains(q.Completed, p.ID) {
+		q.Completed = append(q.Completed, p.ID)
+	}
+	q.Version++
+	q.UpdatedAt = time.Now().UTC()
+	if err := s.write(q); err != nil {
+		return nil, err
+	}
+	return q, nil
+}
+
+// SetHelix records the Helix sync state. It does not change the quote's
+// version, so an open form can still save.
+func (s *Store) SetHelix(id string, h *HelixSync) (*Quote, error) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	q, err := s.read(id)
+	if err != nil {
+		return nil, err
+	}
+	q.Helix = h
+	return q, s.write(q)
+}
+
+// FindBySource returns the quote opened from a Helix policy, if there is one.
+func (s *Store) FindBySource(policyNumber string) (*Quote, error) {
+	all, err := s.List()
+	if err != nil {
+		return nil, err
+	}
+	for _, q := range all {
+		if q.Source != nil && q.Source.PolicyNumber == policyNumber {
+			return q, nil
+		}
+	}
+	return nil, nil
+}
+
+// Import creates a quote from a policy that is already in Helix. Values are
+// not validated as a whole: a migrated policy lacks what the rater never had
+// (names, addresses). Pages that pass their checks count as completed, and the
+// quote opens on the first page that still needs input.
+func (s *Store) Import(src Source, values map[string]any, collections map[string][]map[string]any) (*Quote, error) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	b := make([]byte, 12)
+	if _, err := rand.Read(b); err != nil {
+		return nil, err
+	}
+	id := hex.EncodeToString(b)
+	now := time.Now().UTC()
+	q := &Quote{ID: id, Number: "Q-" + strings.ToUpper(id[:10]), Version: 1, Status: "draft", CreatedAt: now, UpdatedAt: now,
+		Values: defaults(), Collections: map[string][]map[string]any{}, Completed: []string{}, Source: &src}
+	for k, v := range values {
+		q.Values[k] = v
+	}
+	for k, rows := range collections {
+		q.Collections[k] = rows
+	}
+	deriveValues(q)
+	for _, p := range ActivePages(q) {
+		if p.ID == "review" || afterSubmission(p.ID) {
+			continue
+		}
+		if len(validate(q, p, true)) == 0 {
+			q.Completed = append(q.Completed, p.ID)
+		} else if q.CurrentPage == "" {
+			q.CurrentPage = p.ID
+		}
+	}
+	if q.CurrentPage == "" {
+		q.CurrentPage = "review"
+	}
+	if err := s.write(q); err != nil {
+		return nil, err
+	}
+	return q, nil
+}
+
 func (s *Store) Submit(id string, version int) (*Quote, error) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
@@ -313,7 +460,7 @@ func (s *Store) Submit(id string, version int) (*Quote, error) {
 	}
 	fields := map[string]string{}
 	for _, p := range ActivePages(q) {
-		if p.ID == "review" {
+		if p.ID == "review" || afterSubmission(p.ID) {
 			continue
 		}
 		if !contains(q.Completed, p.ID) {
@@ -327,7 +474,7 @@ func (s *Store) Submit(id string, version int) (*Quote, error) {
 		return nil, &ValidationError{fields}
 	}
 	q.Status = "ready_for_rating"
-	q.CurrentPage = "review"
+	q.CurrentPage = "payment"
 	q.Version++
 	q.UpdatedAt = time.Now().UTC()
 	if err := s.write(q); err != nil {
@@ -557,20 +704,9 @@ func validate(q *Quote, p Page, required bool) map[string]string {
 			out["Applicant.DateOfBirth"] = "Date of birth cannot be in the future"
 		}
 	}
-	if p.ID == "billing" && required && q.Values["Billing.Paperless"] == true {
-		if email, _ := q.Values["AccountInput.Email"].(string); strings.TrimSpace(email) == "" {
-			out["Billing.Paperless"] = "An applicant email is required for paperless invoices"
-		}
-	}
-	if p.ID == "billing" && required && q.Values["Billing.BillClass"] == "Mortgagee Escrow" {
-		found := false
-		for _, r := range q.Collections["interests"] {
-			if r["type"] == "Mortgagee" {
-				found = true
-			}
-		}
-		if !found {
-			out["Billing.BillClass"] = "Add a mortgagee on Additional interests before selecting escrow"
+	if p.ID == "payment" {
+		if due, ok := q.Values["Billing.InvoiceDueDate"].(string); ok && out["Billing.InvoiceDueDate"] == "" && due < time.Now().UTC().Format("2006-01-02") {
+			out["Billing.InvoiceDueDate"] = "Invoice due date cannot be in the past"
 		}
 	}
 	return out

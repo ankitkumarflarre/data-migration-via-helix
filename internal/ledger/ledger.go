@@ -19,6 +19,7 @@ import (
 type Entry struct {
 	RecordID     string    `json:"record_id"`
 	Variant      string    `json:"variant"`
+	Instance     string    `json:"instance,omitempty"` // one of several records of the variant in a row
 	Entity       string    `json:"entity"`
 	KeyField     string    `json:"key_field,omitempty"`
 	KeyValue     string    `json:"key_value,omitempty"`
@@ -44,12 +45,20 @@ type Ledger struct {
 	file  *os.File
 	byID  map[string]*Entry
 	byKey map[string]string // entity|field|value → record id (newest)
-	byPol map[string]string // policy|variant → record id (newest)
+	byPol map[string]string // policy|variant[#instance] → record id (newest)
 	seq   int64
 }
 
 func keyIdx(entity, field, value string) string { return entity + "\x00" + field + "\x00" + value }
-func polIdx(policy, variant string) string      { return policy + "\x00" + variant }
+func polIdx(policy, record string) string       { return policy + "\x00" + record }
+
+// Record is the plan record id of the entry: the variant, or "variant#instance".
+func (e *Entry) Record() string {
+	if e.Instance == "" {
+		return e.Variant
+	}
+	return e.Variant + "#" + e.Instance
+}
 
 // Open loads (or creates) the ledger file.
 func Open(path string) (*Ledger, error) {
@@ -92,7 +101,7 @@ func (l *Ledger) apply(o op) {
 				l.byKey[keyIdx(e.Entity, e.KeyField, e.KeyValue)] = e.RecordID
 			}
 			if e.PolicyNumber != "" {
-				l.byPol[polIdx(e.PolicyNumber, e.Variant)] = e.RecordID
+				l.byPol[polIdx(e.PolicyNumber, e.Record())] = e.RecordID
 			}
 		}
 	case "remove":
@@ -100,7 +109,7 @@ func (l *Ledger) apply(o op) {
 			if k := keyIdx(e.Entity, e.KeyField, e.KeyValue); l.byKey[k] == o.ID {
 				delete(l.byKey, k)
 			}
-			if k := polIdx(e.PolicyNumber, e.Variant); l.byPol[k] == o.ID {
+			if k := polIdx(e.PolicyNumber, e.Record()); l.byPol[k] == o.ID {
 				delete(l.byPol, k)
 			}
 		}
@@ -156,11 +165,12 @@ func (l *Ledger) ByKey(entity, field, value string) (Entry, bool) {
 	return Entry{}, false
 }
 
-// ByPolicy finds the record of a variant created for a policy number.
-func (l *Ledger) ByPolicy(policyNumber, variant string) (Entry, bool) {
+// ByPolicy finds the record created for a policy number by its plan record id
+// (the variant, or "variant#instance").
+func (l *Ledger) ByPolicy(policyNumber, record string) (Entry, bool) {
 	l.mu.Lock()
 	defer l.mu.Unlock()
-	if id, ok := l.byPol[polIdx(policyNumber, variant)]; ok {
+	if id, ok := l.byPol[polIdx(policyNumber, record)]; ok {
 		return *l.byID[id], true
 	}
 	return Entry{}, false

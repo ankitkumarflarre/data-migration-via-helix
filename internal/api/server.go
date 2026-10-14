@@ -29,6 +29,7 @@ import (
 	"github.com/ankitkumarflarre/datamigration/internal/ledger"
 	"github.com/ankitkumarflarre/datamigration/internal/plan"
 	"github.com/ankitkumarflarre/datamigration/internal/quote"
+	"github.com/ankitkumarflarre/datamigration/internal/quotesync"
 	"github.com/ankitkumarflarre/datamigration/internal/rules"
 	"github.com/ankitkumarflarre/datamigration/internal/schema"
 )
@@ -45,6 +46,7 @@ type Server struct {
 	Ledger *ledger.Ledger
 	Web    fs.FS // built UI; nil serves a notice
 	Browse *browse.Browser
+	Sync   *quotesync.Syncer // writes quotes to Helix as they are saved
 
 	mu      sync.Mutex
 	jobs    map[string]*job
@@ -87,7 +89,20 @@ func NewServer(h *helix.Client, api execute.API, s *schema.Schema, l *ledger.Led
 func (s *Server) Handler() http.Handler {
 	mux := http.NewServeMux()
 	if s.Quotes != nil {
-		quote.Register(mux, s.Quotes)
+		if s.Sync == nil && s.API != nil && s.Schema != nil && s.Ledger != nil {
+			s.Sync = &quotesync.Syncer{Quotes: s.Quotes, Schema: s.Schema, API: s.API, Ledger: s.Ledger, Bundle: func() (*rules.Bundle, error) {
+				if s.Rules != nil {
+					return s.Rules.Load(quotesync.RuleSet)
+				}
+				return rules.Load(quotesync.RuleSet)
+			}}
+		}
+		var onSaved func(*quote.Quote)
+		if s.Sync != nil {
+			s.Sync.Register(mux)
+			onSaved = s.Sync.Enqueue
+		}
+		quote.Register(mux, s.Quotes, onSaved)
 	}
 	mux.HandleFunc("GET /api/health", s.health)
 	mux.HandleFunc("GET /api/rulesets", s.ruleSets)

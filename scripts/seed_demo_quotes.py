@@ -30,11 +30,10 @@ def save_index(index):
     temporary.replace(INDEX)
 
 
-def fixture(name, form, city, county, zip_code, address, phone, billing=False):
+def fixture(name, form, city, county, zip_code, address, phone):
     values = {
         'Quote.Product': 'Manatee FL Select PersonalHome', 'Quote.State': 'FL',
         'DwellingInput.Form': form, 'PolicyInput.EffectiveDate': '2027-01-01',
-        'Quote.DCTBilling': billing,
         'AccountInput.FirstName': name, 'AccountInput.LastName': 'Demo',
         'AccountInput.PrimaryPhone': phone, 'AccountInput.Email': name.lower()+'.demo@example.com',
         'AccountInput.Address1': address, 'AccountInput.City': city,
@@ -70,7 +69,6 @@ def fixture(name, form, city, county, zip_code, address, phone, billing=False):
         'WaterBackupAndSumpOverflowInput.Indicator': True,
         'IdentityFraudExpenseCoverageInput.Indicator': True,
         'History.HasPrior': True, 'Claims.HasLosses': False,
-        'Billing.BillClass': 'Direct Bill', 'Billing.PaymentPlan': 'Annual', 'Billing.Paperless': True,
     }
     for key in ['Address1','City','State','ZipCode','County']:
         values['LocationInput.'+key] = values['AccountInput.'+key]
@@ -93,13 +91,12 @@ def fixture(name, form, city, county, zip_code, address, phone, billing=False):
 
 
 def demos():
-    home = fixture('Avery','HO3','Tampa','Hillsborough','33602','100 Demo Harbor Lane','8135550101',True)
+    home = fixture('Avery','HO3','Tampa','Hillsborough','33602','100 Demo Harbor Lane','8135550101')
     home['collections']['coapplicants'] = [{'PersonInput.FirstName':'Casey','PersonInput.LastName':'Demo'}]
     home['collections']['interests'] = [{'type':'Mortgagee','name':'Demo Community Bank (fictional)',
         'address':'1 Fictional Bank Plaza, Tampa, FL 33602','rank':1,'reference':'DEMO-LOAN-1001'}]
     home['values'].update({'DwellingInput.SwimmingPool':'Inground','DwellingInput.PoolSlide':'N',
-        'DwellingInput.PoolApprovedFence':'Y','DwellingInput.PoolDivingBoard':'N',
-        'Billing.BillClass':'Mortgagee Escrow'})
+        'DwellingInput.PoolApprovedFence':'Y','DwellingInput.PoolDivingBoard':'N'})
     condo = fixture('Morgan','HO6','Miami','Miami-Dade','33101','200 Demo Bay Avenue, Unit 4A','3055550102')
     condo['values']['Claims.HasLosses'] = True
     condo['collections']['losses'] = [{'LossInput.LossType':'Water damage', 'LossInput.DateOfLoss':'2025-06-15',

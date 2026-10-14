@@ -1763,36 +1763,6 @@
       "status": "read-only"
     },
     {
-      "page": "billing",
-      "key": "Billing.InitialPaymentMethod",
-      "label": "Initial payment method",
-      "status": "editable"
-    },
-    {
-      "page": "billing",
-      "key": "Billing.InitialPaymentAmount",
-      "label": "Initial payment amount",
-      "status": "read-only"
-    },
-    {
-      "page": "billing",
-      "key": "Billing.PaymentStatus",
-      "label": "Payment status",
-      "status": "read-only"
-    },
-    {
-      "page": "billing",
-      "key": "Billing.InstallmentDueDates",
-      "label": "Installment due dates",
-      "status": "read-only"
-    },
-    {
-      "page": "billing",
-      "key": "Billing.InstallmentAmounts",
-      "label": "Installment amounts",
-      "status": "read-only"
-    },
-    {
       "page": "dwellingcoverage",
       "key": "WaterBackupOfSewersOrDrainsInput.Limit",
       "label": "Water backup of sewers or drains limit",

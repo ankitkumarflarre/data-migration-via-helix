@@ -93,7 +93,7 @@ func serve(args []string) {
 	var handler http.Handler
 	if *offline {
 		mux := http.NewServeMux()
-		quote.Register(mux, quotes)
+		quote.Register(mux, quotes, nil)
 		mux.HandleFunc("GET /api/health", func(w http.ResponseWriter, r *http.Request) {
 			w.Header().Set("Content-Type", "application/json")
 			fmt.Fprint(w, `{"offline":true,"helix_url":"Offline · local quotes","helix_reachable":false,"helix_error":"Helix is disabled in offline mode","rule_sets":[],"ledger_records":0}`)

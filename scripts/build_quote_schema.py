@@ -86,7 +86,7 @@ losses=extract('claimshistory')
 for f in losses:f['required']=True
 interests=[field('type','Interest type',required=True,options=['Mortgagee','Additional Insured','Additional Interest','Premium Finance']),field('name','Name',required=True),field('address','Mailing address',required=True),field('rank','Mortgage rank','integer',min=1,max=4),field('reference','Loan / reference number')]
 pages=[
- page('newquote','New quote',[field('Quote.Product','Product',required=True,options=['Manatee FL Select PersonalHome'],default='Manatee FL Select PersonalHome'),field('Quote.State','Risk state',required=True,options=['FL'],default='FL'),field('DwellingInput.Form','Policy form',required=True,options=['HO3','HO6'],default='HO3'),field('PolicyInput.EffectiveDate','Effective date','date',True),field('Quote.DCTBilling','Include billing instructions','boolean',default=False)]),
+ page('newquote','New quote',[field('Quote.Product','Product',required=True,options=['Manatee FL Select PersonalHome'],default='Manatee FL Select PersonalHome'),field('Quote.State','Risk state',required=True,options=['FL'],default='FL'),field('DwellingInput.Form','Policy form',required=True,options=['HO3','HO6'],default='HO3'),field('PolicyInput.EffectiveDate','Effective date','date',True)]),
  page('account','Applicant',account,collection=dict(key='coapplicants',label='Co-applicants',fields=co)),
  page('dwellinginfo','Risk schedule',location+risk),page('dwellingcoverage','Dwelling coverage',coverage),
  page('underwriting','Underwriting',uw,notice='These declarations capture the topics in the source document. Carrier underwriting rules and the full questionnaire still require integration.'),
@@ -94,8 +94,9 @@ pages=[
  page('claimshistory','Claims history',[field('Claims.HasLosses','Prior losses to disclose?','boolean',True)],collection=dict(key='losses',label='Prior losses',fields=losses,when=cond('Claims.HasLosses',True)),notice='Enter known losses manually. CLUE and insurance-score reports are not ordered by this application.'),
  page('summary','Coverage summary',[],notice='Coverage selections are saved. Premium calculation and carrier eligibility require the rating integration; this is not a priced or bindable quote.'),
  page('additionalinterests','Additional interests',[],collection=dict(key='interests',label='Additional interests',fields=interests)),
- page('billing','Billing instructions',[field('Billing.BillClass','Bill class',required=True,options=['Direct Bill','Mortgagee Escrow','Agency Bill']),field('Billing.PaymentPlan','Payment plan',required=True,options=['Annual','Semi-Annual','Quarterly']),field('Billing.Paperless','Paperless invoices','boolean',default=False)],when=cond('Quote.DCTBilling',True),notice='Save billing preferences only. No payment is collected and no installment schedule is generated.'),
- page('review','Review application',[],notice='Review and submit the captured application for rating. Submission records a local workflow status; it does not bind insurance or send data to a carrier.')]
+ page('review','Review application',[],notice='Review and submit the captured application for rating. Submission records a local workflow status; it does not bind insurance or send data to a carrier.'),
+ # Payment details opens only after the application is submitted for rating.
+ page('payment','Payment details',[field('Billing.BilledTo','How will this policy be billed?',required=True,options=['Customer'],default='Customer',control='radio'),field('Billing.PaymentPlan','Payment Plan',required=True,options=['Annual','Semi-Annual','Quarterly','Monthly']),field('Billing.InvoiceDueDate','What day of the month will the invoice be due?','date',True)],notice='Payment details are stored with the quote. No payment is collected and they are not written to Helix.')]
 from complete_quote_schema import complete
 complete(pages, cat, ROOT)
 schema=dict(version=2,pages=pages)

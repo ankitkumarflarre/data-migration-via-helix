@@ -20,7 +20,7 @@ func failure(w http.ResponseWriter, err error) {
 		reply(w, 422, map[string]any{"error": err.Error(), "fields": validation.Fields})
 	case errors.Is(err, ErrNotFound):
 		reply(w, 404, map[string]any{"error": err.Error()})
-	case errors.Is(err, ErrConflict), errors.Is(err, ErrTransition):
+	case errors.Is(err, ErrConflict), errors.Is(err, ErrTransition), errors.Is(err, ErrNotSubmitted):
 		reply(w, 409, map[string]any{"error": err.Error()})
 	default:
 		reply(w, 500, map[string]any{"error": "Could not access quote storage. Your changes were not saved."})
@@ -41,7 +41,16 @@ func decode(w http.ResponseWriter, r *http.Request, v any) bool {
 	}
 	return true
 }
-func Register(mux *http.ServeMux, s *Store) {
+
+// Register adds the quote routes. onSaved, when set, runs after every
+// successful create, save or submit (the Helix sync hooks in here); it may
+// update the quote it is given before the reply is sent.
+func Register(mux *http.ServeMux, s *Store, onSaved func(*Quote)) {
+	saved := func(q *Quote) {
+		if onSaved != nil {
+			onSaved(q)
+		}
+	}
 	mux.HandleFunc("GET /api/quotes", func(w http.ResponseWriter, r *http.Request) {
 		q, err := s.List()
 		if err != nil {
@@ -62,6 +71,7 @@ func Register(mux *http.ServeMux, s *Store) {
 			failure(w, err)
 			return
 		}
+		saved(q)
 		reply(w, 201, q)
 	})
 	mux.HandleFunc("GET /api/quotes/{id}", func(w http.ResponseWriter, r *http.Request) {
@@ -82,6 +92,7 @@ func Register(mux *http.ServeMux, s *Store) {
 			failure(w, err)
 			return
 		}
+		saved(q)
 		reply(w, 200, q)
 	})
 	mux.HandleFunc("POST /api/quotes/{id}/submit", func(w http.ResponseWriter, r *http.Request) {
@@ -96,6 +107,7 @@ func Register(mux *http.ServeMux, s *Store) {
 			failure(w, err)
 			return
 		}
+		saved(q)
 		reply(w, 200, q)
 	})
 }

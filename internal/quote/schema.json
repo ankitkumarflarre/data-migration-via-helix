@@ -46,13 +46,6 @@
           ]
         },
         {
-          "key": "Quote.DCTBilling",
-          "label": "Include billing instructions",
-          "type": "boolean",
-          "required": false,
-          "default": false
-        },
-        {
           "key": "PolicyDetails.PriorPolicyNumber",
           "label": "Prior policy number",
           "type": "text",
@@ -3034,113 +3027,46 @@
       }
     },
     {
-      "id": "billing",
-      "title": "Billing instructions",
+      "id": "review",
+      "title": "Review application",
+      "fields": [],
+      "notice": "Review and submit the captured application for rating. Submission records a local workflow status; it does not bind insurance or send data to a carrier."
+    },
+    {
+      "id": "payment",
+      "title": "Payment details",
       "fields": [
         {
-          "key": "Billing.BillClass",
-          "label": "Bill class",
+          "key": "Billing.BilledTo",
+          "label": "How will this policy be billed?",
           "type": "text",
           "required": true,
           "options": [
-            "Direct Bill",
-            "Mortgagee Escrow",
-            "Agency Bill"
-          ]
+            "Customer"
+          ],
+          "default": "Customer",
+          "control": "radio"
         },
         {
           "key": "Billing.PaymentPlan",
-          "label": "Payment plan",
+          "label": "Payment Plan",
           "type": "text",
           "required": true,
           "options": [
             "Annual",
             "Semi-Annual",
-            "Quarterly"
+            "Quarterly",
+            "Monthly"
           ]
         },
         {
-          "key": "Billing.Paperless",
-          "label": "Paperless invoices",
-          "type": "boolean",
-          "required": false,
-          "default": false
-        },
-        {
-          "key": "Billing.InitialPaymentMethod",
-          "label": "Initial payment method",
-          "type": "text",
-          "required": false,
-          "options": [
-            "EFT",
-            "Credit card"
-          ],
-          "group": "Initial payment",
-          "note": "Preference only. No bank or card details are collected and no payment is processed.",
-          "narrativeSource": "Initial payment method"
-        },
-        {
-          "key": "Billing.InitialPaymentAmount",
-          "label": "Initial payment amount",
-          "type": "text",
-          "required": false,
-          "readOnly": true,
-          "unavailable": "Awaiting billing provider",
-          "group": "Billing summary",
-          "narrativeSource": "Initial payment amount"
-        },
-        {
-          "key": "Billing.PaymentStatus",
-          "label": "Payment status",
-          "type": "text",
-          "required": false,
-          "readOnly": true,
-          "unavailable": "Awaiting billing provider",
-          "group": "Billing summary",
-          "narrativeSource": "Payment status"
-        },
-        {
-          "key": "Billing.InstallmentDueDates",
-          "label": "Installment due dates",
-          "type": "text",
-          "required": false,
-          "readOnly": true,
-          "unavailable": "Awaiting billing provider",
-          "group": "Billing summary",
-          "narrativeSource": "Installment due dates"
-        },
-        {
-          "key": "Billing.InstallmentAmounts",
-          "label": "Installment amounts",
-          "type": "text",
-          "required": false,
-          "readOnly": true,
-          "unavailable": "Awaiting billing provider",
-          "group": "Billing summary",
-          "narrativeSource": "Installment amounts"
+          "key": "Billing.InvoiceDueDate",
+          "label": "What day of the month will the invoice be due?",
+          "type": "date",
+          "required": true
         }
       ],
-      "when": {
-        "key": "Quote.DCTBilling",
-        "values": [
-          true
-        ]
-      },
-      "notice": "Save billing preferences only. No payment is collected and no installment schedule is generated.",
-      "actions": [
-        {
-          "key": "Billing.Pay",
-          "label": "Make a payment",
-          "kind": "unavailable",
-          "reason": "Billing provider is not connected. No payment will be taken."
-        }
-      ]
-    },
-    {
-      "id": "review",
-      "title": "Review application",
-      "fields": [],
-      "notice": "Review and submit the captured application for rating. Submission records a local workflow status; it does not bind insurance or send data to a carrier."
+      "notice": "Payment details are stored with the quote. No payment is collected and they are not written to Helix."
     }
   ]
 }
