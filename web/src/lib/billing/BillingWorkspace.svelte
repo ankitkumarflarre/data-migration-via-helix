@@ -67,11 +67,12 @@
    <a href={href('admin')} class:on={top==='admin'} aria-current={top==='admin'?'page':undefined}><Icon name="rules" size={14}/>Administration</a>
    <a href={href('batches')} class:on={top==='batches'} aria-current={top==='batches'?'page':undefined}><Icon name="card" size={14}/>Batch Cash Management</a>
   </nav>
-  <form class="bw-quick" role="search" onsubmit={quick}>
+  <!-- Home has its own account search in the Billing accounts card. -->
+  {#if match.route.component!=='Home'}<form class="bw-quick" role="search" onsubmit={quick}>
    <label class="sr-only" for="bw-quick-by">Search by</label>
    <select id="bw-quick-by" bind:value={quickBy}><option>Account Number</option></select>
    <div class="b-search"><Icon name="search" size={14}/><label class="sr-only" for="bw-quick-q">Account number</label><input id="bw-quick-q" type="search" bind:value={quickQ} placeholder="Search account number…" autocomplete="off"/><button type="submit" aria-label="Search accounts"><Icon name="arrow" size={14}/></button></div>
-  </form>
+  </form>{/if}
  </div>
 
  {#if error}<div class="b-banner error" role="alert"><span class="ico">!</span><div>{error}</div></div>{/if}
